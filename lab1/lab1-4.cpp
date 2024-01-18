@@ -10,6 +10,11 @@ GLfloat vertices[] =
      -0.5f, 0.5f, 0.0f,
      0.5f, -0.5f, 0.0f};
 
+GLfloat colors[] =
+    {1, 0, 0,
+     0, 1, 0,
+     0, 0, 1};
+
 GLfloat myMatrix[] =
     {1.0f, 0.0f, 0.0f, 0.0f,
      0.0f, 1.0f, 0.0f, 0.0f,
@@ -45,7 +50,7 @@ void init(void)
     printError("GL inits");
 
     // Load and compile shader
-    program = loadShaders("lab1-3.vert", "lab1-3.frag");
+    program = loadShaders("lab1-4.vert", "lab1-4.frag");
     printError("init shader");
 
     // Upload geometry to the GPU:
@@ -62,6 +67,14 @@ void init(void)
     glVertexAttribPointer(glGetAttribLocation(program, "in_Position"), 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(glGetAttribLocation(program, "in_Position"));
 
+    // Use a separate VBO for color
+    // Ideally should use the same VBO and define a vertex struct
+    glGenBuffers(1, &vertexBufferObjID);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjID);
+    glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
+    glVertexAttribPointer(glGetAttribLocation(program, "in_Color"), 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(glGetAttribLocation(program, "in_Color"));
+
     // Set constant shader uniforms
 
     // End of upload of geometry
@@ -77,13 +90,13 @@ void display(void)
     // Get delta time dt in seconds
     GLfloat dt = t; // set to previous t
     t = (GLfloat)glutGet(GLUT_ELAPSED_TIME);
-    dt = (t - dt) / 1000; //convert to s
-    //printf("DT: %.5f\n", dt); //track frame time
+    dt = (t - dt) / 1000; // convert to s
+    // printf("DT: %.5f\n", dt); //track frame time
 
-    
     phi += dt; // take note that this is radians
-    if (phi >= 2 * PI) phi = 0; //reset phi when over 360 deg
-    printf("phi: %.5f\n", phi);
+    if (phi >= 2 * PI)
+        phi = 0; // reset phi when over 360 deg
+    //printf("phi: %.5f\n", phi);
 
     // Update things before rendering
     // Calculate rotation matrix
@@ -94,7 +107,6 @@ void display(void)
 
     // Set dynamic shader uniforms
     glUniformMatrix4fv(glGetUniformLocation(program, "myMatrix"), 1, GL_TRUE, myMatrix);
-
 
     printError("pre display");
 
