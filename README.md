@@ -1,2 +1,4 @@
-# liu-computer-graphics-project-
-repo for LiU TBSK07
+Computer Graphics Project done by Terence and Peri
+
+Features:
+- nothing
