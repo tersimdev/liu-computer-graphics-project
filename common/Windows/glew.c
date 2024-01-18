@@ -253,7 +253,9 @@ static GLboolean _glewStrSame1 (const GLubyte** a, GLuint* na, const GLubyte* b,
   if(*na >= nb)
   {
     GLuint i=0;
-    while (i < nb && (*a)+i != NULL && b+i != NULL && (*a)[i] == b[i]) i++;
+    const GLubyte* ai = (*a) + i;
+    const GLubyte* bi = b + i;
+    while (i < nb && ai != NULL && bi != NULL && (*a)[i] == b[i]) i++;
     if(i == nb)
     {
       *a = *a + nb;
@@ -269,7 +271,9 @@ static GLboolean _glewStrSame2 (const GLubyte** a, GLuint* na, const GLubyte* b,
   if(*na >= nb)
   {
     GLuint i=0;
-    while (i < nb && (*a)+i != NULL && b+i != NULL && (*a)[i] == b[i]) i++;
+    const GLubyte* ai = (*a) + i;
+    const GLubyte* bi = b + i;
+    while (i < nb && ai != NULL && bi != NULL && (*a)[i] == b[i]) i++;
     if(i == nb)
     {
       *a = *a + nb;
@@ -285,7 +289,9 @@ static GLboolean _glewStrSame3 (const GLubyte** a, GLuint* na, const GLubyte* b,
   if(*na >= nb)
   {
     GLuint i=0;
-    while (i < nb && (*a)+i != NULL && b+i != NULL && (*a)[i] == b[i]) i++;
+    const GLubyte* ai = (*a) + i;
+    const GLubyte* bi = b + i;
+    while (i < nb && ai != NULL && bi != NULL && (*a)[i] == b[i]) i++;
     if (i == nb && (*na == nb || (*a)[i] == ' ' || (*a)[i] == '\n' || (*a)[i] == '\r' || (*a)[i] == '\t'))
     {
       *a = *a + nb;
