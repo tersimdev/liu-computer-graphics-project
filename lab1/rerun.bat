@@ -1,3 +1,2 @@
-make clean
-make lab1-4
-.\lab1-4
+make lab1-5
+.\lab1-5
