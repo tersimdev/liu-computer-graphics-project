@@ -35,7 +35,7 @@ unsigned int targetFPS = 60;
 GLfloat t = 0;
 
 // Reference to *current* shader program
-GLuint program = NULL;
+GLuint program = -1;
 
 void init(void)
 {
