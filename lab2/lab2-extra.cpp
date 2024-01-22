@@ -68,7 +68,7 @@ void init(void)
     printError("GL inits");
 
     // Load and compile shader
-    program = loadShaders("lab2-7.vert", "lab2-7.frag");
+    program = loadShaders("lab2-extra.vert", "lab2-extra.frag");
     printError("init shader");
 
     // Set static shader uniforms
@@ -92,7 +92,7 @@ void display(void)
     // Update things before rendering
 
     // Calculate a phi to rotate over time
-    float spinSpeed = 1.f;
+    float spinSpeed = 0.2f;
     phi += dt * spinSpeed; // take note that this is radians
     if (phi >= 2 * PI)
         phi = 0; // reset phi when over 360 deg
@@ -115,7 +115,7 @@ void display(void)
 
 
     //draw first model
-    rot = Ry(phi);
+    rot = Ry(45);
     model = rot;
     glBindTexture(GL_TEXTURE_2D, myTex1);      // Select Texture
     glActiveTexture(GL_TEXTURE0);              // activate texture 0 incase
@@ -124,9 +124,9 @@ void display(void)
 
     //draw second model
     trans = T(0,-1,-3);
-    rot = Ry(phi*3);
+    //rot = Ry(phi*3);
     scale = S(0.3f);
-    model = trans * rot * scale;
+    model = trans * scale;
     glBindTexture(GL_TEXTURE_2D, myTex2);      // Select Texture
     glActiveTexture(GL_TEXTURE0);              // activate texture 0 incase
     glUniformMatrix4fv(glGetUniformLocation(program, "modelMtx"), 1, GL_TRUE, model.m); //set model matrix
@@ -150,10 +150,6 @@ int main(int argc, char *argv[])
 }
 
 /*
-Questions:
-
-If you rotate an object or rotate the camera, what matrices are affected?
-Ans: Rotate object -> model matrix affected
-     Rotate camera -> camera lookat (view) matrix affected
-
+Extra:
+Added some displacement in vertex shader using texcoords and time
 */ 

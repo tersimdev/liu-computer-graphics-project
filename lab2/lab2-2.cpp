@@ -181,7 +181,7 @@ Ans: Tile / Scale the UV
 
 Why can't we just pass the texture object to the shader? There is a specific reason for this, a limited resource. 
 What? (No, it is not that we must avoid re-uploading from CPU. The texture object is on the GPU!)
-Ans: The ID acts as "pointer". Instead of pasing several thousand pixels, we can pass a single number to refer to the texture.
+Ans: The texUnit acts as "pointer". Instead of pasing several thousand pixels, we can pass a single number to refer to the texture.
 The limited resource is likely CPU time or RAM amount. Textures are mostly stored on VRAM and can be referred to by their IDs.
 
 */
