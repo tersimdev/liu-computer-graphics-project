@@ -5,15 +5,16 @@
 
 #define MAIN
 #include "LittleOBJLoader.h"
+#include "LoadTGA.h"
 
 // Globals
 Model *m;
+GLuint myTex;
 GLfloat myMatrix[] =
     {1.0f, 0.0f, 0.0f, 0.0f,
      0.0f, 1.0f, 0.0f, 0.0f,
      0.0f, 0.0f, 1.0f, 0.0f,
      0.0f, 0.0f, 0.0f, 1.0f};
-
 float phi = 0;
 const double PI = 3.14159;
 
@@ -46,6 +47,9 @@ void init(void)
         printError("failed to load model");
         return;
     }
+    //load textures
+    LoadTGATextureSimple("maskros512.tga", &myTex);
+    printError("loading models/textures");
 
     // GL inits
     glClearColor(0.2, 0.2, 0.5, 0);
@@ -56,7 +60,7 @@ void init(void)
     printError("GL inits");
 
     // Load and compile shader
-    program = loadShaders("lab2-1.vert", "lab2-1.frag");
+    program = loadShaders("lab2-2.vert", "lab2-2.frag");
     printError("init shader");
 
     // Upload geometry to the GPU:
@@ -94,6 +98,9 @@ void init(void)
         glVertexAttribPointer(glGetAttribLocation(program, "in_TexCoord"), 2, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(glGetAttribLocation(program, "in_TexCoord"));
     }
+
+    //Set static shader uniforms
+    glUniform1i(glGetUniformLocation(program, "texUnit"), 0); // Texture unit 0
 
     // End of upload of geometry
 
@@ -142,6 +149,8 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(bunnyVertexArrayObjID); // Select VAO
+    glBindTexture(GL_TEXTURE_2D, myTex); // Select Texture
+    glActiveTexture(GL_TEXTURE0); //activate texture 0 incase
     glDrawElements(GL_TRIANGLES, m->numIndices, GL_UNSIGNED_INT, 0L);
 
     printError("display");
@@ -164,8 +173,12 @@ int main(int argc, char *argv[])
 /*
 Questions:
 
-What kind of procedural texture did you make?
-Ans: displayed the UV coordinates as colors, and made it breathe using a time uniform,
-creating a bunny that lights up periodically in the UV colors.
+How are the textures coordinates mapped on the bunny? Can you see how they vary over the model?
+
+How can you make a texture repeat multiple times over the bunny?
+
+Why can't we just pass the texture object to the shader? There is a specific reason for this, a limited resource. 
+What? (No, it is not that we must avoid re-uploading from CPU. The texture object is on the GPU!)
+
 
 */

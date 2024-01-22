@@ -1,2 +1,2 @@
-make lab2-1
-.\lab2-1
+make lab2-2
+.\lab2-2
