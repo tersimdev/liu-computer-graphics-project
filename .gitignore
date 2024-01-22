@@ -1,4 +1,4 @@
-*.makefile
+**/makefile
 *.cbp
 *.depend
 *.layout
@@ -10,7 +10,6 @@
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
