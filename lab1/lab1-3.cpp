@@ -120,3 +120,7 @@ int main(int argc, char *argv[])
     glutMainLoop();
     return 0;
 }
+
+//Questions:
+// What is the frame rate of the animation?
+// Ans: 1000/d where d is the number of miliseconds per frame

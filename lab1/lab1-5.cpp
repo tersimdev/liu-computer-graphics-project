@@ -176,3 +176,10 @@ int main(int argc, char *argv[])
     glutMainLoop();
     return 0;
 }
+
+//Questions:
+//What problems did you encounter while building the pyramid?
+//Ans: Some triangles will be drawn ontop of other triangles.
+
+//How do you change the facing of a polygon?
+//Ans: Put it in counterclockwise order of the direction you want it to face, swap the order

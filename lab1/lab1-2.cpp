@@ -85,3 +85,16 @@ int main(int argc, char *argv[])
     glutMainLoop();
     return 0;
 }
+
+//Questions:
+
+//What is the purpose of the "in", "out" and "uniform" modifiers?
+//Ans: in is used for the vertex shader to get data using the buffer from the cpu to gpu
+//    out is used for the  fragment shader to get the colour of the pixel
+//     uniform is used to pass variables from the cpu to the gpu dynamically
+//
+//What is the output of the fragment shader?
+//Ans: Colour of the fragment
+
+//What does the function glUniformMatrix4fv do?
+//Ans: Set the value of the uniform variable in the shader

@@ -147,3 +147,15 @@ int main(int argc, char *argv[])
     glutMainLoop();
     return 0;
 }
+
+//Quesstions:
+/*
+Why do we need normal vectors for a model?
+Ans: To describe the outer face / direction the vertex is facing 
+What did you do in your fragment shader?
+Ans: simple lighting using the normal and dot product
+Should a normal vector always be perpendicular to a certain triangle? If not, why?
+Ans: Not necessarily, ie sphere
+Now we are using glBindBuffer and glBufferData again. They deal with buffers, but in what way?
+Ans: They bind a new buffer and give data to the buffer
+*/

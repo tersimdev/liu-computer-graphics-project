@@ -85,3 +85,11 @@ int main(int argc, char *argv[])
 	glutMainLoop();
 	return 0;
 }
+
+// Questions:
+
+// Where is the origin placed in the on-screen coordinate system?
+// Ans: In the Middle of the screen
+
+// Which direction are the X and Y axes pointing in the on-screen coordinate system?
+// Ans: X is up down y is left right

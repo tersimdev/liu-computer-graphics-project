@@ -132,3 +132,10 @@ int main(int argc, char *argv[])
     glutMainLoop();
     return 0;
 }
+
+//Questions: 
+//Did you need to do anything different when uploading the color data?
+//Ans: Create a new VBO to upload the colour data with a different variable name
+
+//The "in" and "out" modifiers are now used for something different. What?
+//Ans: To pass data between the vertex and the fragment shader
