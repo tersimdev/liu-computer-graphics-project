@@ -19,4 +19,5 @@ void main(void)
 
 	//use base texture only for now
 	out_Color = texture(texUnit, v_TexCoord);
+	//out_Color = texture(texUnit, v_TexCoord * 10);
 }
