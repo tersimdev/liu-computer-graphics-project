@@ -88,7 +88,7 @@ void init(void)
     printError("init arrays");
 
     // Set display refresh, 1000ms / FPS
-    glutRepeatingTimer(1000 / 60);
+    glutRepeatingTimer(1000 / targetFPS);
 }
 
 void display(void)
