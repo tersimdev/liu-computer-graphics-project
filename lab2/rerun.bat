@@ -1,2 +1,2 @@
-make lab2-5 -j
-.\lab2-5
+make lab2-7 -j
+.\lab2-7
