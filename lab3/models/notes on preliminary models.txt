@@ -1,0 +1,48 @@
+Note: These models are preliminary. Sizes and orientations can be wrong. I will fix this but have not have time yet.
+
+Two houses by Susanne:
+======================
+
+house3
+2023
+
+Both have textures that I have verified to fit when loaded with my units.
+
+These were made in Blender and are very much off in size.
+Both come in "scaled" versions that look more right.
+
+A few models by me, in the folder "preliminary":
+================================================
+
+These models were made in TinkerCAD, and have issues with normal vectors. No textures.
+
+boxhouse
+Super simple house
+
+house
+house-multi
+A plain house with window openings and door. The "multi" version is a multi-part OBJ so you can extract the part as separate models and render them with different textures or colors.
+
+house2
+house2-multi
+A somewhat more elaborate house, also with a "multi" version.
+
+rocket
+That stupid rocket that I slapped together on the lecture. It is junk, but...
+
+simple-house
+Same as boxhouse. Right now I don't remember which was best so I throw in both.
+
+tree-m-small
+A super silly little "tree", multiple parts so the trunk and the "leaves" can be colored differently.
+
+Textures
+========
+
+I have included some new textures that should be enough for the lab:
+bark2
+bricks
+
+If you are really ambitious, or are looking for textures for your project, look here:
+https://www.plaintextures.com
+

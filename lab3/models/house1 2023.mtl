@@ -1,0 +1,68 @@
+# Blender MTL File: 'house1 2023.blend'
+# Material Count: 6
+
+newmtl Material
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd TexturesCom_BuildingsWildWest0030_3_S.jpg
+
+newmtl Material_TexturesCom_BuildingsWildWest0015_20_S.jpg
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Susanne/Grafik, 2D och 3D/Game Jam/Jobb/RUU/Projekt OpenSim + Blender/Blender/texturer/textures.com/Originalfiler/TexturesCom_BuildingsWildWest0015_20_S.jpg
+
+newmtl Material_TexturesCom_BuildingsWildWest0015_20_S.jpg.001
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd TexturesCom_BuildingsWildWest0015_20_S.jpg
+
+newmtl Material_TexturesCom_BuildingsWildWest0030_3_S.jpg
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd /Users/Susanne/Grafik, 2D och 3D/Game Jam/Jobb/RUU/Projekt OpenSim + Blender/Blender/texturer/textures.com/Originalfiler/TexturesCom_BuildingsWildWest0030_3_S.jpg
+
+newmtl Material_TexturesCom_WoodPlanksBare0347_1_seamless_S.jpg.001
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd TexturesCom_WoodPlanksBare0347_1_seamless_S.jpg
+
+newmtl Material_rooftextures-metal2.jpg.001
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd rooftextures-metal2.jpg
