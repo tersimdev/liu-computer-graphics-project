@@ -10,6 +10,7 @@ void glutMainLoop();
 void glutCheckLoop();
 void glutInit(int *argcp, char **argv);
 void glutPostRedisplay();
+void glutClose(void);
 
 void glutReshapeFunc(void (*func)(int width, int height));
 void glutDisplayFunc(void (*func)(void));
