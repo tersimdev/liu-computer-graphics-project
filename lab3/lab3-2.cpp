@@ -13,24 +13,26 @@
 
 #define LABNUM "3-2"
 
-//struct that combines TRS for ease of use
-typedef struct _Transform {
+// struct that combines TRS for ease of use
+typedef struct _Transform
+{
     vec3 translation, rotate, scale;
 } Transform;
 
-//struct to define a object to be drawn in the scene
-typedef struct _SceneObj {
-    const char* name;
-    Model* model;
+// struct to define a object to be drawn in the scene
+typedef struct _SceneObj
+{
+    const char *name;
+    Model *model;
     GLuint textures[MAx_TEXTURES];
-    int currTexture; //texture to use, supports single texture only for now
-    GLuint shaderProgram; //current shader
-    Transform transform; //current translation, rotation, scale vectors
+    int currTexture;      // texture to use, supports single texture only for now
+    GLuint shaderProgram; // current shader
+    Transform transform;  // current translation, rotation, scale vectors
 
 } SceneObj;
 
-//Globals
-// target update time in frames per second
+// Globals
+//  target update time in frames per second
 unsigned int targetFPS = 60;
 // total time elapsed
 GLfloat t = 0;
@@ -45,19 +47,22 @@ mat4 proj;
 // camera variables
 vec3 camPos, camDir, camUp;
 mat4 view;
-//list of scene objects
-SceneObj* sceneObjs[MAX_OBJS];
+// list of scene objects
+SceneObj *sceneObjs[MAX_OBJS];
 int sceneObjIdx = 0;
-//current program
+// current program
 GLuint currProgram;
+
+//temp to make things spin
+float phi = 0;
 
 // helper funcs defined below
 Transform CreateTransform(vec3 trans, vec3 rot, vec3 scale);
-SceneObj* CreateSceneObj(const char* name, Model* model, const char* texturePath0, GLuint program, Transform transform);
-SceneObj* CreateSceneObj(const char* name, const char* modelPath, const char* texturePath0, GLuint program, Transform transform);
-void RemoveSceneObj(SceneObj* obj); //todo, free memory
-SceneObj* CreateGroundPlane(float groundSize, float uvTiles, const char* groundTexture, GLuint program);
-void DrawSceneObj(SceneObj* sceneObj);
+SceneObj *CreateSceneObj(const char *name, Model *model, const char *texturePath0, GLuint program, Transform transform);
+SceneObj *CreateSceneObj(const char *name, const char *modelPath, const char *texturePath0, GLuint program, Transform transform);
+void RemoveSceneObj(SceneObj *obj); // todo, free memory
+SceneObj *CreateGroundPlane(float groundSize, float uvTiles, const char *groundTexture, GLuint program);
+void DrawSceneObj(SceneObj *sceneObj);
 
 void init(void)
 {
@@ -74,14 +79,14 @@ void init(void)
     // load proj matrix
     proj = frustum(P_LEFT, P_RIGHT, P_BOTTOM, P_TOP, P_NEAR, P_FAR);
     // set up camera
-    camPos = vec3(0, 2, 5);
-    camDir = normalize((vec3(0) - camPos)); // look at origin
+    camPos = vec3(0, 1.5f, 1);
+    camDir = normalize(vec3(0,-0.2,-1)); //look forward and a lil down
     camUp = vec3(0, 1, 0);
 
     // Load and compile shader(s)
     GLuint lit_shader = loadShaders("lab" LABNUM ".vert", "lab" LABNUM ".frag");
     printError("init shader");
-    currProgram = lit_shader; //for now
+    currProgram = lit_shader; // for now
 
     // Set static shader uniforms for each program
     glUniformMatrix4fv(glGetUniformLocation(lit_shader, "projectionMtx"), 1, GL_TRUE, proj.m);
@@ -91,17 +96,21 @@ void init(void)
     // Set display refresh, 1000ms / FPS
     glutRepeatingTimer(1000 / targetFPS);
 
-
-    //create scene objects here
+    // create scene objects here
     Transform t;
     sceneObjIdx = 0;
     sceneObjs[sceneObjIdx++] = CreateGroundPlane(100.f, 20.f, "textures/grass.tga", lit_shader);
-    t = CreateTransform(vec3(0,1,1), vec3(0), vec3(1));
-    sceneObjs[sceneObjIdx++] = CreateSceneObj("bunny", "models/bunny.obj", "textures/grass.tga", lit_shader, t);
-    t = CreateTransform(vec3(0,1,-2), vec3(0), vec3(0.2f));
-    sceneObjs[sceneObjIdx++] = CreateSceneObj("teapot", "models/teapot.obj", "textures/conc.tga", lit_shader, t);
+    //spawn houses in one line
+    for (int i = 0; i < 64 && sceneObjIdx < MAX_OBJS; ++i)
+    {
+        int x = i % 4;
+        int z = i / 4;
+        t = CreateTransform(vec3(-0.75f + 0.5f * x, 0.5f, -z - 2), vec3(0,-45,0), vec3(0.4f));
+        const char* textures[3] = {"textures/bricks.tga", "textures/conc.tga", "textures/bark2.tga"};
+        int id = i % 3;
+        sceneObjs[sceneObjIdx++] = CreateSceneObj("cow", "models/cow.obj", textures[id], lit_shader, t);
+    }
     printError("creating scene objects");
-
 }
 
 void display(void)
@@ -111,6 +120,9 @@ void display(void)
     t = (GLfloat)glutGet(GLUT_ELAPSED_TIME);
     dt = (t - dt) / 1000; // convert to s
     // printf("DT: %.5f\n", dt); //track frame time
+
+    //spinnn
+    phi += dt * 2;
 
     // Calculate view matrix based on camera vectors
     view = lookAtv(camPos, camPos + camDir, camUp);
@@ -124,12 +136,18 @@ void display(void)
     // clear the screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //draw all scene objects
-    for (int i = 0; i < MAX_OBJS; ++i) 
+    // draw all scene objects
+    for (int i = 0; i < MAX_OBJS; ++i)
     {
         if (sceneObjs[i] == NULL)
             continue;
-        
+
+        //temp, to make them spin
+        if (strcmp(sceneObjs[i]->name, "cow") == 0)
+        {
+            sceneObjs[i]->transform.rotate = vec3(0,phi + i * 3,0);
+        }
+
         DrawSceneObj(sceneObjs[i]);
     }
 
@@ -152,7 +170,7 @@ int main(int argc, char *argv[])
 
 /* Helper functions below */ //////////////////////////////
 
-Transform CreateTransform(vec3 trans = {0,0,0}, vec3 rot = {0,0,0}, vec3 scale = {1,1,1}) 
+Transform CreateTransform(vec3 trans = {0, 0, 0}, vec3 rot = {0, 0, 0}, vec3 scale = {1, 1, 1})
 {
     Transform t;
     t.translation = trans;
@@ -160,23 +178,23 @@ Transform CreateTransform(vec3 trans = {0,0,0}, vec3 rot = {0,0,0}, vec3 scale =
     t.scale = scale;
     return t;
 }
-SceneObj* CreateSceneObj(const char* name, Model* model, const char* texturePath0, GLuint program, Transform transform)
+SceneObj *CreateSceneObj(const char *name, Model *model, const char *texturePath0, GLuint program, Transform transform)
 {
-    SceneObj* obj = (SceneObj*)malloc(sizeof(SceneObj));
+    SceneObj *obj = (SceneObj *)malloc(sizeof(SceneObj));
     obj->name = name;
     obj->model = model;
     LoadTGATextureSimple(texturePath0, &(obj->textures[0]));
-    obj->currTexture = 0; //as deafult
+    obj->currTexture = 0; // as deafult
     obj->shaderProgram = program;
     obj->transform = transform;
     return obj;
 }
-SceneObj* CreateSceneObj(const char* name, const char* modelPath, const char* texturePath0, GLuint program, Transform transform)
+SceneObj *CreateSceneObj(const char *name, const char *modelPath, const char *texturePath0, GLuint program, Transform transform)
 {
     return CreateSceneObj(name, LoadModel(modelPath), texturePath0, program, transform);
 }
 
-SceneObj* CreateGroundPlane(float groundSize, float uvTiles, const char* groundTexture, GLuint program)
+SceneObj *CreateGroundPlane(float groundSize, float uvTiles, const char *groundTexture, GLuint program)
 {
     vec3 vertices[] =
         {{-groundSize, 0.0f, -groundSize},
@@ -195,23 +213,34 @@ SceneObj* CreateGroundPlane(float groundSize, float uvTiles, const char* groundT
          {uvTiles, uvTiles}};
     GLuint indices[] = {0, 1, 2, 1, 3, 2};
 
-    Model* m = LoadDataToModel(vertices, normals, texCoords, NULL, indices, 4,6);
+    Model *m = LoadDataToModel(vertices, normals, texCoords, NULL, indices, 4, 6);
     return CreateSceneObj("groundplane", m, groundTexture, program, CreateTransform());
 }
-void DrawSceneObj(SceneObj* sceneObj) 
+void DrawSceneObj(SceneObj *sceneObj)
 {
-    printf("Drawing %s\n", sceneObj->name);
-    
+    // printf("Drawing %s\n", sceneObj->name);
+
     vec3 trans = sceneObj->transform.translation;
     vec3 scale = sceneObj->transform.scale;
     vec3 rot = sceneObj->transform.rotate;
 
     mat4 m_trans = T(trans.x, trans.y, trans.z);
-    mat4 m_rot = Rx(rot.x) * Ry(rot.y) * Rz(rot.z); //order matters, consider quarternions for true representation
+    mat4 m_rot = Rx(rot.x) * Ry(rot.y) * Rz(rot.z); // order matters, consider quarternions for true representation
     mat4 m_scale = S(scale.x, scale.y, scale.z);
     mat4 m_model = m_trans * m_rot * m_scale;
-    glBindTexture(GL_TEXTURE_2D, sceneObj->textures[sceneObj->currTexture]);                                             
+    glBindTexture(GL_TEXTURE_2D, sceneObj->textures[sceneObj->currTexture]);
     glActiveTexture(GL_TEXTURE0 + sceneObj->currTexture);
-    glUniformMatrix4fv(glGetUniformLocation(sceneObj->shaderProgram, "modelMtx"), 1, GL_TRUE, m_model.m); 
+    glUniformMatrix4fv(glGetUniformLocation(sceneObj->shaderProgram, "modelMtx"), 1, GL_TRUE, m_model.m);
     DrawModel(sceneObj->model, sceneObj->shaderProgram, "in_Position", "in_Normal", "in_TexCoord");
 }
+
+/*
+ Question:
+
+How many objects did you put into your scene?
+As many as the FPS can handle
+
+How did you manage the larger number of objects?
+By making a struct to store scene object details, and some helper functions to help draw these objects.
+These SceneObjects are also stored in a array, then in display() the whole array or objects are rendered.
+*/
