@@ -238,9 +238,9 @@ void DrawSceneObj(SceneObj *sceneObj)
  Question:
 
 How many objects did you put into your scene?
-As many as the FPS can handle
+Ans: As many as the FPS can handle
 
 How did you manage the larger number of objects?
-By making a struct to store scene object details, and some helper functions to help draw these objects.
+Ans: By making a struct to store scene object details, and some helper functions to help draw these objects.
 These SceneObjects are also stored in a array, then in display() the whole array or objects are rendered.
 */

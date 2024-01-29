@@ -8,6 +8,8 @@
 #include "LoadTGA.h"
 #include "VectorUtils4.h"
 
+#define RESX 600
+#define RESY 600
 #define MAX_OBJS 100
 #define MAx_TEXTURES 8
 
@@ -36,6 +38,8 @@ typedef struct _SceneObj
 unsigned int targetFPS = 60;
 // total time elapsed
 GLfloat t = 0;
+// curr minus last mouse position
+vec2 deltaMousePos = vec2(0, 0);
 // projection matrix
 #define P_NEAR 1.0
 #define P_FAR 30.0
@@ -46,6 +50,11 @@ GLfloat t = 0;
 mat4 proj;
 // camera variables
 vec3 camPos, camDir, camUp;
+float camMoveSpeed = 2;
+float camRotSpeed = 0.5f;
+float mouseSens = 0.5f;
+#define CAM_DEADZONE 0.1
+#define MAX_CAM_LOOK_UP 0.8
 mat4 view;
 // list of scene objects
 SceneObj *sceneObjs[MAX_OBJS];
@@ -53,7 +62,7 @@ int sceneObjIdx = 0;
 // current program
 GLuint currProgram;
 
-//temp to make things spin
+// temp to make things spin
 float phi = 0;
 
 // helper funcs defined below
@@ -81,7 +90,7 @@ void init(void)
     proj = frustum(P_LEFT, P_RIGHT, P_BOTTOM, P_TOP, P_NEAR, P_FAR);
     // set up camera
     camPos = vec3(0, 1.5f, 1);
-    camDir = normalize(vec3(0,-0.2,-1)); //look forward and a lil down
+    camDir = normalize(vec3(0, -0.2, -1)); // look forward and a lil down
     camUp = vec3(0, 1, 0);
 
     // Load and compile shader(s)
@@ -101,13 +110,13 @@ void init(void)
     Transform t;
     sceneObjIdx = 0;
     sceneObjs[sceneObjIdx++] = CreateGroundPlane(100.f, 20.f, "textures/grass.tga", lit_shader);
-    //spawn houses in one line
+    // spawn houses in one line
     for (int i = 0; i < 64 && sceneObjIdx < MAX_OBJS; ++i)
     {
         int x = i % 4;
         int z = i / 4;
-        t = CreateTransform(vec3(-0.75f + 0.5f * x, 0.5f, -z - 2), vec3(0,-45,0), vec3(0.4f));
-        const char* textures[3] = {"textures/bricks.tga", "textures/conc.tga", "textures/bark2.tga"};
+        t = CreateTransform(vec3(-0.75f + 0.5f * x, 0.5f, -z - 2), vec3(0, -45, 0), vec3(0.4f));
+        const char *textures[3] = {"textures/bricks.tga", "textures/conc.tga", "textures/bark2.tga"};
         int id = i % 3;
         sceneObjs[sceneObjIdx++] = CreateSceneObj("cow", "models/cow.obj", textures[id], lit_shader, t);
     }
@@ -119,12 +128,12 @@ void display(void)
     // Get delta time dt in seconds
     GLfloat dt = t; // set to previous t
     t = (GLfloat)glutGet(GLUT_ELAPSED_TIME);
-    dt = (t - dt) / 1000; // convert to s
+    dt = (t - dt) / 1000.0f; // convert to s
     // printf("DT: %.5f\n", dt); //track frame time
 
     HandleInput(dt);
 
-    //spinnn
+    // spinnn
     phi += dt * 2;
 
     // Calculate view matrix based on camera vectors
@@ -145,10 +154,10 @@ void display(void)
         if (sceneObjs[i] == NULL)
             continue;
 
-        //temp, to make them spin
+        // temp, to make them spin
         if (strcmp(sceneObjs[i]->name, "cow") == 0)
         {
-            sceneObjs[i]->transform.rotate = vec3(0,phi + i * 3,0);
+            sceneObjs[i]->transform.rotate = vec3(0, phi + i * 3, 0);
         }
 
         DrawSceneObj(sceneObjs[i]);
@@ -159,13 +168,26 @@ void display(void)
     glutSwapBuffers();
 }
 
+void mouse_move(int x, int y)
+{
+    // calculate how far mouse moved from middle
+    deltaMousePos.x = x - RESX / 2;
+    deltaMousePos.y = y - RESY / 2;
+    // printf("%d, %d\n", x, y);
+    // printf("delta %f, %f\n", deltaMousePos.x, deltaMousePos.y);
+    // move pointer back to middle
+    glutWarpPointer(RESX / 2, RESY / 2);
+}
+
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     glutInitContextVersion(3, 2);
-    glutInitWindowSize(600, 600);
+    glutInitWindowSize(RESX, RESY);
     glutCreateWindow("Lab " LABNUM " (Terence and Peri)");
     glutDisplayFunc(display);
+    glutPassiveMotionFunc(mouse_move);
+    glutWarpPointer(RESX / 2, RESY / 2);
     init();
     glutMainLoop();
     return 0;
@@ -173,23 +195,86 @@ int main(int argc, char *argv[])
 
 /* Helper functions below */ //////////////////////////////
 
-void HandleInput(GLfloat dt) {
-    //WASD movement
-    if (glutKeyIsDown('w')){
-        printf("w pressed\n");
+void HandleInput(GLfloat dt)
+{
+    // calclulate some stuff i prob need
+    vec3 camFront = camDir;
+    camFront.y = 0;
+    vec3 camRight = normalize(cross(camDir, camUp));
+    camRight.y = 0; // incase
+
+    // WASD movement, E up Q down
+    if (glutKeyIsDown('w'))
+    {
+        // move along the front direction (view igrnoring y)
+        camPos += camFront * camMoveSpeed * dt;
     }
-    if (glutKeyIsDown('a')){
-        printf("a pressed\n");
+    else if (glutKeyIsDown('s'))
+    {
+        // same as w but -1
+        camPos += -camFront * camMoveSpeed * dt;
     }
-    if (glutKeyIsDown('s')){
-        printf("s pressed\n");
+    if (glutKeyIsDown('d'))
+    {
+        // calculate right and move along it
+        camPos += camRight * camMoveSpeed * dt;
     }
-    if (glutKeyIsDown('d')){
-        printf("d pressed\n");
+    else if (glutKeyIsDown('a'))
+    {
+        // same as d but -1
+        camPos += -camRight * camMoveSpeed * dt;
+    }
+    if (glutKeyIsDown('e'))
+    {
+        // move u in y
+        vec3 up = vec3(0, 1, 0); // incase camUp is invalid
+        camPos += up * camMoveSpeed * dt;
+    }
+    else if (glutKeyIsDown('q'))
+    {
+        // same as up but -1
+        vec3 up = vec3(0, 1, 0); // incase camUp is invalid
+        camPos += -up * camMoveSpeed * dt;
     }
 
-    //Exit button
-    if (glutKeyIsDown(0x1B) || glutKeyIsDown('0')) { //VK_ESCAPE or 0
+    // Camera mouse movement
+    if (deltaMousePos.x > CAM_DEADZONE || deltaMousePos.x < -CAM_DEADZONE)
+    {
+        camDir = ArbRotate(camUp, -deltaMousePos.x * dt * camRotSpeed * mouseSens) * camDir;
+        camDir = normalize(camDir);
+    }
+    if ((deltaMousePos.y > CAM_DEADZONE && camDir.y > -MAX_CAM_LOOK_UP) || 
+        (deltaMousePos.y < -CAM_DEADZONE && camDir.y < MAX_CAM_LOOK_UP))
+    {
+        camDir = ArbRotate(camRight, -deltaMousePos.y * dt * camRotSpeed * mouseSens) * camDir;
+        camDir = normalize(camDir);
+    }
+
+    // keyboard controls for camera direction ijkl
+    if (glutKeyIsDown('j'))
+    {
+        camDir = ArbRotate(camUp, dt * camRotSpeed) * camDir;
+        camDir = normalize(camDir);
+    }
+    else if (glutKeyIsDown('l'))
+    {
+        camDir = ArbRotate(camUp, -dt * camRotSpeed) * camDir;
+        camDir = normalize(camDir);
+    }
+    if (glutKeyIsDown('i') && camDir.y < MAX_CAM_LOOK_UP) // limit how far the cam can look up
+    {
+        camDir = ArbRotate(camRight, dt * camRotSpeed) * camDir;
+        camDir = normalize(camDir);
+    }
+    else if (glutKeyIsDown('k') && camDir.y > -MAX_CAM_LOOK_UP) // limit how far the cam can look down
+    {
+        camDir = ArbRotate(camRight, -dt * camRotSpeed) * camDir;
+        camDir = normalize(camDir);
+    }
+
+    // Exit button
+    if (glutKeyIsDown(0x1B) || glutKeyIsDown('0'))
+    { // VK_ESCAPE or 0
         printf("Exit button pressed!\n");
         glutClose();
     }
@@ -260,12 +345,13 @@ void DrawSceneObj(SceneObj *sceneObj)
 }
 
 /*
- Question:
+Questions:
 
-How many objects did you put into your scene?
-As many as the FPS can handle
+What kind of control did you implement?
+Ans: Movement via moving along view, right and up vectors.
+Mouse viewing by altering a camera direction variable camDir, which is used to calculate the point to lookAt.
+This camDir is altered by multiplying with the matrix rotating about the camera axes.
 
-How did you manage the larger number of objects?
-By making a struct to store scene object details, and some helper functions to help draw these objects.
-These SceneObjects are also stored in a array, then in display() the whole array or objects are rendered.
+Can you make this kind of control in some other way than manipulating a "look-at" matrix?
+Ans: by rotating each object with camera as center and passing that rotation as a model matrix to shader
 */
