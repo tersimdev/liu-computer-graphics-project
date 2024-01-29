@@ -165,7 +165,11 @@ int main(int argc, char *argv[])
 Questions:
 
 What kind of procedural texture did you make?
-Ans: displayed the UV coordinates as colors, and made it breathe using a time uniform,
+Ans: 
+
+Displayed the UV coordinates as colors, and made it breathe using a time uniform,
 creating a bunny that lights up periodically in the UV colors.
+Additionally added procedual lines from lecture sldies, and made it scroll with time.
+Final result is a mix of both.
 
 */
