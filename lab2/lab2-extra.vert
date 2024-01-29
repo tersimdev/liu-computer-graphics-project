@@ -19,7 +19,7 @@ void main(void)
 	vec3 normal = mat3(viewMtx) * mat3(modelMtx) * in_Normal; //strip translation
 	
 	//maps time to o to 1 cycles
-	float cycle = sin(elapsedTime  * 2) * 0.5f + 0.5f;
+	float cycle = sin(elapsedTime  * 2);
 	pos = pos + vec4(cycle,0,0,0) * cos(in_TexCoord.x + elapsedTime);
 	pos = pos + vec4(0,cycle,0,0) * sin(in_TexCoord.y);
 	pos = pos + vec4(0,0,cycle,0) * -cos(in_TexCoord.y * in_TexCoord.x);
