@@ -131,7 +131,10 @@ void display(void)
     dt = (t - dt) / 1000.0f; // convert to s
     // printf("DT: %.5f\n", dt); //track frame time
 
+    // Handle all mouse and keyboard input 
     HandleInput(dt);
+    // Move pointer back to middle
+    glutWarpPointer(RESX / 2, RESY / 2);
 
     // spinnn
     phi += dt * 2;
@@ -175,8 +178,6 @@ void mouse_move(int x, int y)
     deltaMousePos.y = y - RESY / 2;
     // printf("%d, %d\n", x, y);
     // printf("delta %f, %f\n", deltaMousePos.x, deltaMousePos.y);
-    // move pointer back to middle
-    glutWarpPointer(RESX / 2, RESY / 2);
 }
 
 int main(int argc, char *argv[])
