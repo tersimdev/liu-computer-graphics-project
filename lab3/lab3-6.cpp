@@ -129,7 +129,7 @@ void init(void)
     {
         int x = i % 4;
         int z = i / 4;
-        t = CreateTransform(vec3(-0.75f + 0.5f * x, 0.5f, -z - 2), vec3(0, -45, 0), vec3(0.4f));
+        t = CreateTransform(vec3(-0.75f + 0.5f * x, 0.25f, -z - 2), vec3(0, -45, 0), vec3(0.4f));
         const char *textures[3] = {"textures/bricks.tga", "textures/conc.tga", "textures/bark2.tga"};
         int id = i % 3;
         sceneObjs[sceneObjIdx++] = CreateSceneObj("cow", "models/cow.obj", textures[id], lit_shader, t);
@@ -434,8 +434,11 @@ void DrawSkyBox(SceneObj *sceneObj)
 Questions (non-mandatory part):
 
 Why do we get a white area in the distance for the specular light but not for the diffuse?
+Ans: Not sure what the question means.
 
 How do you generate a vector from the surface to the eye?
+Ans: Using a varying (in/out) attribute, calculated from vertex position in world space
 
 Which vectors need renormalization in the fragment shader?
+Ans: None? Light direction? View direction?
 */
