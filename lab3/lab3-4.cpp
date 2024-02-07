@@ -76,7 +76,7 @@ SceneObj *CreateSceneObj(const char *name, Model *model, const char *texturePath
 SceneObj *CreateSceneObj(const char *name, const char *modelPath, const char *texturePath0, GLuint program, Transform transform);
 void RemoveSceneObj(SceneObj *obj); // todo, free memory
 SceneObj *CreateGroundPlane(float groundSize, float uvTiles, const char *groundTexture, GLuint program);
-SceneObj *CreateSkyBox(float size, GLuint program);
+SceneObj *CreateSkyBox(float size, float height, GLuint program);
 void DrawSceneObj(SceneObj *sceneObj);
 void DrawSkyBox(SceneObj* sceneObj);
 
@@ -88,7 +88,7 @@ void init(void)
     glClearColor(0.2, 0.2, 0.5, 0);
     glEnable(GL_DEPTH_TEST);
     // glDisable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE); //for skybox
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     printError("GL inits");
 
@@ -110,7 +110,7 @@ void init(void)
     Transform t;
     sceneObjIdx = 0;
     sceneObjs[sceneObjIdx++] = CreateGroundPlane(100.f, 100.f, "textures/grass.tga", lit_shader);
-    skybox = CreateSkyBox(100.f, unlit_shader);
+    skybox = CreateSkyBox(1.0f, -0.2f, unlit_shader);
     // spawn houses in one line
     for (int i = 0; i < 64 && sceneObjIdx < MAX_OBJS; ++i)
     {
@@ -354,9 +354,10 @@ SceneObj *CreateGroundPlane(float groundSize, float uvTiles, const char *groundT
     Model *m = LoadDataToModel(vertices, normals, texCoords, NULL, indices, 4, 6);
     return CreateSceneObj("groundplane", m, groundTexture, program, CreateTransform());
 }
-SceneObj *CreateSkyBox(float size, GLuint program)
+SceneObj *CreateSkyBox(float size, float height, GLuint program)
 {
     SceneObj* ret = CreateSceneObj("skybox", "skybox/labskybox.obj", "skybox/labskybox512.tga", program, CreateTransform());
+    ret->transform.translation.y = height;
     ret->transform.scale = vec3(size);
     return ret;
 }
@@ -383,28 +384,35 @@ void DrawSceneObj(SceneObj *sceneObj)
 void DrawSkyBox(SceneObj* sceneObj) 
 {
     glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
 
-    vec3 scale = sceneObj->transform.scale;
-    mat4 m_scale = S(scale.x, scale.y, scale.z);
-    mat4 m_model = m_scale;
+    const Transform t = sceneObj->transform;
+    mat4 m_trans = T(0, t.translation.y, 0);
+    mat4 m_scale = S(t.scale.x, t.scale.y, t.scale.z);
+    mat4 m_model = m_trans * m_scale;
+    mat4 custom_view = mat3tomat4(mat4tomat3(view));
     glUseProgram(sceneObj->shaderProgram);
     glBindTexture(GL_TEXTURE_2D, sceneObj->textures[sceneObj->currTexture]);
     glActiveTexture(GL_TEXTURE0 + sceneObj->currTexture);
     glUniformMatrix4fv(glGetUniformLocation(sceneObj->shaderProgram, "modelMtx"), 1, GL_TRUE, m_model.m);
+    glUniformMatrix4fv(glGetUniformLocation(sceneObj->shaderProgram, "viewMtx"), 1, GL_TRUE, custom_view.m);
     DrawModel(sceneObj->model, sceneObj->shaderProgram, "in_Position", "in_Normal", "in_TexCoord");
 
-    glEnable(GL_CULL_FACE);
+    glUniformMatrix4fv(glGetUniformLocation(sceneObj->shaderProgram, "viewMtx"), 1, GL_TRUE, view.m); //reset
     glEnable(GL_DEPTH_TEST);
 }
 
 /*
 Questions:
 How did you handle the camera matrix for the skybox?
+Ans: Created a new view matrix without translation, and set to shader uniform
 
 How did you represent the objects? Is this a good way to manage a scene or would you do it differently for a "real" application?
+Ans: As a list of SceneObjects. Suffices for current implementation, but could be extended via OOP or composition to 
+better represent different types of objects. E.G. a animal might have "health" variable while buildings might not. 
 
 What special considerations are needed when rendering a skybox?
+Ans: It should not be lit, should stay fixed distance from camera, should be within view frustrum.
 
 What is the problem with the “labskybox" object used in the lab? (The problem doesn't have to be corrected.)
+Ans: There was a gap between the ground and the skybox, and it gets culled if culling is turned on.
 */
