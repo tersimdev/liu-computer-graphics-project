@@ -33,8 +33,8 @@ void main(void)
 
 	//final output
 	outColor = vec4(totalLight, 1);
-	outColor = vec4(vec3(diffuseAmt), 1);
-	outColor = vec4(vec3(abs(normal)), 1);
+	//outColor = vec4(vec3(diffuseAmt), 1);
+	//outColor = vec4(vec3(abs(normal)), 1);
 
 	//outColor = texture(tex, texCoord); //uncomment for lab4-1, 4-2
 }

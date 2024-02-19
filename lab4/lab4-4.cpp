@@ -373,13 +373,8 @@ void HandleInput(GLfloat dt)
 
 /**
 Questions:
-Which method did you use to find the normal vector?
-Ans: Had refrence the method from here: https://stackoverflow.com/questions/6656358/calculating-normals-in-a-triangle-mesh/21660173#21660173
-In short, we used a high precision method that calculates the normal vectors for all (6) neighbouring triangles using the cross product.
-We then took a weighted sum of the neighbouring normals (which are not normalized, and contain the area of the triangle * 2).
-Finally, we normalize the normal to "average" out the result.
-Lighting is applied top-down, so normals pointinng up would be lit brighter.
-Normals are visualised with absolute values, meaning green = pointing y aixs, blue pointing z axis etc.
-It is shown that the flatter regions have greener normals, and steeper regions have bluer/redder normals.
+How did you figure out what surface to use? 
+
+How did you calculate the height from the surface?
 
 */
