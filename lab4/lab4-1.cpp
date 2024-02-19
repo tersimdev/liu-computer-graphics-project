@@ -155,3 +155,16 @@ int main(int argc, char **argv)
 	glutMainLoop();
 	exit(0);
 }
+
+/**
+Questions:
+
+What kind of data does the heightmap image data hold? What range is the heightmap data?
+- height of the terrain at coordinates (x,y), ranges from 0.0-1.0 (24bpp) 
+
+The terrain is 4x4. How many polygons does it draw?
+- 	"""triangleCount = (tex->width-1) * (tex->height-1) * 2"""
+- draws 3*3*2=18 triangles
+- each pixel represents a vertex
+
+*/
