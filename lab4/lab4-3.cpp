@@ -11,11 +11,21 @@
 
 mat4 projectionMatrix;
 
+GLfloat getHeight(TextureData *tex, int x, int z)
+{
+	// no checks for bounds done
+	return (GLfloat)tex->imageData[(x + z * tex->width) * (tex->bpp / 8)];
+}
+
 Model *GenerateTerrain(TextureData *tex)
 {
 	int vertexCount = tex->width * tex->height;
 	int triangleCount = (tex->width - 1) * (tex->height - 1) * 2;
 	unsigned int x, z;
+	vec3 currVertex;
+	vec3 scale = {1.0, 50.0, 1.0};
+	vec3 neighbours[6];
+	vec3 nbrNormals[6];
 
 	vec3 *vertexArray = (vec3 *)malloc(sizeof(GLfloat) * 3 * vertexCount);
 	vec3 *normalArray = (vec3 *)malloc(sizeof(GLfloat) * 3 * vertexCount);
@@ -26,14 +36,59 @@ Model *GenerateTerrain(TextureData *tex)
 	for (x = 0; x < tex->width; x++)
 		for (z = 0; z < tex->height; z++)
 		{
+			// get current vertex pos
+			currVertex = {x / scale.x, getHeight(tex, x, z) / scale.y, z / scale.z};
+			// get left right up down up-right down-left neighbours
+			neighbours[0] = {(x - 1) / scale.x, -1, (z) / scale.z};		// left
+			neighbours[1] = {(x + 1) / scale.x, -1, (z) / scale.z};		// right
+			neighbours[2] = {(x) / scale.x, -1, (z - 1) / scale.z};		// up
+			neighbours[3] = {(x) / scale.x, -1, (z + 1) / scale.z};		// down
+			neighbours[4] = {(x + 1) / scale.x, -1, (z - 1) / scale.z}; // up-right
+			neighbours[5] = {(x - 1) / scale.x, -1, (z + 1) / scale.z}; // down-left
+			for (int i = 0; i < 6; ++i)
+			{
+				if (neighbours[i].x >= 0 && neighbours[i].x < tex->width &&
+					neighbours[i].z >= 0 && neighbours[i].z < tex->height)
+					neighbours[i].y = getHeight(tex, neighbours[i].x, neighbours[i].z) / scale.y;
+				else
+					neighbours[i].y = -999;
+				// else default to invalid height
+				nbrNormals[i] = {0, 0, 0}; // init normals
+			}
+			// get neighbouring triangle normals
+			if (neighbours[2].y >= 0) // has up
+			{
+				if (neighbours[0].y >= 0)															   // has left
+					nbrNormals[0] = cross((neighbours[2] - currVertex), (neighbours[0] - currVertex)); // up x left
+				if (neighbours[1].y >= 0)															   // has right
+				{
+					nbrNormals[1] = cross((neighbours[4] - currVertex), (neighbours[2] - currVertex)); // up-right x up
+					nbrNormals[2] = cross((neighbours[1] - currVertex), (neighbours[4] - currVertex)); // right x up-right
+				}
+			}
+			if (neighbours[3].y >= 0) // has down
+			{
+				if (neighbours[1].y >= 0)															   // has right
+					nbrNormals[3] = cross((neighbours[3] - currVertex), (neighbours[1] - currVertex)); // down x right
+				if (neighbours[0].y >= 0)															   // has left
+				{
+					nbrNormals[4] = cross((neighbours[5] - currVertex), (neighbours[3] - currVertex)); // down-left x down
+					nbrNormals[5] = cross((neighbours[0] - currVertex), (neighbours[5] - currVertex)); // left x down-left
+				}
+			}
+
 			// Vertex array. You need to scale this properly
-			vertexArray[(x + z * tex->width)].x = x / 1.0;
-			vertexArray[(x + z * tex->width)].y = tex->imageData[(x + z * tex->width) * (tex->bpp / 8)] / 100.0;
-			vertexArray[(x + z * tex->width)].z = z / 1.0;
+			vertexArray[(x + z * tex->width)] = currVertex;
 			// Normal vectors. You need to calculate these.
-			normalArray[(x + z * tex->width)].x = 0.0;
-			normalArray[(x + z * tex->width)].y = 1.0;
-			normalArray[(x + z * tex->width)].z = 0.0;
+			vec3 normal = {0, 0.1, 0};
+			// sum up all triangle normals and do weighted sum
+			for (int i = 0; i < 6; ++i)
+			{
+				normal += nbrNormals[i];
+			}
+			normal = normalize(normal);
+			printf("%f %f %f\n\n", normal.x, normal.y , normal.z);
+			normalArray[(x + z * tex->width)] = normal;
 			// Texture coordinates. You may want to scale them.
 			texCoordArray[(x + z * tex->width)].x = x; // (float)x / tex->width;
 			texCoordArray[(x + z * tex->width)].y = z; // (float)z / tex->height;
@@ -88,6 +143,12 @@ float mouseSens = 0.5f;
 #define RESY 600
 //  target update time in frames per second
 unsigned int targetFPS = 60;
+// light variables
+vec3 lightDir = vec3(0, -1, 0);
+vec4 lightCol = vec4(0.8, 0.8, 0.7, 1);
+
+// whether to draw wireframe
+bool wireframe = false;
 
 // helper funcs
 void HandleInput(GLfloat dt);
@@ -115,13 +176,17 @@ void init(void)
 	glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
 	LoadTGATextureSimple("maskros512.tga", &tex1);
 
+	// lights
+	glUniform3fv(glGetUniformLocation(program, "lightDir"), 1, &(lightDir.x));
+	glUniform4fv(glGetUniformLocation(program, "lightCol"), 1, &(lightCol.r));
+
 	// Load terrain data
 
 	LoadTGATextureData("44-terrain.tga", &ttex);
 	tm = GenerateTerrain(&ttex);
 	printError("init terrain");
 
-	printf("Note: The call to DrawModel will report warnings about inNormal not existing. This is because inNormal is not used in the shader yet so it is optimized away.\n");
+	// printf("Note: The call to DrawModel will report warnings about inNormal not existing. This is because inNormal is not used in the shader yet so it is optimized away.\n");
 }
 
 void display(void)
@@ -136,22 +201,31 @@ void display(void)
 	// Move pointer back to middle
 	glutWarpPointer(RESX / 2, RESY / 2);
 
-	mat4 total, modelView, camMatrix;
+	mat4 modelView, camMatrix;
+	mat3 normal;
 
 	printError("pre display");
 
 	glUseProgram(program);
-
 	// Build matrix
 
 	camMatrix = lookAt(camPos, camPos + camDir, camUp);
 	modelView = IdentityMatrix();
-	total = camMatrix * modelView;
+	normal = transpose(inverse(mat4tomat3(modelView)));
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, modelView.m);
 	glUniformMatrix4fv(glGetUniformLocation(program, "viewMatrix"), 1, GL_TRUE, camMatrix.m);
-	
+	glUniformMatrix3fv(glGetUniformLocation(program, "normalMatrix"), 1, GL_TRUE, normal.m);
+
 	glBindTexture(GL_TEXTURE_2D, tex1); // Bind Our Texture tex1
-	DrawModel(tm, program, "inPosition", "inNormal", "inTexCoord");
+	if (wireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		DrawModel(tm, program, "inPosition", "inNormal", "inTexCoord");
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		// DrawWireframeModel(tm, program, "inPosition", "inNormal", "inTexCoord"); //kinda buggy
+	}
+	else
+		DrawModel(tm, program, "inPosition", "inNormal", "inTexCoord");
 
 	printError("display 2");
 
@@ -258,6 +332,15 @@ void HandleInput(GLfloat dt)
 	{
 		camDir = ArbRotate(camRight, -dt * camRotSpeed) * camDir;
 		camDir = normalize(camDir);
+	}
+
+	if (glutKeyIsDown('1'))
+	{
+		wireframe = false;
+	}
+	if (glutKeyIsDown('2'))
+	{
+		wireframe = true;
 	}
 
 	// Exit button
