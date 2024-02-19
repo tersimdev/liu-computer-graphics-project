@@ -13,7 +13,7 @@ mat4 projectionMatrix;
 //terrain variables
 vec3 terrainScale = {10, 100.0, 10};
 
-GLfloat getHeight(TextureData *tex, int x, int z)
+GLfloat getHeight(TextureData *tex, unsigned int x, unsigned int z)
 {
 	// check for bounds, return -1 if invalid
 	if (x < 0 || z < 0 || x >= tex->width || z >= tex->height)
@@ -56,17 +56,17 @@ Model *GenerateTerrain(TextureData *tex, vec3 scale, float tileFactor)
 			bool hasDown = (z < tex->height - 1);
 			// get left right up down up-right down-left neighbours
 			if (hasLeft)
-				neighbours[0] = {x - 1, -1, z}; // left
+				neighbours[0] = {(float)x - 1, -1, (float)z}; // left
 			if (hasRight)
-				neighbours[1] = {x + 1, -1, z}; // right
+				neighbours[1] = {(float)x + 1, -1, (float)z}; // right
 			if (hasUp)
-				neighbours[2] = {x, -1, z - 1}; // up
+				neighbours[2] = {(float)x, -1, (float)z - 1}; // up
 			if (hasDown)
-				neighbours[3] = {x, -1, z + 1}; // down
+				neighbours[3] = {(float)x, -1, (float)z + 1}; // down
 			if (hasUp && hasRight)
-				neighbours[4] = {x + 1, -1, z - 1}; // up-right
+				neighbours[4] = {(float)x + 1, -1, (float)z - 1}; // up-right
 			if (hasDown && hasLeft)
-				neighbours[5] = {x - 1, -1, z + 1}; // down-left
+				neighbours[5] = {(float)x - 1, -1, (float)z + 1}; // down-left
 			for (int i = 0; i < 6; ++i)
 			{
 				neighbours[i].y = getHeight(tex, neighbours[i].x, neighbours[i].z) / scale.y;
