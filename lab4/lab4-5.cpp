@@ -560,4 +560,8 @@ void RotateCamera(vec3 camRight, float dt)
 /**
 Questions:
 What kind of multitexturing function did you implement?
+Ans: Blended between two different textures based on the height of the terrain.
+To give the illusion of grassy mountain transitioning to stone to water.
+(water texture is just a color)
+
 */
