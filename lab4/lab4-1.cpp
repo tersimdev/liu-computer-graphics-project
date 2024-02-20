@@ -72,7 +72,7 @@ Model* GenerateTerrain(TextureData *tex)
 Model *m, *m2, *tm;
 // Reference to shader program
 GLuint program;
-GLuint tex1, tex2;
+GLuint tex0, tex1;
 TextureData ttex; // terrain
 
 void init(void)
@@ -92,7 +92,7 @@ void init(void)
 	
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
-	LoadTGATextureSimple("maskros512.tga", &tex1);
+	LoadTGATextureSimple("maskros512.tga", &tex0);
 	
 // Load terrain data
 	
@@ -126,7 +126,7 @@ void display(void)
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, modelView.m);
 	glUniformMatrix4fv(glGetUniformLocation(program, "viewMatrix"), 1, GL_TRUE, camMatrix.m);
 	
-	glBindTexture(GL_TEXTURE_2D, tex1);		// Bind Our Texture tex1
+	glBindTexture(GL_TEXTURE_2D, tex0);		// Bind Our Texture tex1
 	DrawModel(tm, program, "inPosition", "inNormal", "inTexCoord");
 
 	printError("display 2");

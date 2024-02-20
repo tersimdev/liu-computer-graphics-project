@@ -241,7 +241,7 @@ GLfloat getObjectHeightFromTerrain(TextureData *tex, float worldX, float worldZ)
 Model *m, *m2, *tm;
 // Reference to shader program
 GLuint program;
-GLuint tex1, tex2;
+GLuint tex0, texq;
 TextureData ttex; // terrain
 // total time elapsed
 GLfloat t = 0;
@@ -267,7 +267,7 @@ vec4 lightCol = vec4(0.8, 0.8, 0.7, 1);
 bool wireframe = false;
 
 // variable to move octagon, ball
-vec3 octagonPos = vec3(0, 0, 0);
+vec3 spherePos = vec3(0, 0, 0);
 vec3 ballOffset; //init in InitCamera()
 
 // helper funcs
@@ -295,7 +295,7 @@ void init(void)
 
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 	glUniform1i(glGetUniformLocation(program, "tex"), 0); // Texture unit 0
-	LoadTGATextureSimple("conc.tga", &tex1);
+	LoadTGATextureSimple("conc.tga", &tex0);
 
 	// lights
 	glUniform3fv(glGetUniformLocation(program, "lightDir"), 1, &(lightDir.x));
@@ -314,7 +314,7 @@ void init(void)
 	// load ball on camera
 	m = LoadModel("groundsphere.obj");
 	m2 = LoadModel("octagon.obj");
-	LoadTGATextureSimple("grass.tga", &tex2);
+	LoadTGATextureSimple("grass.tga", &texq);
 
 	printError("init terrain");
 
@@ -350,7 +350,7 @@ void display(void)
 	glUniformMatrix4fv(glGetUniformLocation(program, "viewMatrix"), 1, GL_TRUE, camMatrix.m);
 	glUniformMatrix3fv(glGetUniformLocation(program, "normalMatrix"), 1, GL_TRUE, normal.m);
 
-	glBindTexture(GL_TEXTURE_2D, tex1); // Bind Our Texture tex1
+	glBindTexture(GL_TEXTURE_2D, tex0); // Bind Our Texture tex1
 	if (wireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -365,14 +365,14 @@ void display(void)
 	vec3 ballPos = ballOffset + camPos;
 	float height = getObjectHeightFromTerrain(&ttex, ballPos.x, ballPos.z);
 	LOG_PRINTF(">>> BALL terrain height at (%f,%f,%f) is %f\n", ballPos.x, camPos.y, ballPos.z, height);
-	glBindTexture(GL_TEXTURE_2D, tex2); // Bind Our Texture tex1
+	glBindTexture(GL_TEXTURE_2D, texq); // Bind Our Texture tex1
 	modelMatrix = T(ballPos.x, height, ballPos.z);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, modelMatrix.m);
 	DrawModel(m, program, "inPosition", "inNormal", "inTexCoord");
 	// draw octagon
-	height = getObjectHeightFromTerrain(&ttex, octagonPos.x, octagonPos.z);
-	LOG_PRINTF(">>> OCTAGON terrain height at (%f,-,%f) is %f\n", octagonPos.x, octagonPos.z, height);
-	modelMatrix = T(octagonPos.x, height, octagonPos.z);
+	height = getObjectHeightFromTerrain(&ttex, spherePos.x, spherePos.z);
+	LOG_PRINTF(">>> OCTAGON terrain height at (%f,-,%f) is %f\n", spherePos.x, spherePos.z, height);
+	modelMatrix = T(spherePos.x, height, spherePos.z);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, modelMatrix.m);
 	DrawModel(m2, program, "inPosition", "inNormal", "inTexCoord");
 
@@ -435,15 +435,15 @@ void HandleInput(GLfloat dt)
 	{
 		// move octagon ball in x and z axis
 		if (glutKeyIsDown('j'))
-			octagonPos.x -= camMoveSpeed * dt;
+			spherePos.x -= camMoveSpeed * dt;
 		else if (glutKeyIsDown('l'))
-			octagonPos.x += camMoveSpeed * dt;
+			spherePos.x += camMoveSpeed * dt;
 
 		if (glutKeyIsDown('i')) 
-			octagonPos.z -= camMoveSpeed * dt;
+			spherePos.z -= camMoveSpeed * dt;
 
 		else if (glutKeyIsDown('k'))
-			octagonPos.z += camMoveSpeed * dt;
+			spherePos.z += camMoveSpeed * dt;
 	}
 
 	//special toggles below
