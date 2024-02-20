@@ -570,7 +570,25 @@ void RotateCamera(vec3 camRight, float dt)
 /**
 Questions:
 How did you figure out what surface to use?
+Ans: 
+1) find quad
+Given a world space x and z coordinate, multiplying by the terrain scale / stepsize converts it to model space
+i.e. x=1.5, z=1 corresponds to midpoint of edge x=1,z=1 and x=2,z=1
+Then, by flooring the result, we get the topleft(smallest x, smallest z) most vertex position.
+By adding 1 to x and z, we get the four vertices for this quad surface. 
 
 How did you calculate the height from the surface?
+Ans:
+2) find triangle
+Once we have the surface, we can use the diagonal edge botLeft-topRight to cross product with the vector from topRight to the point P   
+The sign of the y component of the resulting cross product lets us know on which side the point P resides on the edge.
+Thus we have identified the triangle to use.
 
+3) calculate height
+Lastly given the three vertices of the triangle, we get the corresponding heights from the texture,
+and we interpolate based on the area formed by point P and the other two points.
+e.g. for vertex A, with height hA, we interpolate with cA, i.e. hA*cA + hB*cB + hC*cC
+cA is the area of the triangle formed with point P and vertex B and C,
+divided by the total area of the triangle.
+The areas can be found with 1/2 * magnitude of cross product of two vectors of the triangle.
 */
