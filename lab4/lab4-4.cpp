@@ -10,7 +10,7 @@
 #include "LoadTGA.h"
 
 // uncomment to use bigger terrain file
-// #define FFT
+//#define FFT
 
 // helper to print every x frame
 int currFrame = 0;
@@ -248,7 +248,7 @@ GLfloat t = 0;
 // curr minus last mouse position
 vec2 deltaMousePos = vec2(0, 0);
 // camera variables
-int camMode = 1; // 0 for normal, 1 for ball
+int camMode = 0; // 0 for normal, 1 for ball
 vec3 camPos, camDir, camUp;
 float camMoveSpeed = 2;
 float camRotSpeed = 0.5f;
@@ -266,8 +266,9 @@ vec4 lightCol = vec4(0.8, 0.8, 0.7, 1);
 // whether to draw wireframe
 bool wireframe = false;
 
-// variable to move octagon
+// variable to move octagon, ball
 vec3 octagonPos = vec3(0, 0, 0);
+vec3 ballOffset; //init in InitCamera()
 
 // helper funcs
 void HandleInput(GLfloat dt);
@@ -360,12 +361,12 @@ void display(void)
 	else
 		DrawModel(tm, program, "inPosition", "inNormal", "inTexCoord");
 
-	float height = getObjectHeightFromTerrain(&ttex, camPos.x, camPos.z);
-	LOG_PRINTF(">>> BALL terrain height at (%f,%f,%f) is %f\n", camPos.x, camPos.y, camPos.z, height);
-
 	// draw ball
+	vec3 ballPos = ballOffset + camPos;
+	float height = getObjectHeightFromTerrain(&ttex, ballPos.x, ballPos.z);
+	LOG_PRINTF(">>> BALL terrain height at (%f,%f,%f) is %f\n", ballPos.x, camPos.y, ballPos.z, height);
 	glBindTexture(GL_TEXTURE_2D, tex2); // Bind Our Texture tex1
-	modelMatrix = T(camPos.x, height, camPos.z);
+	modelMatrix = T(ballPos.x, height, ballPos.z);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, modelMatrix.m);
 	DrawModel(m, program, "inPosition", "inNormal", "inTexCoord");
 	// draw octagon
@@ -478,13 +479,15 @@ void InitCamera()
 {
 	if (camMode == 0)
 	{
-		camPos = vec3(0, 5, 4);
-		camDir = normalize(vec3(2, 0, 2) - camPos); // look forward and a lil down
+		ballOffset.z = -10;
+		camPos = vec3(0, 5, 10);
+		camDir = normalize(vec3(0, 0, 0) - camPos); // look at origin
 		camUp = vec3(0, 1, 0);
 	}
-	else if (camMode == 1)
+	else if (camMode == 1) //top down view
 	{
-		camPos = vec3(0, 10, 2);
+		ballOffset.z = 0;
+		camPos = vec3(0, 10, 10);
 		camDir = normalize(vec3(0, -1, 0)); // look forward and a lil down
 		camUp = vec3(0, 0, -1);
 	}
