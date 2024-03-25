@@ -289,6 +289,7 @@
 	vec3 cross(vec3 a, vec3 b);
 	GLfloat dot(vec3 a, vec3 b);
 	vec3 ScalarMult(vec3 a, GLfloat s);
+	vec3 ElementMult(vec3 a, vec3 b); // 25/3/2024, Terence, ADDED: element wise multiply operation
 	GLfloat Norm(vec3 a);
 	vec3 normalize(vec3 a);
 	vec3 CalcNormalVector(vec3 a, vec3 b, vec3 c);
@@ -706,6 +707,18 @@ char transposed = 0;
 		
 		return result;
 	}
+
+	vec3 ElementMult(vec3 a, vec3 b) // 25/3/2024, Terence, ADDED: element wise multiply operation
+	{
+		vec3 result;
+		
+		result.x = a.x * b.x;
+		result.y = a.y * b.y;
+		result.z = a.z * b.z;
+		
+		return result;
+	}
+
 
 	GLfloat Norm(vec3 a)
 	{
@@ -1140,7 +1153,7 @@ mat4 ArbRotate(vec3 axis, GLfloat fi)
 		R.m[12] = 0.0; R.m[13] = 0.0; R.m[14] = 0.0;  R.m[15] = 1.0;
 	}
 
-	Rt = Transpose(R); // Transpose = Invert -> felet ej i Transpose, och det Šr en ortonormal matris
+	Rt = Transpose(R); // Transpose = Invert -> felet ej i Transpose, och det ï¿½r en ortonormal matris
 
 	Raxel = Rx(fi); // Rotate around x axis
 
