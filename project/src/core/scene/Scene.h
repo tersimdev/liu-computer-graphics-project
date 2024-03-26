@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "../system/DrawableHelper.h"
+#include "../system/ThingMailbox.h"
 
 /*
     Base class defining a scene construct. Inherit to create new scenes.
@@ -27,4 +28,6 @@ protected:
     std::vector<Light*> lights; //0th is dirLight
     std::vector<Drawable*> drawables;
     std::vector<Thing*> things;
+
+    ThingMailbox mailbox;
 };

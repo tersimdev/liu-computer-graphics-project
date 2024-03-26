@@ -10,7 +10,7 @@ void Player::init()
 
 void Player::update(float dt)
 {
-    drawable->rotate({0, 2*dt, 0});
+    drawable->rotate({0, 2 * dt, 0});
     if (camera)
     {
         camera->example_movement(dt);
@@ -25,7 +25,22 @@ void Player::cleanup()
 {
 }
 
-Drawable* Player::get_drawable()
+void Player::on_notify(MailTopic topic)
+{
+    // demo observer pattern
+    switch (topic)
+    {
+    case PLAYER_SAID_HELLO:
+    {
+        debug_log("Player: Hello!\n");
+    }
+    break;
+    default:
+        break;
+    }
+}
+
+Drawable *Player::get_drawable()
 {
     return this->drawable;
 }

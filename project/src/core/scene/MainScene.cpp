@@ -7,7 +7,9 @@ void MainScene::init(Camera* camera)
     player->init();
     drawables.push_back(player->get_drawable());
     things.push_back(player);
-
+    //example mailbox usage
+    mailbox.sub(PLAYER_SAID_HELLO, player); //player listen to topic
+    mailbox.notify(PLAYER_SAID_HELLO); //notify player of event
     // todo Create maze
 
     // todo Create enemy spawner

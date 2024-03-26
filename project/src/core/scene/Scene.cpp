@@ -29,6 +29,8 @@ void Scene::cleanup()
     lights.clear();
     drawables.clear();
     things.clear();
+
+    mailbox.cleanup();
 }
 
 std::vector<Light *>& Scene::get_lights()
