@@ -290,6 +290,7 @@
 	GLfloat dot(vec3 a, vec3 b);
 	vec3 ScalarMult(vec3 a, GLfloat s);
 	vec3 ElementMult(vec3 a, vec3 b); // 25/3/2024, Terence, ADDED: element wise multiply operation
+	GLfloat NormSq(vec3 a); // 25/3/2024, Terence, ADDED: norm squared
 	GLfloat Norm(vec3 a);
 	vec3 normalize(vec3 a);
 	vec3 CalcNormalVector(vec3 a, vec3 b, vec3 c);
@@ -719,6 +720,13 @@ char transposed = 0;
 		return result;
 	}
 
+	GLfloat NormSq(vec3 a) // 25/3/2024, Terence, ADDED: norm squared
+	{
+		GLfloat result;
+
+		result = (GLfloat)(a.x * a.x + a.y * a.y + a.z * a.z);
+		return result;
+	}
 
 	GLfloat Norm(vec3 a)
 	{
