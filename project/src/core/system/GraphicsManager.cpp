@@ -153,7 +153,13 @@ void GraphicsManager::render(Drawable *d)
         debug_error("Material is null (Drawable: %p)\n", d);
         return;
     }
-    GLuint program = m->shaderProg;
+    GLuint program = get_shader(m->shaderProg);
+    if (program < 0) 
+    {
+        debug_error("Shader program is invalid\n");
+        return;
+    }
+    
     glUseProgram(program);
     //set model matrix
     glUniformMatrix4fv(glGetUniformLocation(program, "modelMtx"), 1, GL_TRUE, m_model.m);

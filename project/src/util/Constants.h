@@ -17,6 +17,8 @@
 
 #define CLEAR_COL 0.2, 0.2, 0.5, 0
 #define SHADER_PATH "./shaders/"
+#define TEXTURES_PATH "./asset/texture/"
+#define MODELS_PATH "./asset/model/"
 #define MAX_TEXTURES 8
 #define MAX_POINT_LIGHTS 16
 #define INITIAL_FOV 45.0f

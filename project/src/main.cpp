@@ -9,6 +9,7 @@
 #include "core/system/ThingManager.h"
 #include "core/system/GraphicsManager.h"
 #include "core/system/SceneManager.h"
+#include "core/system/TextureManager.h"
 
 #include "LoadTGA.h"
 #include "LittleOBJLoader.h"
@@ -20,6 +21,7 @@ Camera camera;
 // ThingManager thingManager; //todo
 GraphicsManager graphicsMgr;
 SceneManager sceneMgr;
+TextureManager textureMgr;
 
 // runs once at the start
 void init(void)
@@ -30,6 +32,7 @@ void init(void)
 	camera.init(&input);
 	graphicsMgr.init(&camera);
 	sceneMgr.init();
+	textureMgr.init();
 	debug_log("[Intialized Systems]\n");
 
 	// temp
@@ -37,7 +40,7 @@ void init(void)
 	Material *m = new Material;
 	LoadTGATextureSimple("asset/texture/conc.tga", &(m->textures[0]));
 	m->textureBitmask = 1;
-	m->shaderProg = graphicsMgr.get_shader(ShaderProg::LIT);
+	m->shaderProg = ShaderProg::LIT;
 	// m->textureBitmask = 0;
 	m->albedo = {0.7, 0.2, 0.2}; // red sphere
 	// m->specular = { 0, 0, 0 ,0};
@@ -74,6 +77,7 @@ void cleanup()
 	debug_log("[Cleaning Up]\n");
 	graphicsMgr.cleanup();
 	sceneMgr.cleanup();
+	textureMgr.cleanup();
 }
 
 void passive_motion(int x, int y)

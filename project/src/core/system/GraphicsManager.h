@@ -5,19 +5,13 @@
 #include "VectorUtils4.h"
 #include "../entity/Drawable.h"
 #include "../entity/Light.h"
+#include "../entity/ShaderProg.h"
 #include "../../util/Constants.h"
 #include "../../util/Camera.h"
 
 #include <unordered_map>
 #include <string>
 #include <vector>
-
-enum ShaderProg
-{
-    LIT,
-    UNLIT,
-    NUM_PROGS
-};
 
 class GraphicsManager
 {
