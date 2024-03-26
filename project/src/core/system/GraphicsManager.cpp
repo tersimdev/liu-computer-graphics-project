@@ -49,8 +49,9 @@ void GraphicsManager::update(float dt, float elapsed)
 
 void GraphicsManager::cleanup()
 {
-    // todo, low priority, delete all drawables
-
+    // delete all drawables
+    for (Drawable* d : objArray)
+        delete d;
 }
 
 void GraphicsManager::add_obj(Drawable *drawable)

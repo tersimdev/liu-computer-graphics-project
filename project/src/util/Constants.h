@@ -10,6 +10,7 @@
 #define RES_Y 576
 #define EXIT_KEY_1 0x1B
 #define EXIT_KEY_2 '0'
+#define STARTING_SCENE "main"
 
 //graphics config here ///////////////////////////////////
 //////////////////////////////////////////////////////////
