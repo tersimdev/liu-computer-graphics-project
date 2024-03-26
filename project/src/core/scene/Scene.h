@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "../system/DrawableHelper.h"
-typedef DrawableHelper dh;
 
 /*
     Base class defining a scene construct. Inherit to create new scenes.

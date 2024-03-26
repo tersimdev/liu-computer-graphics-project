@@ -3,6 +3,8 @@
 #include "../entity/Thing.h"
 #include "../entity/Drawable.h"
 
+#include "../system/DrawableHelper.h"
+
 /*
     Defines a player object. Handles logic like shooting input, movement, health
     Composes of entities like Drawables, colliders 
@@ -15,7 +17,7 @@ public:
     void update(float dt) override;
     void cleanup() override;
 
-    void attach_drawable(Drawable* d);
+    Drawable* get_drawable();
 private:
     Drawable* drawable;
 };

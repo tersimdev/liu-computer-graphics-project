@@ -8,6 +8,7 @@
     Includes material helpers as well
     Should not have state, ie functions are static
 */
+
 class DrawableHelper
 {
 public:
@@ -19,3 +20,7 @@ public:
     static Drawable *create_cube(Transform t);
     static Drawable *create_plane(Transform t);
 };
+
+
+//shorthand for easy usage
+typedef DrawableHelper dh;

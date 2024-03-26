@@ -2,17 +2,22 @@
 
 void Player::init()
 {
+    this->drawable = dh::create_from_model("bunnyplus.obj", Transform({0, 0, -5}, {0, -45, 0}, {0.5, 0.5, 0.5}));
+    Material *m = dh::create_material("test", ShaderProg::LIT, {0.7, 0.2, 0.2}, {0.8, 0.8, 0.8, 16});
+    dh::attach_texture_to_material(m, 0, "conc");
+    drawable->setMaterial(m);
 }
 
 void Player::update(float dt)
 {
+    drawable->rotate({0, 2*dt, 0});
 }
 
 void Player::cleanup()
 {
 }
 
-void Player::attach_drawable(Drawable *d)
+Drawable* Player::get_drawable()
 {
-    this->drawable = d;
+    return this->drawable;
 }
