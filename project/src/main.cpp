@@ -11,7 +11,6 @@
 
 float timeElapsed = 0;
 unsigned int targetFPS = 60;
-Input input;
 Camera camera;
 GraphicsManager graphicsMgr;
 SceneManager sceneMgr;
@@ -21,8 +20,8 @@ void init(void)
 {
 	dumpInfo();
 	debug_log("[Initialising Systems]\n");
-	input.init();
-	camera.init(&input);
+	Input::init();
+	camera.init();
 	graphicsMgr.init(&camera);
 	sceneMgr.init(&graphicsMgr);
 	debug_log("[Intialized Systems]\n");
@@ -37,8 +36,9 @@ void display(void)
 
 	// debug_log("Tick, dt: %.4f\n", dt);
 
-	input.update(dt);
+	Input::update(dt);
 	camera.update(dt);
+	//camera.example_movement(dt);
 	graphicsMgr.update(dt, timeElapsed);
 	sceneMgr.update(dt);
 }
@@ -52,7 +52,7 @@ void cleanup()
 
 void passive_motion(int x, int y)
 {
-	input.on_mouse_move(x, y);
+	Input::on_mouse_move(x, y);
 }
 
 void glutMainLoop(); // forward declare for intellisense

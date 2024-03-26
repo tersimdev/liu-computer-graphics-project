@@ -2,6 +2,9 @@
 
 #include "../entity/Thing.h"
 #include "../entity/Drawable.h"
+#include "../../util/Camera.h"
+#include "../../util/Input.h"
+#include "../../util/Debug.h"
 
 #include "../system/DrawableHelper.h"
 
@@ -13,6 +16,8 @@
 class Player : public Thing
 {
 public:
+    Player(Camera* camera) : camera(camera) {}
+
     void init() override;
     void update(float dt) override;
     void cleanup() override;
@@ -20,4 +25,5 @@ public:
     Drawable* get_drawable();
 private:
     Drawable* drawable;
+    Camera* camera;
 };

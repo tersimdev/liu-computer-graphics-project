@@ -24,6 +24,8 @@
 #define INITIAL_FOV 45.0f
 #define P_Z_NEAR 0.1f
 #define P_Z_FAR 20.f
+#define CAM_MAX_LOOK_UP 0.95f
+#define CAM_DEADZONE 0.1f
 
 //define hardcorded strings here! ////////////////////////
 #define HELLO_WORLD "Hello World!"

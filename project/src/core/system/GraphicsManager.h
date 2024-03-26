@@ -25,6 +25,7 @@ class GraphicsManager
     void set_dir_light(Light* light);
     void set_point_light(int idx, Light* light);
 
+    Camera* get_camera();
     GLuint get_shader(ShaderProg shaderProg);
 private:
     std::unordered_map<ShaderProg, GLuint> shaderMap; //map of compiled shaders programs

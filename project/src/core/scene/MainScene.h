@@ -7,6 +7,6 @@
 class MainScene : public Scene 
 {
 public:
-    void init() override;
+    void init(Camera* camera) override;
     void update(float dt) override;
 };

@@ -12,17 +12,17 @@ void glutClose(); //forward declare
 class Input
 {
 public:
-    void init();
-    void update(float dt);
-    void on_mouse_move(int x, int y);
+    static void init();
+    static void update(float dt);
+    static void on_mouse_move(int x, int y);
 
-    vec2 get_mouse_delta();
+    static vec2 get_mouse_delta();
     
-    bool get_action(const std::string& action);
+    static bool get_action(const std::string& action);
 
 private:
-    vec2 deltaMousePos = vec2(0, 0); // how much the mouse has moved in x,y
-    bool lockMouse = true;           // whether should keep mouse in center
+    static vec2 deltaMousePos; // how much the mouse has moved in x,y
+    static bool lockMouse;           // whether should keep mouse in center
 
-    std::unordered_map<std::string, char> inputMapping; //stores mapping of action to keypress
+    static std::unordered_map<std::string, char> inputMapping; //stores mapping of action to keypress
 };

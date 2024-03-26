@@ -52,7 +52,7 @@ void SceneManager::change_scene(std::string sceneName)
 
 void SceneManager::init_active_scene()
 {
-    activeScene->init();
+    activeScene->init(graphicsMgr->get_camera());
     graphicsMgr->set_drawable_list(activeScene->get_drawables());
     std::vector<Light*> lights = activeScene->get_lights();
     int n = lights.size();

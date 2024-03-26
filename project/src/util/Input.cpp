@@ -1,5 +1,9 @@
 #include "Input.h"
 
+vec2 Input::deltaMousePos = vec2(0,0);
+bool Input::lockMouse = true;
+std::unordered_map<std::string, char> Input::inputMapping = std::unordered_map<std::string, char>();
+
 void Input::init()
 {
     // define input map here
@@ -10,6 +14,8 @@ void Input::init()
 
     inputMapping["up"] = 'e';
     inputMapping["down"] = 'q';
+
+    inputMapping["shoot"] = 'f';
 }
 void Input::update(float dt)
 {

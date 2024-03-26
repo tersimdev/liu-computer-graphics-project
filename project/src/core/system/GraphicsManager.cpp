@@ -79,6 +79,11 @@ void GraphicsManager::set_point_light(int idx, Light *light)
         pointLights[idx] = light;
 }
 
+Camera *GraphicsManager::get_camera()
+{
+    return camera;
+}
+
 GLuint GraphicsManager::get_shader(ShaderProg shaderProg)
 {
     if (shaderMap.find(shaderProg) == shaderMap.end())

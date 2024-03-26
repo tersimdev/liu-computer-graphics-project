@@ -4,6 +4,7 @@
 #include "../entity/Drawable.h"
 #include "../entity/Material.h"
 #include "../entity/Light.h"
+#include "../../util/Camera.h"
 #include <vector>
 
 #include "../system/DrawableHelper.h"
@@ -15,7 +16,7 @@ class Scene
 {
 public:
     virtual ~Scene() = default;
-    virtual void init() = 0; //abstract, as this is empty scene
+    virtual void init(Camera* camera) = 0; //abstract, as this is empty scene
     virtual void update(float dt);
     virtual void cleanup();
 

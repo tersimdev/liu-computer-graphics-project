@@ -11,6 +11,14 @@ void Player::init()
 void Player::update(float dt)
 {
     drawable->rotate({0, 2*dt, 0});
+    if (camera)
+    {
+        camera->example_movement(dt);
+    }
+    if (Input::get_action("shoot"))
+    {
+        debug_log("pew pew pew\n");
+    }
 }
 
 void Player::cleanup()

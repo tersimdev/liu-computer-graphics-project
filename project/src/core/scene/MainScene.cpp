@@ -1,9 +1,9 @@
 #include "MainScene.h"
 
-void MainScene::init()
+void MainScene::init(Camera* camera)
 {   
     // Create player object
-    Player* player = new Player;
+    Player* player = new Player(camera);
     player->init();
     drawables.push_back(player->get_drawable());
     things.push_back(player);

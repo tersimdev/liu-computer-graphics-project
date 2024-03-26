@@ -1,8 +1,7 @@
 #include "Camera.h"
 
-void Camera::init(Input *input)
+void Camera::init()
 {
-    this->input = input;
     reset();
 }
 void Camera::update(float dt)
@@ -12,9 +11,7 @@ void Camera::update(float dt)
     _camRight = normalize(cross(camDir, camUp));
     _camRight.y = 0; // incase
 
-    rotate_cam(_camRight, dt);
-    move_cam(_camFront, _camRight, dt);
-    //debug_log("pos %f %f %f\n", camPos.x, camPos.y, camPos.z);
+    // debug_log("pos %f %f %f\n", camPos.x, camPos.y, camPos.z);
 }
 void Camera::reset()
 {
@@ -26,6 +23,11 @@ void Camera::reset()
 void Camera::set_move_speed(float speed)
 {
     camMoveSpeed = speed;
+}
+
+void Camera::set_mouse_sens(float sens)
+{
+    mouseSens = sens;
 }
 
 vec3 Camera::get_pos()
@@ -49,56 +51,50 @@ vec3 Camera::get_up()
 }
 
 // Camera keyboard movement (WASD)
-void Camera::move_cam(vec3 camFront, vec3 camRight, float dt)
+void Camera::move_cam(vec3 direction, float dt)
 {
-    if (input->get_action("fwd"))
-    {
-        // move along the front direction (view igrnoring y)
-        camPos += camFront * camMoveSpeed * dt;
-    }
-    else if (input->get_action("bck"))
-    {
-        // same as w but -1
-        camPos += -camFront * camMoveSpeed * dt;
-    }
-    if (input->get_action("right"))
-    {
-        // calculate right and move along it
-        camPos += camRight * camMoveSpeed * dt;
-    }
-    else if (input->get_action("left"))
-    {
-        // same as d but -1
-        camPos += -camRight * camMoveSpeed * dt;
-    }
-
-    if (input->get_action("up"))
-    {
-        // move u in y
-        vec3 up = vec3(0, 1, 0); // incase camUp is invalid
-        camPos += up * camMoveSpeed * dt;
-    }
-    else if (input->get_action("down"))
-    {
-        // same as up but -1
-        vec3 up = vec3(0, 1, 0); // incase camUp is invalid
-        camPos += -up * camMoveSpeed * dt;
-    }
+    if (NormSq(direction - vec3(0)) > 0.1) //not zero
+        direction = normalize(direction);
+    camPos += -direction.z * _camFront * camMoveSpeed * dt;
+    camPos += direction.x * _camRight * camMoveSpeed * dt;
+    camPos += direction.y * vec3(0, 1, 0) * camMoveSpeed * dt;
 }
 
 // Camera mouse movement
-void Camera::rotate_cam(vec3 camRight, float dt)
+void Camera::rotate_cam(vec2 delta, float dt)
 {
-    vec2 deltaMouse = input->get_mouse_delta();
-    if (deltaMouse.x > camDeadzone || deltaMouse.x < -camDeadzone)
+    if (delta.x > CAM_DEADZONE || delta.x < -CAM_DEADZONE)
     {
-        camDir = ArbRotate(camUp, -deltaMouse.x * dt * mouseSens) * camDir;
+        camDir = ArbRotate(camUp, -delta.x * dt * mouseSens) * camDir;
         camDir = normalize(camDir);
     }
-    if ((deltaMouse.y > camDeadzone && camDir.y > -maxLookUp) ||
-        (deltaMouse.y < -camDeadzone && camDir.y < maxLookUp))
+    if ((delta.y > CAM_DEADZONE && camDir.y > -CAM_MAX_LOOK_UP) ||
+        (delta.y < -CAM_DEADZONE && camDir.y < CAM_MAX_LOOK_UP))
     {
-        camDir = ArbRotate(camRight, -deltaMouse.y * dt * mouseSens) * camDir;
+        camDir = ArbRotate(_camRight, -delta.y * dt * mouseSens) * camDir;
         camDir = normalize(camDir);
     }
+}
+
+void Camera::example_movement(float dt)
+{
+    // wasd qe movement
+    vec3 dir = {0,0,0};
+    if (Input::get_action("fwd"))
+        dir.z = -1;
+    else if (Input::get_action("bck"))
+        dir.z = 1;
+    if (Input::get_action("right"))
+        dir.x = 1;
+    else if (Input::get_action("left"))
+        dir.x = -1;
+    if (Input::get_action("up"))
+        dir.y = 1;
+    else if (Input::get_action("down"))
+        dir.y = -1;
+    move_cam(dir, dt);
+
+    // rotation
+    vec2 deltaMouse = Input::get_mouse_delta();
+    rotate_cam(deltaMouse, dt);
 }
