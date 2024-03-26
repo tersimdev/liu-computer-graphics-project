@@ -31,30 +31,9 @@ void init(void)
 	input.init();
 	camera.init(&input);
 	graphicsMgr.init(&camera);
-	sceneMgr.init();
 	textureMgr.init();
+	sceneMgr.init(&graphicsMgr, &textureMgr);
 	debug_log("[Intialized Systems]\n");
-
-	// temp
-	Drawable *d = new Drawable;
-	Material *m = new Material;
-	LoadTGATextureSimple("asset/texture/conc.tga", &(m->textures[0]));
-	m->textureBitmask = 1;
-	m->shaderProg = ShaderProg::LIT;
-	// m->textureBitmask = 0;
-	m->albedo = {0.7, 0.2, 0.2}; // red sphere
-	// m->specular = { 0, 0, 0 ,0};
-	m->specular = {0.8, 0.8, 0.8, 16};
-	// d->setModel(LoadModel("asset/model/groundsphere.obj"));
-	d->setModel(LoadModel("asset/model/bunnyplus.obj"));
-	d->setMaterial(m);
-	d->translate({0, 0, -5});
-	d->scale({0.5, 0.5, 0.5});
-	graphicsMgr.add_obj(d);
-	Light *dlt = new Light;
-	dlt->color = vec4(0.8, 0.8, 0.6, 1);
-	dlt->position = vec3(-1, -1, -0.5);
-	graphicsMgr.set_dir_light(dlt);
 }
 
 // runs every tick

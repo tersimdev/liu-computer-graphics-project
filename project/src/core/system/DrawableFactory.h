@@ -8,4 +8,5 @@
 */
 class DrawableFactory
 {
+    static Drawable* create_from_model()
 };

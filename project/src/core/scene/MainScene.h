@@ -4,7 +4,7 @@
 
 class MainScene : public Scene 
 {
-    void init() override;
+    void init(SceneManager* sceneMgr) override;
     void update(float dt) override;
     void cleanup() override;
 };

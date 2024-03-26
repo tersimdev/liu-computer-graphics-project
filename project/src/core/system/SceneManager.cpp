@@ -5,8 +5,11 @@
 #include "../../util/Constants.h"
 #include "../../util/Debug.h"
 
-void SceneManager::init()
+void SceneManager::init(GraphicsManager* graphicsMgr, TextureManager* textureMgr)
 {
+    this->graphicsMgr = graphicsMgr;
+    this->textureMgr = textureMgr;
+
     /**
      * ADD YOUR SCENES HERE.
      * DEFINE STARTING SCENE IN CONSTANTS
@@ -19,7 +22,7 @@ void SceneManager::init()
         return;
     }
     activeScene = scenes[STARTING_SCENE];
-    activeScene->init();
+    activeScene->init(this);
 }
 void SceneManager::update(float dt)
 {
@@ -45,5 +48,15 @@ void SceneManager::change_scene(std::string sceneName)
     }
     activeScene->cleanup();
     activeScene = scenes[sceneName];
-    activeScene->init();
+    activeScene->init(this);
+}
+
+GraphicsManager *SceneManager::get_graphics_mgr()
+{
+    return graphicsMgr;
+}
+
+TextureManager *SceneManager::get_texture_mgr()
+{
+    return textureMgr;
 }
