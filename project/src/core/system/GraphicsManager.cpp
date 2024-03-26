@@ -5,6 +5,7 @@
 void GraphicsManager::init(Camera *camera)
 {
     this->camera = camera;
+    textureMgr.init();
 
     // GL inits
     glClearColor(CLEAR_COL);
@@ -51,7 +52,13 @@ void GraphicsManager::cleanup()
 {
     // delete all drawables
     for (Drawable* d : objArray)
+    {
+        Material* m = d->getMaterial();
+        if (m)
+            delete m;
         delete d;
+    }
+    textureMgr.cleanup();
 }
 
 void GraphicsManager::add_obj(Drawable *drawable)
@@ -171,7 +178,9 @@ void GraphicsManager::render(Drawable *d)
         // if bitmask is 1
         if ((m->textureBitmask >> i) & 1)
         {
-            glBindTexture(GL_TEXTURE_2D, m->textures[i]);
+            int texUnit = textureMgr.get_texture(m->textures[i]);
+            if (texUnit < 0) continue;
+            glBindTexture(GL_TEXTURE_2D, texUnit);
             glActiveTexture(GL_TEXTURE0 + i);
         }
     }

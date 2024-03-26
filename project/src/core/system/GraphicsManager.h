@@ -8,6 +8,7 @@
 #include "../entity/ShaderProg.h"
 #include "../../util/Constants.h"
 #include "../../util/Camera.h"
+#include "TextureManager.h"
 
 #include <unordered_map>
 #include <string>
@@ -30,7 +31,7 @@ class GraphicsManager
 private:
     std::vector<Drawable*> objArray; //list of drawables
     std::unordered_map<ShaderProg, GLuint> shaderMap; //map of compiled shaders programs
-
+    TextureManager textureMgr;
 
     mat4 proj, view;
     Camera* camera; //reference to camera obj

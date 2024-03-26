@@ -4,6 +4,9 @@
 #include "Material.h"
 #include "Light.h"
 
+#include "../system/DrawableHelper.h"
+typedef DrawableHelper dh;
+
 /*
     Abstract class defining a scene construct. Inherit to create new scenes.
 */

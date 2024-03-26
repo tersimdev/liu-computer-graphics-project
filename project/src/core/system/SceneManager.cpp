@@ -5,10 +5,9 @@
 #include "../../util/Constants.h"
 #include "../../util/Debug.h"
 
-void SceneManager::init(GraphicsManager* graphicsMgr, TextureManager* textureMgr)
+void SceneManager::init(GraphicsManager* graphicsMgr)
 {
     this->graphicsMgr = graphicsMgr;
-    this->textureMgr = textureMgr;
 
     /**
      * ADD YOUR SCENES HERE.
@@ -54,9 +53,4 @@ void SceneManager::change_scene(std::string sceneName)
 GraphicsManager *SceneManager::get_graphics_mgr()
 {
     return graphicsMgr;
-}
-
-TextureManager *SceneManager::get_texture_mgr()
-{
-    return textureMgr;
 }

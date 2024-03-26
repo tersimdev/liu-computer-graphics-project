@@ -6,22 +6,15 @@
 #include "util/Constants.h"
 #include "util/Input.h"
 #include "util/Camera.h"
-#include "core/system/ThingManager.h"
 #include "core/system/GraphicsManager.h"
 #include "core/system/SceneManager.h"
-#include "core/system/TextureManager.h"
-
-#include "LoadTGA.h"
-#include "LittleOBJLoader.h"
 
 float timeElapsed = 0;
 unsigned int targetFPS = 60;
 Input input;
 Camera camera;
-// ThingManager thingManager; //todo
 GraphicsManager graphicsMgr;
 SceneManager sceneMgr;
-TextureManager textureMgr;
 
 // runs once at the start
 void init(void)
@@ -31,8 +24,7 @@ void init(void)
 	input.init();
 	camera.init(&input);
 	graphicsMgr.init(&camera);
-	textureMgr.init();
-	sceneMgr.init(&graphicsMgr, &textureMgr);
+	sceneMgr.init(&graphicsMgr);
 	debug_log("[Intialized Systems]\n");
 }
 
@@ -54,9 +46,8 @@ void display(void)
 void cleanup()
 {
 	debug_log("[Cleaning Up]\n");
-	graphicsMgr.cleanup();
 	sceneMgr.cleanup();
-	textureMgr.cleanup();
+	graphicsMgr.cleanup();
 }
 
 void passive_motion(int x, int y)
