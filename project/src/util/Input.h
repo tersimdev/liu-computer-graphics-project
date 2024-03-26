@@ -17,8 +17,9 @@ public:
     static void on_mouse_move(int x, int y);
 
     static vec2 get_mouse_delta();
-    
     static bool get_action(const std::string& action);
+
+    static void set_lock_mouse(bool lock);
 
 private:
     static vec2 deltaMousePos; // how much the mouse has moved in x,y

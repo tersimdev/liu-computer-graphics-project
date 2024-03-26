@@ -2,6 +2,7 @@
 
 #define MAIN
 #include "MicroGlut.h"
+#include "SimpleGUI.h"
 #include "util/Debug.h"
 #include "util/Constants.h"
 #include "util/Input.h"
@@ -15,6 +16,8 @@ Camera camera;
 GraphicsManager graphicsMgr;
 SceneManager sceneMgr;
 
+float testf = 5; // test for simplegui
+
 // runs once at the start
 void init(void)
 {
@@ -25,6 +28,15 @@ void init(void)
 	graphicsMgr.init(&camera);
 	sceneMgr.init(&graphicsMgr);
 	debug_log("[Intialized Systems]\n");
+
+	// temp, testing simplegui
+	sgCreateStaticString(40, 40, "Minimal demo of SimpleGUI");
+
+	// A slider and a float display
+	sgCreateStaticString(40, 80, "Slider and float display");
+	sgCreateSlider(40, 100, 200, &testf, 5, 10);
+	sgCreateDisplayFloat(40, 120, "Value: ", &testf);
+	Input::set_lock_mouse(false);
 }
 
 // runs every tick
@@ -38,7 +50,7 @@ void display(void)
 
 	Input::update(dt);
 	camera.update(dt);
-	//camera.example_movement(dt);
+	// camera.example_movement(dt);
 	graphicsMgr.update(dt, timeElapsed);
 	sceneMgr.update(dt);
 }
@@ -54,6 +66,18 @@ void passive_motion(int x, int y)
 {
 	Input::on_mouse_move(x, y);
 }
+void mouse(int button, int state, int x, int y)
+{
+	// todo send mouse click to input class as well
+
+	if (button == 0)
+		sgMouse(state, x, y);
+}
+
+void motion(int x, int y)
+{
+	sgMouseDrag(x, y);
+}
 
 void glutMainLoop(); // forward declare for intellisense
 int main(int argc, char **argv)
@@ -68,6 +92,8 @@ int main(int argc, char **argv)
 	glutDisplayFunc(display);
 	glutRepeatingTimer(1000 / targetFPS);
 	glutPassiveMotionFunc(passive_motion);
+	glutMouseFunc(mouse);
+	glutMotionFunc(motion);
 	std::atexit(cleanup); // register exit cleanup
 
 	glutMainLoop();

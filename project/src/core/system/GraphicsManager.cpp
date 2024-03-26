@@ -1,4 +1,5 @@
 #include "GraphicsManager.h"
+#include "SimpleGUI.h"
 
 void GraphicsManager::init(Camera *camera)
 {
@@ -49,6 +50,8 @@ void GraphicsManager::update(float dt, float elapsed)
         render(d);
 
     printError("display");
+    //draw gui
+    sgDraw();
     // Swap buffers
     glutSwapBuffers();
 }

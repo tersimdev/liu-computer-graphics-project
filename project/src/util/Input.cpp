@@ -1,6 +1,6 @@
 #include "Input.h"
 
-vec2 Input::deltaMousePos = vec2(0,0);
+vec2 Input::deltaMousePos = vec2(0, 0);
 bool Input::lockMouse = true;
 std::unordered_map<std::string, char> Input::inputMapping = std::unordered_map<std::string, char>();
 
@@ -35,8 +35,13 @@ void Input::update(float dt)
 void Input::on_mouse_move(int x, int y)
 {
     // debug_log("Mouse Coords: %d %d\n", x, y);
-    deltaMousePos.x = x - RES_X / 2;
-    deltaMousePos.y = y - RES_Y / 2;
+    if (!lockMouse)
+        deltaMousePos = {0, 0};
+    else
+    {
+        deltaMousePos.x = x - RES_X / 2;
+        deltaMousePos.y = y - RES_Y / 2;
+    }
 }
 
 vec2 Input::get_mouse_delta()
@@ -53,8 +58,13 @@ bool Input::get_action(const std::string &action)
     }
     if (glutKeyIsDown(inputMapping[action]))
     {
-        //debug_log("%s (%d) key pressed\n", action.c_str(), inputMapping[action]);
+        // debug_log("%s (%d) key pressed\n", action.c_str(), inputMapping[action]);
         return true;
     }
     return false;
+}
+
+void Input::set_lock_mouse(bool lock)
+{
+    lockMouse = lock;
 }
