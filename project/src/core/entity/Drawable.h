@@ -5,6 +5,9 @@
 typedef struct _Transform
 {
     vec3 translation, rotate, scale;
+    //constructor for convenience
+    _Transform(vec3 trl = {0,0,0}, vec3 rot = {0,0,0}, vec3 sca = {1,1,1})
+        : translation(trl), rotate(rot), scale(sca) {}
 } Transform;
 
 class Drawable
@@ -12,9 +15,7 @@ class Drawable
 public:
     Drawable()
     {
-        transform.translation = {0, 0, 0};
-        transform.rotate = {0, 0, 0};
-        transform.scale = {1, 1, 1};
+        transform = Transform();
         model = nullptr;
         material = nullptr;
         drawFlag = true;
