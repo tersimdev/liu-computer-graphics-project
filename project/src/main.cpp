@@ -5,9 +5,9 @@
 #include "util/Debug.h"
 #include "util/Constants.h"
 #include "util/Input.h"
-#include "system/manager/ThingManager.h"
-#include "system/manager/GraphicsManager.h"
-#include "system/Camera.h"
+#include "util/Camera.h"
+#include "core/system/ThingManager.h"
+#include "core/system/GraphicsManager.h"
 
 #include "LoadTGA.h"
 #include "LittleOBJLoader.h"
@@ -32,14 +32,15 @@ void init(void)
 	//temporary, to test out rendering
 	Drawable* d = new Drawable;
 	Material* m = new Material;
-	//LoadTGATextureSimple("asset/texture/conc.tga", &(m->textures[0]));
-	//m->textureBitmask = 1;
+	LoadTGATextureSimple("asset/texture/conc.tga", &(m->textures[0]));
+	m->textureBitmask = 1;
 	m->shaderProg = graphicsMgr.get_shader(ShaderProg::LIT);
-	m->textureBitmask = 0;
+	//m->textureBitmask = 0;
 	m->albedo = { 0.7, 0.2, 0.2}; //red sphere
-	m->specular = { 0, 0, 0 ,0};
- 	//m->specular = {0.8,0.8,0.8,16};
-	d->setModel(LoadModel("asset/model/groundsphere.obj"));
+	//m->specular = { 0, 0, 0 ,0};
+ 	m->specular = {0.8,0.8,0.8,16};
+	// d->setModel(LoadModel("asset/model/groundsphere.obj"));
+	d->setModel(LoadModel("asset/model/bunnyplus.obj"));
 	d->setMaterial(m);
 	d->translate({0,0,-5});
 	d->scale({0.5,0.5,0.5});

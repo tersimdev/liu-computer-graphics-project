@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "../Thing.h"
+#include "../entity/Thing.h"
 /*
     Class to manage "things"
 */

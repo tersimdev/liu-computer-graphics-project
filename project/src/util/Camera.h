@@ -12,6 +12,7 @@ public:
     void init(Input *input);
     void update(float dt);
     void reset();
+    
     void set_move_speed(float speed);
     
     vec3 get_pos();

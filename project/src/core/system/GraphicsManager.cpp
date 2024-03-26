@@ -13,8 +13,8 @@ void GraphicsManager::init(Camera *camera)
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     printError("GL inits");
 
-    // load proj matrix
-    proj = frustum(P_LEFT, P_RIGHT, P_BOTTOM, P_TOP, P_NEAR, P_FAR);
+    // load proj matrix using fov
+    proj = perspective(fovDeg, (float) RES_X/RES_Y, P_Z_NEAR, P_Z_FAR);
 
     // Load and compile shader(s)
     shaderMap[LIT] = load_shaders("lit.vert", "lit.frag");

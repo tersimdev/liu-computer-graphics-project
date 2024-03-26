@@ -22,8 +22,6 @@ void main(void)
 {
 	//base texture color
 	vec4 texColor = texture(texUnit, v_TexCoord);
-	//not used for now
-	texColor = vec4(1);
 
 	///for convenience
 	vec3 lightColor = lightCol.rgb;

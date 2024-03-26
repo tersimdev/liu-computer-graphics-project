@@ -3,10 +3,10 @@
 #include "GL_utilities.h"
 #include "MicroGlut.h"
 #include "VectorUtils4.h"
-#include "../Drawable.h"
-#include "../Light.h"
+#include "../entity/Drawable.h"
+#include "../entity/Light.h"
 #include "../../util/Constants.h"
-#include "../Camera.h"
+#include "../../util/Camera.h"
 
 #include <unordered_map>
 #include <string>
@@ -37,9 +37,11 @@ private:
     std::vector<Drawable*> objArray; //list of drawables
     std::unordered_map<ShaderProg, GLuint> shaderMap; //map of compiled shaders programs
 
+
     mat4 proj, view;
     Camera* camera; //reference to camera obj
     vec3 viewPos; //same as camPos, stored for uniforms
+    float fovDeg = INITIAL_FOV; //fov of perspective
 
     //an array to store references to point lights in the scene
     Light* pointLights[MAX_POINT_LIGHTS];

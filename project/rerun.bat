@@ -1,2 +1,1 @@
-make -j quick
-.\output
+make -j quick && .\output
