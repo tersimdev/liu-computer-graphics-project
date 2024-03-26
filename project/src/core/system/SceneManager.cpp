@@ -21,7 +21,7 @@ void SceneManager::init(GraphicsManager* graphicsMgr)
         return;
     }
     activeScene = scenes[STARTING_SCENE];
-    activeScene->init(this);
+    init_active_scene();
 }
 void SceneManager::update(float dt)
 {
@@ -47,10 +47,26 @@ void SceneManager::change_scene(std::string sceneName)
     }
     activeScene->cleanup();
     activeScene = scenes[sceneName];
-    activeScene->init(this);
+    init_active_scene();
 }
 
-GraphicsManager *SceneManager::get_graphics_mgr()
+void SceneManager::init_active_scene()
 {
-    return graphicsMgr;
+    activeScene->init();
+    graphicsMgr->set_drawable_list(activeScene->get_drawables());
+    std::vector<Light*> lights = activeScene->get_lights();
+    int n = lights.size();
+    if (n > 0) //take first as directional
+        graphicsMgr->set_dir_light(lights[0]);
+    
+    //take the rest as point lights
+    for (int i = 1; i < n; ++i)
+    {
+        if (i-1 >= MAX_POINT_LIGHTS) 
+        {
+            debug_warn("Number of point lights allowed excceeded (%d)\n", i-1);
+            break;
+        }
+        graphicsMgr->set_point_light(i-1 ,lights[i]);
+    }
 }

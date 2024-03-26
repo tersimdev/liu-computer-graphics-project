@@ -2,10 +2,15 @@
 #include "VectorUtils4.h"
 #include "../../util/Constants.h"
 
+enum LightType
+{
+    DIR,
+    POINT
+};
 
 typedef struct _LightSource
 {
-    int type;       // 0 for dir, 1 for point
+    LightType type;   // directional, point
     vec4 color;     // alpha for intensity/attenuation
     vec3 position;  // treated as direction for directional
 } Light;

@@ -21,27 +21,25 @@ class GraphicsManager
     void update(float dt, float elapsed);
     void cleanup();
 
-    void add_obj(Drawable* drawable);
-    void remove_obj(Drawable* drawable);
-
+    void set_drawable_list(std::vector<Drawable*>* list);
     void set_dir_light(Light* light);
     void set_point_light(int idx, Light* light);
 
     GLuint get_shader(ShaderProg shaderProg);
 private:
-    std::vector<Drawable*> objArray; //list of drawables
     std::unordered_map<ShaderProg, GLuint> shaderMap; //map of compiled shaders programs
     TextureManager textureMgr;
+    // reference to a list of drawables to draw
+    std::vector<Drawable*>* drawableList;
+    // an array to store references to point lights in the scene
+    Light* pointLights[MAX_POINT_LIGHTS];
+    // reference to the directional light, intially null
+    Light* dirLight;
 
     mat4 proj, view;
     Camera* camera; //reference to camera obj
     vec3 viewPos; //same as camPos, stored for uniforms
     float fovDeg = INITIAL_FOV; //fov of perspective
-
-    //an array to store references to point lights in the scene
-    Light* pointLights[MAX_POINT_LIGHTS];
-    //reference to the directional light, intially null
-    Light* dirLight;
 
     //helper to load shader, wrapper around loadShaders from glUtils
     GLuint load_shaders(std::string vertex, std::string fragment);

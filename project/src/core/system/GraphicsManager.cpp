@@ -1,7 +1,5 @@
 #include "GraphicsManager.h"
 
-#include <algorithm> //for std::remove
-
 void GraphicsManager::init(Camera *camera)
 {
     this->camera = camera;
@@ -15,7 +13,7 @@ void GraphicsManager::init(Camera *camera)
     printError("GL inits");
 
     // load proj matrix using fov
-    proj = perspective(fovDeg, (float) RES_X/RES_Y, P_Z_NEAR, P_Z_FAR);
+    proj = perspective(fovDeg, (float)RES_X / RES_Y, P_Z_NEAR, P_Z_FAR);
 
     // Load and compile shader(s)
     shaderMap[LIT] = load_shaders("lit.vert", "lit.frag");
@@ -29,6 +27,11 @@ void GraphicsManager::update(float dt, float elapsed)
         debug_error("Camera reference is null!\n");
         return;
     }
+    if (drawableList == nullptr)
+    {
+        // debug_log("No drawable list yet\n");
+        return;
+    }
 
     viewPos = camera->get_pos();
     // Calculate view matrix based on camera vectors
@@ -39,10 +42,12 @@ void GraphicsManager::update(float dt, float elapsed)
 
     // Clear the screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // draw all scene objects
+    
+    // draw available drawables
     // TODO sort drawables by distance, and transperency if needed
-    for (Drawable *d : objArray)
+    for (Drawable *d : *drawableList)
         render(d);
+
     printError("display");
     // Swap buffers
     glutSwapBuffers();
@@ -50,39 +55,26 @@ void GraphicsManager::update(float dt, float elapsed)
 
 void GraphicsManager::cleanup()
 {
-    // delete all drawables
-    for (Drawable* d : objArray)
-    {
-        Material* m = d->getMaterial();
-        if (m)
-            delete m;
-        delete d;
-    }
     textureMgr.cleanup();
 }
 
-void GraphicsManager::add_obj(Drawable *drawable)
+void GraphicsManager::set_drawable_list(std::vector<Drawable *> *list)
 {
-    objArray.push_back(drawable);
-}
-
-void GraphicsManager::remove_obj(Drawable *drawable)
-{
-    objArray.erase(std::remove(objArray.begin(), objArray.end(), drawable), objArray.end());
+    drawableList = list;
 }
 
 void GraphicsManager::set_dir_light(Light *light)
 {
-    if (!light) return;
-    light->type = 0;
+    if (!light)
+        return;
     light->position = normalize(light->position);
     dirLight = light;
 }
 
 void GraphicsManager::set_point_light(int idx, Light *light)
 {
-    if (!light) return;
-    light->type = 1;
+    if (!light)
+        return;
     if (idx >= 0 && idx < MAX_POINT_LIGHTS)
         pointLights[idx] = light;
 }
@@ -161,25 +153,26 @@ void GraphicsManager::render(Drawable *d)
         return;
     }
     GLuint program = get_shader(m->shaderProg);
-    if (program < 0) 
+    if (program < 0)
     {
         debug_error("Shader program is invalid\n");
         return;
     }
-    
+
     glUseProgram(program);
-    //set model matrix
+    // set model matrix
     glUniformMatrix4fv(glGetUniformLocation(program, "modelMtx"), 1, GL_TRUE, m_model.m);
     glUniformMatrix3fv(glGetUniformLocation(program, "normalMtx"), 1, GL_TRUE, m_normal.m);
-        
-    //set material uniforms
+
+    // set material uniforms
     for (int i = 0; i < MAX_TEXTURES; ++i)
     {
         // if bitmask is 1
         if ((m->textureBitmask >> i) & 1)
         {
             int texUnit = textureMgr.get_texture(m->textures[i]);
-            if (texUnit < 0) continue;
+            if (texUnit < 0)
+                continue;
             glBindTexture(GL_TEXTURE_2D, texUnit);
             glActiveTexture(GL_TEXTURE0 + i);
         }

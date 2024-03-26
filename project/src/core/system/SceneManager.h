@@ -2,7 +2,7 @@
 
 #include <string>
 #include <unordered_map>
-#include "../entity/Scene.h"
+#include "../scene/Scene.h"
 #include "TextureManager.h"
 #include "GraphicsManager.h"
 
@@ -17,6 +17,7 @@ public:
     void update(float dt);
     void cleanup();
     void change_scene(std::string sceneName);
+    void init_active_scene();
     
     GraphicsManager* get_graphics_mgr();
 private:

@@ -13,7 +13,7 @@ Material *DrawableHelper::create_material(std::string name, ShaderProg shaderPro
 
 Material *DrawableHelper::attach_texture_to_material(Material *m, int idx, std::string textureName)
 {
-    if (m == nullptr || idx < 0 || idx > MAX_TEXTURES || textureName != "")
+    if (m == nullptr || idx < 0 || idx >= MAX_TEXTURES || textureName == "")
     {
         debug_error("Invalid material/idx/texture.\n");
         return m;
