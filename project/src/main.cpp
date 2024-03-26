@@ -32,17 +32,20 @@ void init(void)
 	//temporary, to test out rendering
 	Drawable* d = new Drawable;
 	Material* m = new Material;
-	LoadTGATextureSimple("asset/texture/conc.tga", &(m->textures[0]));
-	m->textureBitmask = 1;
+	//LoadTGATextureSimple("asset/texture/conc.tga", &(m->textures[0]));
+	//m->textureBitmask = 1;
 	m->shaderProg = graphicsMgr.get_shader(ShaderProg::LIT);
-	m->specular.a = 16;
+	m->textureBitmask = 0;
+	m->albedo = { 0.7, 0.2, 0.2}; //red sphere
+	m->specular = { 0, 0, 0 ,0};
+ 	//m->specular = {0.8,0.8,0.8,16};
 	d->setModel(LoadModel("asset/model/groundsphere.obj"));
 	d->setMaterial(m);
 	d->translate({0,0,-5});
 	d->scale({0.5,0.5,0.5});
 	graphicsMgr.add_obj(d);
 	Light* dlt = new Light;
-	dlt->color = vec3(0.8, 0.8, 0.6);
+	dlt->color = vec4(0.8, 0.8, 0.6, 1);
 	dlt->position = vec3(-1, -1, -0.5);
 	graphicsMgr.set_dir_light(dlt);
 }

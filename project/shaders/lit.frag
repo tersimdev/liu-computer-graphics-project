@@ -13,12 +13,17 @@ uniform sampler2D texUnit;
 uniform vec3 viewPos;
 uniform vec3 lightDir;
 uniform vec4 lightCol;
-uniform float specularExp;
+
+//material stuff
+uniform vec3 albedo;
+uniform vec4 specular;
 
 void main(void)
 {
 	//base texture color
 	vec4 texColor = texture(texUnit, v_TexCoord);
+	//not used for now
+	texColor = vec4(1);
 
 	///for convenience
 	vec3 lightColor = lightCol.rgb;
@@ -28,26 +33,20 @@ void main(void)
 
 	//ambient lighting
 	float ambientAmt = 0.3;
-
 	//diffuse lighting
-	float diffuseAmt = dot(normal, -lightDir);
-	//diffuseAmt = 0.5 * diffuseAmt + 0.5f; //remap from -1,1 to 0,1, uses full range but not "realistic"
-	diffuseAmt = clamp(diffuseAmt, 0, 1);
-
+	float diffuseAmt = clamp(dot(normal, -lightDir), 0, 1);
 	//specular lighting
 	float specularAmt = dot(reflect(lightDir, normal), viewDir);
-	specularAmt = pow(max(specularAmt, 0), specularExp);
-	if (specularExp <= 1)
-		specularAmt = 0; //better done using material
+	specularAmt = pow(max(specularAmt, 0), specular.a);
 
 
-	//calc lighting
+	//calculate lighting
 	//I = kd*Ia + kd*Il*max(0, s·n) + ks*Il*max(0, r·v)^a
-	vec3 totalLight = texColor.xyz*lightColor*ambientAmt 
-		+ texColor.xyz*lightColor*lightStrength*diffuseAmt 
-		+ lightColor*20*specularAmt;
-	//totalLight = clamp(totalLight, vec3(0), vec3(1));
+	vec3 baseColor = albedo * texColor.xyz;
+	vec3 totalLight = baseColor * lightColor * ambientAmt
+		+ baseColor * lightColor * lightStrength * diffuseAmt
+		+ specular.rgb * specularAmt;
 
 	//final output
-	out_Color = vec4(totalLight, 1);
+	out_Color = vec4(totalLight, texColor.a);
 }

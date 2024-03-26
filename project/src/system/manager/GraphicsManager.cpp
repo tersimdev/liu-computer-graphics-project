@@ -49,7 +49,8 @@ void GraphicsManager::update(float dt, float elapsed)
 
 void GraphicsManager::cleanup()
 {
-    // todo, low priority
+    // todo, low priority, delete all drawables
+
 }
 
 void GraphicsManager::add_obj(Drawable *drawable)
@@ -141,7 +142,6 @@ void GraphicsManager::render(Drawable *d)
     // mat4 m_rot = Rx(rot.x) * Ry(rot.y) * Rz(rot.z); // order matters, consider quarternions for true representation
     // mat4 m_scale = S(scale.x, scale.y, scale.z);
     // mat4 m_model = m_trans * m_rot * m_scale;
-
     // Calculate TRS in one line to save memory
     mat4 m_model = T(trans.x, trans.y, trans.z) * (Rx(rot.x) * Ry(rot.y) * Rz(rot.z)) * S(scale.x, scale.y, scale.z);
     mat3 m_normal = transpose(inverse(mat4tomat3(m_model)));
@@ -154,6 +154,11 @@ void GraphicsManager::render(Drawable *d)
     }
     GLuint program = m->shaderProg;
     glUseProgram(program);
+    //set model matrix
+    glUniformMatrix4fv(glGetUniformLocation(program, "modelMtx"), 1, GL_TRUE, m_model.m);
+    glUniformMatrix3fv(glGetUniformLocation(program, "normalMtx"), 1, GL_TRUE, m_normal.m);
+        
+    //set material uniforms
     for (int i = 0; i < MAX_TEXTURES; ++i)
     {
         // if bitmask is 1
@@ -163,8 +168,8 @@ void GraphicsManager::render(Drawable *d)
             glActiveTexture(GL_TEXTURE0 + i);
         }
     }
-    glUniformMatrix4fv(glGetUniformLocation(program, "modelMtx"), 1, GL_TRUE, m_model.m);
-    glUniformMatrix3fv(glGetUniformLocation(program, "normalMtx"), 1, GL_TRUE, m_normal.m);
-    glUniform1f(glGetUniformLocation(program, "specularExp"), m->specular.a);
+    glUniform3fv(glGetUniformLocation(program, "albedo"), 1, &(m->albedo.r));
+    glUniform4fv(glGetUniformLocation(program, "specular"), 1, &(m->specular.r));
+
     DrawModel(d->getModel(), program, "in_Position", "in_Normal", "in_TexCoord");
 }
