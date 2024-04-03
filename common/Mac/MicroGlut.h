@@ -161,7 +161,7 @@ void glutFullScreen();
 void glutExitFullScreen();
 void glutToggleFullScreen();
 
-void glutExit();
+void glutClose();
 
 // Placeholders, we only support one window, unlike FreeGlut.
 void glutSetWindow(int win);

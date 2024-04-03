@@ -25,7 +25,7 @@
 // 120301: Resizable window. Correct vertical window position.
 // 120808: Fixed a bug that caused error messages. (Calling finishLaunching twice.)
 // 120822: Stencil now uses 8 instead of 32
-// 120905: Two corrections suggested by Marcus StenbŠck.
+// 120905: Two corrections suggested by Marcus Stenbï¿½ck.
 // 120913: Added 2-button emulation with CTRL
 // 130103: Added [m_context makeCurrentContext]; in all user callbacks. (GL calls had no effect.)
 // 130127: Added basic popup menu support
@@ -411,7 +411,7 @@ NSPoint gMousePosition;
 	}
 }
 
-// Clone of above, but necessary for supporting the alternative button. Thanks to Marcus StenbŠck!
+// Clone of above, but necessary for supporting the alternative button. Thanks to Marcus Stenbï¿½ck!
 -(void) rightMouseDragged:(NSEvent *)theEvent
 {
 	NSPoint p;
@@ -752,7 +752,7 @@ void glutInit(int *argcp, char **argv)
 	pool = [NSAutoreleasePool new];
 	myApp = [MGApplication sharedApplication];
 	
-	[NSApp setActivationPolicy: NSApplicationActivationPolicyRegular]; // Thanks to Marcus StenbŠck
+	[NSApp setActivationPolicy: NSApplicationActivationPolicyRegular]; // Thanks to Marcus Stenbï¿½ck
 	
 	gRunning = 1;
 	home();
@@ -1147,8 +1147,8 @@ void glutWarpPointer(int x, int y)
 
 // Deprecation hell below:
 //The NSWindow class provides these methods for converting between window local coordinates and screen global coordinates:
-//	¥	convertRectToScreen:
-//	¥	convertRectFromScreen:
+//	ï¿½	convertRectToScreen:
+//	ï¿½	convertRectFromScreen:
 //Use them instead of the deprecated convertBaseToScreen: and convertScreenToBase: methods.
 	NSRect mpmp;
 	mpmp.size.height = 0;
@@ -1241,7 +1241,7 @@ void glutToggleFullScreen()
 		glutFullScreen();
 }
 
-void glutExit()
+void glutClose()
 {
 	gRunning = 0;
 }
