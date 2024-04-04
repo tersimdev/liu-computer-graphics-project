@@ -2,9 +2,9 @@
 
 void Player::init()
 {
-    this->drawable = dh::create_from_model("bunnyplus.obj", Transform({0, 0, -5}, {0, -45, 0}, {0.5, 0.5, 0.5}));
-    //this->drawable = dh::create_sphere(Transform({0, 0, -5}, {0, -45, 0}, {0.5, 0.5, 0.5}), 32, 32);
-    Material *m = dh::create_material(ShaderProg::LIT, {0.7, 0.2, 0.2}, {0.8, 0.8, 0.8, 16});
+    //this->drawable = dh::create_from_model("bunnyplus.obj", Transform({0, 0, -5}, {0, -45, 0}, {0.5, 0.5, 0.5}));
+    this->drawable = dh::create_sphere(Transform({0, 0, -5}, {0, -45, 0}, {0.3, 0.3, 0.3}), 32, 32);
+    Material *m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
     dh::attach_texture_to_material(m, 0, "conc");
     drawable->setMaterial(m);
 }
@@ -18,7 +18,8 @@ void Player::update(float dt)
     }
     if (Input::get_action("shoot"))
     {
-        debug_log("pew pew pew\n");
+        //debug_log("pew pew pew\n");
+        mailbox->notify(PLAYER_SAID_HELLO);
     }
 }
 
@@ -31,11 +32,6 @@ void Player::on_notify(MailTopic topic)
     // demo observer pattern
     switch (topic)
     {
-    case PLAYER_SAID_HELLO:
-    {
-        debug_log("Player: Hello!\n");
-    }
-    break;
     default:
         break;
     }

@@ -16,6 +16,9 @@ void Input::init()
     inputMapping["down"] = 'q';
 
     inputMapping["shoot"] = 'f';
+
+    inputMapping["n"] = 'n';
+    inputMapping["m"] = 'm';
 }
 void Input::update(float dt)
 {

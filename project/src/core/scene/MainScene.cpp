@@ -1,19 +1,31 @@
 #include "MainScene.h"
 
-void MainScene::init(Camera* camera)
-{   
+
+#include "../things/Player.h"
+#include "../things/LightBall.h"
+
+void MainScene::init(Camera *camera)
+{
     // Create player object
-    Player* player = new Player(camera);
+    Player *player = new Player(&mailbox, camera);
     player->init();
     drawables.push_back(player->get_drawable());
     things.push_back(player);
-    //example mailbox usage
-    mailbox.sub(PLAYER_SAID_HELLO, player); //player listen to topic
-    mailbox.notify(PLAYER_SAID_HELLO); //notify player of event
+
+
+    // put more players to test
+    for (int i = 1; i <= 12; ++i)
+    {
+        Player *temp = new Player(&mailbox, nullptr);
+        temp->init();
+        temp->get_drawable()->translate({i, 0, 0});
+        drawables.push_back(temp->get_drawable());
+        things.push_back(temp);
+    }
+
     // todo Create maze
 
     // todo Create enemy spawner
-
 
     // Define lighting
     Light *dlt = new Light;
@@ -22,22 +34,20 @@ void MainScene::init(Camera* camera)
     dlt->position = vec3(-1, -1, -0.5);
     lights.push_back(dlt);
 
-    //add max point lights to test
-    for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
-    {
-        Light *plt = new Light;
-        plt->type = LightType::POINT;
-        if (i % 2 == 0)
-            plt->color = vec4(0, 0.2, 0.8, 1);
-        else
-            plt->color = vec4(0, 0.8, 0.1, 1);
-        plt->position = vec3(-8 + i, 1, -5);
-        lights.push_back(plt);
-        //add a drawable to each light to debug
-        Drawable* ball = dh::create_sphere(Transform(plt->position, vec3(0), vec3(0.2)), 16, 16);
-        ball->setMaterial(dh::create_material(SIMPLE, plt->color, {0,0,0,0}));
-        drawables.push_back(ball);
-    }
+    // add point light to test
+    Light *plt = new Light;
+    plt->type = LightType::POINT;
+    plt->color = vec4(0, 0.8, 0.1, 1);
+    plt->position = vec3(0, 0.5, -5);
+    lights.push_back(plt);
+
+    // add a drawable to point light to debug
+    LightBall* lightBall = new LightBall(plt);
+    lightBall->init();
+    drawables.push_back(lightBall->get_drawable());
+    things.push_back(lightBall);
+    // example mailbox usage
+    mailbox.sub(PLAYER_SAID_HELLO, lightBall); // lightBall listen to player
 }
 
 void MainScene::update(float dt)

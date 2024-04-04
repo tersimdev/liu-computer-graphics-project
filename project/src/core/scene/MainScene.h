@@ -2,8 +2,6 @@
 
 #include "Scene.h"
 
-#include "../things/Player.h"
-
 class MainScene : public Scene 
 {
 public:

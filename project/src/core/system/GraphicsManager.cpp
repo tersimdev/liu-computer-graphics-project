@@ -20,6 +20,16 @@ void GraphicsManager::init(Camera *camera)
     shaderMap[LIT] = load_shaders("lit.vert", "lit.frag");
     shaderMap[UNLIT] = load_shaders("unlit.vert", "unlit.frag");
     shaderMap[SIMPLE] = load_shaders("unlit.vert", "simple.frag");
+
+    disabledLight.type = LightType::DISABLED;
+    disabledLight.color = vec4(0);
+    disabledLight.position = vec3(0);
+
+    dirLight = &disabledLight;
+    for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+    {
+        pointLights[i] = &disabledLight;
+    }
 }
 
 void GraphicsManager::update(float dt, float elapsed)
@@ -44,14 +54,14 @@ void GraphicsManager::update(float dt, float elapsed)
 
     // Clear the screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
     // draw available drawables
     // TODO sort drawables by distance, and transperency if needed
     for (Drawable *d : *drawableList)
         render(d);
 
     printError("display");
-    //draw gui
+    // draw gui
     sgDraw();
     // Swap buffers
     glutSwapBuffers();
@@ -121,10 +131,29 @@ void GraphicsManager::set_shader_uniforms(float elapsed)
         case LIT:
         {
             glUniform3fv(glGetUniformLocation(prog, "viewPos"), 1, &(viewPos.x));
-            if (dirLight != nullptr)
+            if (dirLight == nullptr)
             {
-                glUniform3fv(glGetUniformLocation(prog, "lightDir"), 1, &(dirLight->position.x));
-                glUniform4fv(glGetUniformLocation(prog, "lightCol"), 1, &(dirLight->color.x));
+                debug_error("Missing directional light!\n");
+            }
+            else
+            {
+                glUniform1i(glGetUniformLocation(prog, "dLight.type"), (GLint)dirLight->type);
+                glUniform3fv(glGetUniformLocation(prog, "dLight.position"), 1, &(dirLight->position.x));
+                glUniform4fv(glGetUniformLocation(prog, "dLight.color"), 1, &(dirLight->color.x));
+            }
+            if (pointLights[0] == nullptr)
+            {
+                debug_error("Missing point light reference, set to disabledLight!\n");
+            }
+            else
+            {
+                for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+                {
+                    std::string varName = "pLight[" + std::to_string(i) + "]"; 
+                    glUniform1i(glGetUniformLocation(prog, (varName + ".type").c_str()), (GLint)pointLights[i]->type);
+                    glUniform3fv(glGetUniformLocation(prog, (varName + ".position").c_str()), 1, &(pointLights[i]->position.x));
+                    glUniform4fv(glGetUniformLocation(prog, (varName + ".color").c_str()), 1, &(pointLights[i]->color.x));
+                }
             }
             break;
         }

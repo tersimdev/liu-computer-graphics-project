@@ -36,6 +36,8 @@ private:
     Light* pointLights[MAX_POINT_LIGHTS];
     // reference to the directional light, intially null
     Light* dirLight;
+    // a light to represent no light, used as deafult value
+    Light disabledLight;
 
     mat4 proj, view;
     Camera* camera; //reference to camera obj

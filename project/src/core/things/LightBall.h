@@ -2,22 +2,20 @@
 
 #include "../entity/Thing.h"
 #include "../entity/Drawable.h"
-#include "../../util/Camera.h"
+#include "../entity/Light.h"
 #include "../../util/Input.h"
 #include "../../util/Debug.h"
 
 #include "../system/DrawableHelper.h"
-#include "../system/ThingMailbox.h"
 
 /*
-    Defines a player object. Handles logic like shooting input, movement, health
-    Composes of entities like Drawables, colliders 
+    Defines a ball that is a point light
 */
 
-class Player : public Thing
+class LightBall : public Thing
 {
 public:
-    Player(ThingMailbox* mailbox, Camera* camera) : mailbox(mailbox), camera(camera) {}
+    LightBall(Light* light) : light(light) {}
 
     void init() override;
     void update(float dt) override;
@@ -27,6 +25,5 @@ public:
     Drawable* get_drawable();
 private:
     Drawable* drawable;
-    ThingMailbox* mailbox;
-    Camera* camera;
+    Light* light;
 };

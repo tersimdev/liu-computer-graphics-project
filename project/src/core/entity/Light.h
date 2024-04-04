@@ -4,6 +4,7 @@
 
 enum LightType
 {
+    DISABLED = 0,
     DIR,
     POINT
 };
