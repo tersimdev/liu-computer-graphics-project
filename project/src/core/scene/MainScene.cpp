@@ -1,8 +1,6 @@
 #include "MainScene.h"
 
 
-#include "../things/Player.h"
-#include "../things/LightBall.h"
 #include "SimpleGUI.h"
 
 void MainScene::init(Camera *camera)
@@ -17,7 +15,7 @@ void MainScene::init(Camera *camera)
 
 
     // Create player object
-    Player *player = new Player(&mailbox, camera);
+    player = new Player(&mailbox, camera);
     player->init();
     drawables.push_back(player->get_drawable());
     things.push_back(player);
@@ -40,7 +38,7 @@ void MainScene::init(Camera *camera)
     // Define lighting
     Light *dlt = new Light;
     dlt->type = LightType::DIR;
-    dlt->color = vec4(0.8, 0.8, 0.6, 1);
+    dlt->color = vec4(0.8, 0.8, 0.6, 0.2);
     dlt->position = vec3(-1, -1, -0.5);
     lights.push_back(dlt);
 
@@ -52,17 +50,38 @@ void MainScene::init(Camera *camera)
     lights.push_back(plt);
 
     // add a drawable to point light to debug
-    LightBall* lightBall = new LightBall(plt);
+    lightBall = new LightBall(plt);
     lightBall->init();
     drawables.push_back(lightBall->get_drawable());
     things.push_back(lightBall);
     // example mailbox usage
     mailbox.sub(PLAYER_SAID_HELLO, lightBall); // lightBall listen to player
+
+    //second light ball to animate
+    plt = new Light;
+    plt->type = LightType::POINT;
+    plt->color = vec4(0.8, 0.2, 0.8, 1);
+    plt->position = vec3(0, -0.5, -5);
+    lights.push_back(plt);
+    lightBall2 = new LightBall(plt);
+    lightBall2->init();
+    drawables.push_back(lightBall2->get_drawable());
+    things.push_back(lightBall2);
+    elapsed = 0;
 }
 
 void MainScene::update(float dt)
 {
     Scene::update(dt);
+
+    if (Input::get_action("m"))
+        lightBall->translate({dt*10, 0, 0});
+    if (Input::get_action("n"))
+        lightBall->translate({-dt*10, 0, 0});
+
+    elapsed += dt;
+
+    lightBall2->set_pos({sinf(elapsed) * 6 + 6,-0.5, -5});
 }
 
 void MainScene::on_notify(MailTopic topic, void *aux)

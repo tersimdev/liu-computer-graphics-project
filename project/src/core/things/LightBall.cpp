@@ -14,10 +14,10 @@ void LightBall::init()
 void LightBall::update(float dt)
 {
     //tmp controls
-    if (Input::get_action("m"))
-        light->position.x += dt * 10;
-    if (Input::get_action("n"))
-        light->position.x -= dt * 10;
+    // if (Input::get_action("m"))
+    //     light->position.x += dt * 10;
+    // if (Input::get_action("n"))
+    //     light->position.x -= dt * 10;
     drawable->getTransform()->translation = light->position;
 }
 
@@ -38,6 +38,16 @@ void LightBall::on_notify(MailTopic topic, void* aux)
     default:
         break;
     }
+}
+
+void LightBall::translate(vec3 trl)
+{
+    light->position += trl;
+}
+
+void LightBall::set_pos(vec3 pos)
+{
+    light->position = pos;
 }
 
 Drawable *LightBall::get_drawable()

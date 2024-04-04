@@ -22,6 +22,9 @@ public:
     void cleanup() override;
     void on_notify(MailTopic topic, void* aux) override;
 
+    void translate(vec3 trl);
+    void set_pos(vec3 pos);
+
     Drawable* get_drawable();
 private:
     Drawable* drawable;
