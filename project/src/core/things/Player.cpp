@@ -16,7 +16,7 @@ void Player::update(float dt)
     {
         camera->example_movement(dt);
     }
-    if (Input::get_action("shoot"))
+    if (Input::get_action("shoot", false))
     {
         //debug_log("pew pew pew\n");
         mailbox->notify(PLAYER_SAID_HELLO);

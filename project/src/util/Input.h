@@ -17,7 +17,7 @@ public:
     static void on_mouse_move(int x, int y);
 
     static vec2 get_mouse_delta();
-    static bool get_action(const std::string& action);
+    static bool get_action(const std::string& action, bool hold = true);
 
     static void set_lock_mouse(bool lock);
 
@@ -26,4 +26,5 @@ private:
     static bool lockMouse;           // whether should keep mouse in center
 
     static std::unordered_map<std::string, char> inputMapping; //stores mapping of action to keypress
+    static std::unordered_map<char, char> prevState; //stores mapping of keypress and its prev state
 };
