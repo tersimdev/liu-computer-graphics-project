@@ -33,10 +33,10 @@ void init(void)
 	sgCreateStaticString(40, 40, "Minimal demo of SimpleGUI");
 
 	// A slider and a float display
-	sgCreateStaticString(40, 80, "Slider and float display");
-	sgCreateSlider(40, 100, 200, &testf, 5, 10);
-	sgCreateDisplayFloat(40, 120, "Value: ", &testf);
-	Input::set_lock_mouse(false);
+	// sgCreateStaticString(40, 80, "Slider and float display");
+	// sgCreateSlider(40, 100, 200, &testf, 5, 10);
+	// sgCreateDisplayFloat(40, 120, "Value: ", &testf);
+	// Input::set_lock_mouse(false);
 }
 
 // runs every tick
