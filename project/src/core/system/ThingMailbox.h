@@ -13,7 +13,7 @@
 class ThingMailbox
 {
 public:
-    void notify(MailTopic topic);
+    void notify(MailTopic topic, void* aux);
     void sub(MailTopic topic, Thing* thing);
     void unsub(MailTopic topic, Thing* thing);
 

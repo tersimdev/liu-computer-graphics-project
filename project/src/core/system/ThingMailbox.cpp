@@ -2,13 +2,13 @@
 
 #include <algorithm>
 
-void ThingMailbox::notify(MailTopic topic)
+void ThingMailbox::notify(MailTopic topic, void* aux)
 {
     if (subscribers.find(topic) == subscribers.end())
         return;
     std::vector<Thing*> list = subscribers[topic];
     for (Thing* o : list)
-        o->on_notify(topic);
+        o->on_notify(topic, aux);
 }
 
 void ThingMailbox::sub(MailTopic topic, Thing* thing)

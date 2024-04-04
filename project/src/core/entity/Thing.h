@@ -12,5 +12,5 @@ public:
     virtual void init() = 0;
     virtual void update(float dt) = 0;
     virtual void cleanup() = 0;
-    virtual void on_notify(MailTopic topic) = 0;
+    virtual void on_notify(MailTopic topic, void* aux) = 0;
 };

@@ -22,7 +22,7 @@ public:
     void init() override;
     void update(float dt) override;
     void cleanup() override;
-    void on_notify(MailTopic topic) override;
+    void on_notify(MailTopic topic, void* aux) override;
 
     Drawable* get_drawable();
 private:
