@@ -20,7 +20,7 @@
 #define TEXTURES_PATH "./asset/texture/"
 #define MODELS_PATH "./asset/model/"
 #define MAX_TEXTURES 8
-#define MAX_POINT_LIGHTS 16
+#define MAX_POINT_LIGHTS 4
 #define INITIAL_FOV 45.0f
 #define P_Z_NEAR 0.1f
 #define P_Z_FAR 20.f

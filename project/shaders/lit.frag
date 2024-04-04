@@ -10,7 +10,7 @@ uniform float elapsedTime;
 uniform sampler2D texUnit;
 
 //lighting stuff
-#define MAX_POINT_LIGHTS 16
+#define MAX_POINT_LIGHTS 4
 #define kc 1.0
 #define kl 0.22
 #define kq 0.20

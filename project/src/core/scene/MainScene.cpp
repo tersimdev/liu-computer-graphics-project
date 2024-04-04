@@ -3,9 +3,19 @@
 
 #include "../things/Player.h"
 #include "../things/LightBall.h"
+#include "SimpleGUI.h"
 
 void MainScene::init(Camera *camera)
 {
+	sgCreateStaticString(20, RES_Y - 20, "WASDQE to move camera, NM to move lightball");
+    sgSetBackgroundColor(0,0,0,0);
+	//A slider and a float display
+	// sgCreateStaticString(40, 80, "Slider and float display");
+	// sgCreateSlider(40, 100, 200, &testf, 5, 10);
+	// sgCreateDisplayFloat(40, 120, "Value: ", &testf);
+	// Input::set_lock_mouse(false);
+
+
     // Create player object
     Player *player = new Player(&mailbox, camera);
     player->init();
@@ -18,7 +28,7 @@ void MainScene::init(Camera *camera)
     {
         Player *temp = new Player(&mailbox, nullptr);
         temp->init();
-        temp->get_drawable()->translate({i, 0, 0});
+        temp->get_drawable()->translate({(float)i, 0, 0});
         drawables.push_back(temp->get_drawable());
         things.push_back(temp);
     }

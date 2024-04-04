@@ -22,7 +22,7 @@ public:
     }
 
     void setTransform(Transform tr) { this->transform = tr; }
-    Transform getTransform() { return transform; }
+    Transform* getTransform() { return &transform; }
 
     void translate(vec3 t) { transform.translation += t; }
     void scale(vec3 s) { transform.scale = ElementMult(transform.scale, s); }

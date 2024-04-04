@@ -172,9 +172,9 @@ void GraphicsManager::render(Drawable *d)
     if (d == nullptr || !d->getDrawFlag())
         return;
 
-    vec3 trans = d->getTransform().translation;
-    vec3 scale = d->getTransform().scale;
-    vec3 rot = d->getTransform().rotate;
+    vec3 trans = d->getTransform()->translation;
+    vec3 scale = d->getTransform()->scale;
+    vec3 rot = d->getTransform()->rotate;
 
     // mat4 m_trans = T(trans.x, trans.y, trans.z);
     // mat4 m_rot = Rx(rot.x) * Ry(rot.y) * Rz(rot.z); // order matters, consider quarternions for true representation

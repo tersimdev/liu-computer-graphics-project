@@ -26,11 +26,16 @@ void Input::update(float dt)
         Check if escape key pressed.
         0x1B is VK_ESCAPE (tested on windows)
     */
-    if (glutKeyIsDown(EXIT_KEY_1) || glutKeyIsDown(EXIT_KEY_2))
+    if (glutKeyIsDown(EXIT_KEY_1))
     {
         debug_log("Exit button pressed, terminating\n");
         glutClose();
         exit(0);
+    }
+    if (glutKeyIsDown(EXIT_KEY_2))
+    {
+        debug_log("Toggled mouse lock\n");
+        lockMouse = !lockMouse;
     }
     if (lockMouse)
         glutWarpPointer(RES_X / 2, RES_Y / 2);

@@ -10,8 +10,9 @@
 #include "core/system/GraphicsManager.h"
 #include "core/system/SceneManager.h"
 
-float timeElapsed = 0;
-unsigned int targetFPS = 60;
+double timeElapsed = 0;
+unsigned int repeatingTimer = 16;
+int currFPS = 0; 
 Camera camera;
 GraphicsManager graphicsMgr;
 SceneManager sceneMgr;
@@ -28,25 +29,19 @@ void init(void)
 	graphicsMgr.init(&camera);
 	sceneMgr.init(&graphicsMgr);
 	debug_log("[Intialized Systems]\n");
-
-	// temp, testing simplegui
-	sgCreateStaticString(40, 40, "Minimal demo of SimpleGUI");
-
-	// A slider and a float display
-	// sgCreateStaticString(40, 80, "Slider and float display");
-	// sgCreateSlider(40, 100, 200, &testf, 5, 10);
-	// sgCreateDisplayFloat(40, 120, "Value: ", &testf);
-	// Input::set_lock_mouse(false);
 }
 
 // runs every tick
 void display(void)
 {
-	float dt = timeElapsed; // set to previous
-	timeElapsed = (float)glutGet(GLUT_ELAPSED_TIME);
-	dt = (timeElapsed - dt) / 1000.0f; // divide by 1000f to convert to seconds
+	double dt = timeElapsed; // set to previous
+	timeElapsed = ((double)glutGet(GLUT_ELAPSED_TIME) / 1000.0); // divide by 1000f to convert to seconds
+	dt = (timeElapsed - dt); 
 
 	// debug_log("Tick, dt: %.4f\n", dt);
+	if (dt > 0.01)
+		currFPS = 1.0 / dt;
+	sgCreateDisplayInt(10, 20, "FPS:", &currFPS);
 
 	Input::update(dt);
 	camera.update(dt);
@@ -90,7 +85,7 @@ int main(int argc, char **argv)
 	init();
 
 	glutDisplayFunc(display);
-	glutRepeatingTimer(1000 / targetFPS);
+	glutRepeatingTimer(repeatingTimer);
 	glutPassiveMotionFunc(passive_motion);
 	glutMouseFunc(mouse);
 	glutMotionFunc(motion);
