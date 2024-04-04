@@ -27,7 +27,7 @@ void Player::cleanup()
 {
 }
 
-void Player::on_notify(MailTopic topic)
+void Player::on_notify(MailTopic topic, void* aux)
 {
     // demo observer pattern
     switch (topic)

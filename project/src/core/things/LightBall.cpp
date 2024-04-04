@@ -15,7 +15,10 @@ void LightBall::update(float dt)
 {
     //tmp controls
     if (Input::get_action("m"))
+    {
         light->position.x += dt * 10;
+        debug_log("hi %d\n", light->position.x);
+    }
     drawable->getTransform().translation = light->position;
 }
 
@@ -23,7 +26,7 @@ void LightBall::cleanup()
 {
 }
 
-void LightBall::on_notify(MailTopic topic)
+void LightBall::on_notify(MailTopic topic, void* aux)
 {
     // demo observer pattern
     switch (topic)
