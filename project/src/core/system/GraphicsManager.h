@@ -24,6 +24,7 @@ class GraphicsManager
     void set_drawable_list(std::vector<Drawable*>* list);
     void set_dir_light(Light* light);
     void set_point_light(int idx, Light* light);
+    void reset_lights();
 
     Camera* get_camera();
     GLuint get_shader(ShaderProg shaderProg);

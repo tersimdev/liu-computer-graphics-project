@@ -25,11 +25,7 @@ void GraphicsManager::init(Camera *camera)
     disabledLight.color = vec4(0);
     disabledLight.position = vec3(0);
 
-    dirLight = &disabledLight;
-    for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
-    {
-        pointLights[i] = &disabledLight;
-    }
+    reset_lights();
 }
 
 void GraphicsManager::update(float dt, float elapsed)
@@ -91,6 +87,15 @@ void GraphicsManager::set_point_light(int idx, Light *light)
         return;
     if (idx >= 0 && idx < MAX_POINT_LIGHTS)
         pointLights[idx] = light;
+}
+
+void GraphicsManager::reset_lights()
+{
+    dirLight = &disabledLight;
+    for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+    {
+        pointLights[i] = &disabledLight;
+    }
 }
 
 Camera *GraphicsManager::get_camera()
