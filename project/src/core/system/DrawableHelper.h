@@ -12,7 +12,7 @@
 class DrawableHelper
 {
 public:
-    static Material *create_material(std::string name, ShaderProg shaderProg, vec3 albedo, vec4 specular);
+    static Material *create_material(ShaderProg shaderProg, vec3 albedo, vec4 specular);
     static Material *attach_texture_to_material(Material *m, int idx, std::string textureName);
 
     static Drawable *create_from_model(std::string path, Transform t); // path relative from MODELS_PATH

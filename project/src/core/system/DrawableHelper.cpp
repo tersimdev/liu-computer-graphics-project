@@ -1,7 +1,7 @@
 #include "DrawableHelper.h"
 #include "../../util/Debug.h"
 
-Material *DrawableHelper::create_material(std::string name, ShaderProg shaderProg, vec3 albedo, vec4 specular)
+Material *DrawableHelper::create_material(ShaderProg shaderProg, vec3 albedo, vec4 specular)
 {
     Material *m = new Material;
     m->albedo = albedo;

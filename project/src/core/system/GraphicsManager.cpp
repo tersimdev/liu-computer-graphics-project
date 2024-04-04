@@ -19,6 +19,7 @@ void GraphicsManager::init(Camera *camera)
     // Load and compile shader(s)
     shaderMap[LIT] = load_shaders("lit.vert", "lit.frag");
     shaderMap[UNLIT] = load_shaders("unlit.vert", "unlit.frag");
+    shaderMap[SIMPLE] = load_shaders("unlit.vert", "simple.frag");
 }
 
 void GraphicsManager::update(float dt, float elapsed)

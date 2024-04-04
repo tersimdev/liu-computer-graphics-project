@@ -8,5 +8,6 @@ enum ShaderProg
 {
     LIT,
     UNLIT,
+    SIMPLE, //no texture, just unlit color
     NUM_PROGS
 };

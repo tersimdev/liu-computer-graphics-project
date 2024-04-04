@@ -4,7 +4,7 @@ void Player::init()
 {
     this->drawable = dh::create_from_model("bunnyplus.obj", Transform({0, 0, -5}, {0, -45, 0}, {0.5, 0.5, 0.5}));
     //this->drawable = dh::create_sphere(Transform({0, 0, -5}, {0, -45, 0}, {0.5, 0.5, 0.5}), 32, 32);
-    Material *m = dh::create_material("test", ShaderProg::LIT, {0.7, 0.2, 0.2}, {0.8, 0.8, 0.8, 16});
+    Material *m = dh::create_material(ShaderProg::LIT, {0.7, 0.2, 0.2}, {0.8, 0.8, 0.8, 16});
     dh::attach_texture_to_material(m, 0, "conc");
     drawable->setMaterial(m);
 }
