@@ -1,5 +1,10 @@
 #include "Scene.h"
 
+void Scene::init()
+{
+    debug_warn("Make sure to init with camera!\n");
+}
+
 void Scene::update(float dt)
 {
     for (Thing *th : things)

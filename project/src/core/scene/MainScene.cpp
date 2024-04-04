@@ -64,3 +64,8 @@ void MainScene::update(float dt)
 {
     Scene::update(dt);
 }
+
+void MainScene::on_notify(MailTopic topic, void *aux)
+{
+    //can recieve messages from things in the scene here
+}

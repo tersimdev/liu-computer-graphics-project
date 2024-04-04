@@ -13,13 +13,16 @@
 /*
     Base class defining a scene construct. Inherit to create new scenes.
 */
-class Scene 
+class Scene : public Thing
 {
 public:
     virtual ~Scene() = default;
-    virtual void init(Camera* camera) = 0; //abstract, as this is empty scene
+    void init() override; //override Thing
+    virtual void init(Camera* camera) = 0; //inherit from thing but keep it abstract
     virtual void update(float dt);
     virtual void cleanup();
+    virtual void on_notify(MailTopic topic, void* aux) = 0;
+
 
     std::vector<Light*>& get_lights();
     std::vector<Drawable*>* get_drawables();
