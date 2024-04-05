@@ -19,5 +19,5 @@ public:
 
     void cleanup(); //unsub all
 private:
-    std::unordered_map<MailTopic, std::vector<Thing*>> subscribers;
+    std::unordered_map<MailTopic, std::vector<Thing*> > subscribers;
 };
