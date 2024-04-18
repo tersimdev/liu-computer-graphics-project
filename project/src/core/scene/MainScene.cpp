@@ -72,7 +72,7 @@ void MainScene::init(Camera *camera)
         {
             if(maze[i][j])
             {
-                MazeWall *temp = new MazeWall(&mailbox, camera);
+                MazeWall *temp = new MazeWall(&mailbox);
                 temp->init();
                 temp->get_drawable()->translate({(float)i, 0, (float)j});
                 drawables.push_back(temp->get_drawable());

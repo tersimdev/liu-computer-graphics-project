@@ -4,8 +4,6 @@
 #include "../util/Debug.h"
 #include "../util/Input.h"
 
-//todo abstract movement from camera, have it be controlled by "Player" 
-
 class Camera
 {
 public:
@@ -32,6 +30,6 @@ private:
     vec3 _camFront, _camRight; // tmp variables
 
     /* config vars */
-    float camMoveSpeed = 0.01;
-    float mouseSens = 0.001f;
+    float camMoveSpeed = 2;
+    float mouseSens = 0.2f;
 };

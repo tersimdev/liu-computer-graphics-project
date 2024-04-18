@@ -10,11 +10,6 @@ void MazeWall::init()
 
 void MazeWall::update(float dt)
 {
-//   drawable->rotate({0, 2 *dt, 0});
-    if(camera)
-    {
-        camera->example_movement(dt);
-    }
 }
 
 Drawable *MazeWall::get_drawable()

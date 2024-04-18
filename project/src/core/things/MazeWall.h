@@ -12,21 +12,17 @@
 class MazeWall : public Thing
 {
 public:
-    MazeWall(ThingMailbox* mailbox, Camera* camera) : mailbox(mailbox), camera(camera) {}
+    MazeWall(ThingMailbox* mailbox) : mailbox(mailbox) {}
 
     void init() override;
     void update(float dt) override;
     void cleanup() override;
     void on_notify(MailTopic topic, void* aux) override;
 
-    void translate(vec3 trl);
-    void set_pos(vec3 pos);
-
     Drawable* get_drawable();
 private:
     Drawable* drawable;
     ThingMailbox* mailbox;
-    Camera* camera;
 
 
 
