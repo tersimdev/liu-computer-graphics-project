@@ -5,7 +5,7 @@ void Obstacle::init()
     float scale = 0.3;
     vec3 pos = vec3(0);
     this->collider = new SphereCollider(pos, scale);
-    this->rigidbody = new Rigidbody(KINEMATIC, scale);
+    this->rigidbody = new Rigidbody(DYNAMIC, scale);
     this->collider->set_rigidbody(rigidbody);
     
     this->drawable = dh::create_sphere(Transform(), 32, 32);
@@ -19,7 +19,7 @@ void Obstacle::init()
 void Obstacle::update(float dt)
 {
     vec3 pos = collider->get_position();
-    //pos = rigidbody->update(dt, pos); //uncomment when obstacles are dynamic
+    pos = rigidbody->update(dt, pos); //uncomment when obstacles are dynamic
     collider->set_position(pos);
     drawable->set_position(pos);
 }

@@ -25,6 +25,7 @@ public:
 
     void example_movement(float dt);
     void move_cam(vec3 direction, float dt);
+    vec3 move_pos(vec3 pos, vec3 dir, float dt);
     void rotate_cam(vec2 delta,  float dt);
 private:
     vec3 camPos, camDir, camUp;

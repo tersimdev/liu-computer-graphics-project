@@ -70,6 +70,18 @@ void Camera::move_cam(vec3 direction, float dt)
     camPos += direction.y * vec3(0, 1, 0) * camMoveSpeed * dt;
 }
 
+//moves a given position vector
+vec3 Camera::move_pos(vec3 pos, vec3 dir, float dt)
+{
+    if (NormSq(dir - vec3(0)) > 0.1) //not zero
+        dir = normalize(dir);
+    pos += -dir.z * _camFront * camMoveSpeed * dt;
+    pos += dir.x * _camRight * camMoveSpeed * dt;
+    pos += dir.y * vec3(0, 1, 0) * camMoveSpeed * dt;
+
+    return pos;
+}
+
 // Camera mouse movement
 void Camera::rotate_cam(vec2 delta, float dt)
 {
