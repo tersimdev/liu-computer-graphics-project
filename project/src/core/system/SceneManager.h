@@ -5,6 +5,7 @@
 #include "../scene/Scene.h"
 #include "TextureManager.h"
 #include "GraphicsManager.h"
+#include "CollisionManager.h"
 
 /*
     Class to manage scene transistions, and own all scene objects.
@@ -13,7 +14,7 @@
 class SceneManager
 {
 public:
-    void init(GraphicsManager* graphicsMgr);
+    void init(GraphicsManager* graphicsMgr, CollisionManager* colMgr);
     void update(float dt);
     void cleanup();
     void change_scene(std::string sceneName);
@@ -26,4 +27,5 @@ private:
 
     //dependency injections
     GraphicsManager* graphicsMgr;
+    CollisionManager* colMgr;
 };

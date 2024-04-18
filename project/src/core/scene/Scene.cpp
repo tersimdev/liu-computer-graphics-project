@@ -30,10 +30,15 @@ void Scene::cleanup()
     {
         delete th;
     }
+    for (Collider *col : colliders)
+    {
+        delete col;
+    }
 
     lights.clear();
     drawables.clear();
     things.clear();
+    colliders.clear();
 
     mailbox.cleanup();
 }
@@ -51,4 +56,9 @@ std::vector<Drawable *> *Scene::get_drawables()
 std::vector<Thing *> *Scene::get_things()
 {
     return &things;
+}
+
+std::vector<Collider *> *Scene::get_colliders()
+{
+    return &colliders;
 }

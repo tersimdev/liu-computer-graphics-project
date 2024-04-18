@@ -15,7 +15,9 @@ public:
     
     void set_move_speed(float speed);
     void set_mouse_sens(float sens);
-    
+    void set_pos(vec3 pos);
+    void set_dir(vec3 dir);
+
     vec3 get_pos();
     vec3 get_lookat();
     vec3 get_dir();
@@ -23,6 +25,7 @@ public:
 
     void example_movement(float dt);
     void move_cam(vec3 direction, float dt);
+    vec3 move_pos(vec3 pos, vec3 dir, float dt);
     void rotate_cam(vec2 delta,  float dt);
 private:
     vec3 camPos, camDir, camUp;

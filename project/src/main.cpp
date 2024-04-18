@@ -9,6 +9,7 @@
 #include "util/Camera.h"
 #include "core/system/GraphicsManager.h"
 #include "core/system/SceneManager.h"
+#include "core/system/CollisionManager.h"
 
 double timeElapsed = 0;
 unsigned int repeatingTimer = 16;
@@ -16,6 +17,7 @@ int currFPS = 0;
 Camera camera;
 GraphicsManager graphicsMgr;
 SceneManager sceneMgr;
+CollisionManager colMgr;
 
 float testf = 5; // test for simplegui
 
@@ -27,7 +29,8 @@ void init(void)
 	Input::init();
 	camera.init();
 	graphicsMgr.init(&camera);
-	sceneMgr.init(&graphicsMgr);
+	colMgr.init();
+	sceneMgr.init(&graphicsMgr, &colMgr);
 	debug_log("[Intialized Systems]\n");
 }
 
@@ -46,6 +49,7 @@ void display(void)
 	Input::update(dt);
 	camera.update(dt);
 	// camera.example_movement(dt);
+	colMgr.update(PHYS_TIMESTEP);
 	graphicsMgr.update(dt, timeElapsed);
 	sceneMgr.update(dt);
 }
@@ -55,6 +59,7 @@ void cleanup()
 	debug_log("[Cleaning Up]\n");
 	sceneMgr.cleanup();
 	graphicsMgr.cleanup();
+	colMgr.cleanup();
 }
 
 void passive_motion(int x, int y)

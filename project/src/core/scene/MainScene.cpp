@@ -49,16 +49,20 @@ void MainScene::init(Camera *camera)
     player->init();
     drawables.push_back(player->get_drawable());
     things.push_back(player);
+    colliders.push_back(player->get_collider());
 
 
-    // put more players to test
+    // put more balls to test
+    //this temp code should move into maze, 
+    //ie for each maze cell chance to spawn an obstacle
     for (int i = 1; i <= 12; ++i)
     {
-        Player *temp = new Player(&mailbox, nullptr);
+        Obstacle *temp = new Obstacle(&mailbox);
         temp->init();
-        temp->get_drawable()->translate({(float)i, 0, 0});
+        temp->set_position({(float)i, 0, -5});
         drawables.push_back(temp->get_drawable());
         things.push_back(temp);
+        colliders.push_back(temp->get_collider());
     }
 
     // todo Create maze

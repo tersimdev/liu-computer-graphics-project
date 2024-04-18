@@ -5,10 +5,10 @@
 #include "../../util/Constants.h"
 #include "../../util/Debug.h"
 
-void SceneManager::init(GraphicsManager* graphicsMgr)
+void SceneManager::init(GraphicsManager* graphicsMgr, CollisionManager* colMgr)
 {
     this->graphicsMgr = graphicsMgr;
-
+    this->colMgr = colMgr;
     /**
      * ADD YOUR SCENES HERE.
      * DEFINE STARTING SCENE IN CONSTANTS
@@ -70,4 +70,6 @@ void SceneManager::init_active_scene()
         }
         graphicsMgr->set_point_light(i-1 ,lights[i]);
     }
+
+    colMgr->set_collider_list(activeScene->get_colliders());
 }
