@@ -3,6 +3,7 @@
 #include "../entity/Thing.h"
 #include "../entity/Drawable.h"
 #include "../entity/SphereCollider.h"
+#include "../entity/Rigidbody.h"
 #include "../../util/Debug.h"
 
 #include "../system/DrawableHelper.h"
@@ -32,4 +33,5 @@ private:
     ThingMailbox* mailbox;
     Drawable* drawable;
     SphereCollider* collider;
+    Rigidbody* rigidbody;
 };

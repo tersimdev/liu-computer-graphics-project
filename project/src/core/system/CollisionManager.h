@@ -23,10 +23,11 @@ public:
     void set_collider_list(std::vector<Collider *>*);
 
 private:
+    bool no_rigidbodies(Collider* c1, Collider* c2); //helper to check if both colliders have no rigidbody, ie both static
     ColResult check_sphere_sphere(SphereCollider *c1, SphereCollider *c2);
     ColResult check_sphere_plane(SphereCollider *c1, PlaneCollider *c2);
 
-    const float EPSILON = 0.001f;
+    void resolve_collision(Collider *c1, Collider *c2, vec3 delta);
 
     std::vector<Collider *>* colliders;
 };

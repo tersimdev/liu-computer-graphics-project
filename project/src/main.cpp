@@ -49,7 +49,7 @@ void display(void)
 	Input::update(dt);
 	camera.update(dt);
 	// camera.example_movement(dt);
-	colMgr.update(dt);
+	colMgr.update(PHYS_TIMESTEP);
 	graphicsMgr.update(dt, timeElapsed);
 	sceneMgr.update(dt);
 }

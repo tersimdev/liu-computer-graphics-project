@@ -3,6 +3,7 @@
 #include "../entity/Thing.h"
 #include "../entity/Drawable.h"
 #include "../entity/SphereCollider.h"
+#include "../entity/Rigidbody.h"
 #include "../../util/Camera.h"
 #include "../../util/Input.h"
 #include "../../util/Debug.h"
@@ -34,6 +35,7 @@ private:
     ThingMailbox* mailbox;
     Camera* camera;
     SphereCollider* collider;
+    Rigidbody* rigidbody;
 
     vec3 position;
     vec3 camOffset; 

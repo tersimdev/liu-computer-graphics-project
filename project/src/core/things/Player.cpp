@@ -14,6 +14,8 @@ void Player::init()
     drawable->set_scale(scale);
 
     this->collider = new SphereCollider(position, scale);
+    this->rigidbody = new Rigidbody(KINEMATIC, scale);
+    this->collider->set_rigidbody(rigidbody);
 }
 
 void Player::update(float dt)
