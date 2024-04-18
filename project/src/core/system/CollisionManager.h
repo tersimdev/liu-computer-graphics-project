@@ -8,7 +8,7 @@
 typedef struct _ColResult
 {
     bool overlap;
-    vec3 delta; // how much either collider to move to resolve
+    vec3 delta; // how much collider 1 should move to resolve
 } ColResult;
 
 /*
@@ -20,8 +20,7 @@ public:
     void init();
     void update(float dt);
     void cleanup();
-    void register_collider(Collider *col);
-    void unregister_collider(Collider *col);
+    void set_collider_list(std::vector<Collider *>*);
 
 private:
     ColResult check_sphere_sphere(SphereCollider *c1, SphereCollider *c2);
@@ -29,5 +28,5 @@ private:
 
     const float EPSILON = 0.001f;
 
-    std::vector<Collider *> colliders;
+    std::vector<Collider *>* colliders;
 };

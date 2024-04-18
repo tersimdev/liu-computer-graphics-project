@@ -30,6 +30,16 @@ void Camera::set_mouse_sens(float sens)
     mouseSens = sens;
 }
 
+void Camera::set_pos(vec3 pos)
+{
+    camPos = pos;
+}
+
+void Camera::set_dir(vec3 dir)
+{
+    camDir = normalize(dir);
+}
+
 vec3 Camera::get_pos()
 {
     return camPos;

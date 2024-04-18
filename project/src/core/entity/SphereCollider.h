@@ -5,8 +5,8 @@
 class SphereCollider : public Collider
 {
 public:
-    SphereCollider(float radius) 
-    : Collider(ColliderType::SPHERE), radius(radius) {}
+    SphereCollider(vec3 pos, float radius) 
+    : Collider(ColliderType::SPHERE, pos), radius(radius) {}
     ~SphereCollider() = default;
 
     float radius;

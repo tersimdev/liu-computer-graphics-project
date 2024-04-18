@@ -4,6 +4,7 @@
 #include "../entity/Drawable.h"
 #include "../entity/Material.h"
 #include "../entity/Light.h"
+#include "../entity/Collider.h"
 #include "../../util/Camera.h"
 #include <vector>
 
@@ -27,10 +28,12 @@ public:
     std::vector<Light*>& get_lights();
     std::vector<Drawable*>* get_drawables();
     std::vector<Thing*>* get_things();
+    std::vector<Collider*>* get_colliders();
 protected:
     std::vector<Light*> lights; //0th is dirLight
     std::vector<Drawable*> drawables;
     std::vector<Thing*> things;
+    std::vector<Collider*> colliders;
 
     ThingMailbox mailbox;
 };

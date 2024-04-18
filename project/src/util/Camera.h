@@ -15,7 +15,9 @@ public:
     
     void set_move_speed(float speed);
     void set_mouse_sens(float sens);
-    
+    void set_pos(vec3 pos);
+    void set_dir(vec3 dir);
+
     vec3 get_pos();
     vec3 get_lookat();
     vec3 get_dir();

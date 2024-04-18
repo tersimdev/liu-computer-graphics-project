@@ -4,6 +4,7 @@
 
 #include "../things/Player.h"
 #include "../things/LightBall.h"
+#include "../things/Obstacle.h"
 
 class MainScene : public Scene 
 {

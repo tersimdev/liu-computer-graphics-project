@@ -20,14 +20,15 @@ enum ColliderType
 class Collider
 {
 public:
-    Collider(ColliderType coltype) : coltype(coltype) {}
+    Collider(ColliderType coltype, vec3 pos) : coltype(coltype), position(pos) {}
     virtual ~Collider() = default;
 
-    void set_position(vec3 pos) { postiion = pos; }
+    void move_position(vec3 delta) { position += delta; }
+    void set_position(vec3 pos) { position = pos; }
 
-    vec3 get_position() { return postiion; }
+    vec3 get_position() { return position; }
     ColliderType get_collider_type() { return coltype; }
 protected:
     ColliderType coltype;
-    vec3 postiion;
+    vec3 position;
 };

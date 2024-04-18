@@ -24,6 +24,9 @@ public:
     void setTransform(Transform tr) { this->transform = tr; }
     Transform* getTransform() { return &transform; }
 
+    void set_position(vec3 pos) { transform.translation = pos; } //shorthand
+    void set_scale(float unifScale) { transform.scale = {unifScale,unifScale,unifScale}; } //shorthand
+
     void translate(vec3 t) { transform.translation += t; }
     void scale(vec3 s) { transform.scale = ElementMult(transform.scale, s); }
     void rotate(vec3 r) { transform.rotate += r; }
