@@ -23,7 +23,7 @@ class Rigidbody
 public:
     Rigidbody(RigidbodyType rbtype, float mass) 
     : rbtype(rbtype), mass(mass), 
-    gravScale(1), elasticity(0.7), dampening(0.8),
+    gravScale(1), elasticity(0.7), dampening(0.1),
     vel({0,0,0}), accel({0,0,0}) 
     {}
 
@@ -32,12 +32,17 @@ public:
         //apply gravity
         //disabled for now, no floor
         // accel.y -= GRAVITY * gravScale;
-        // if (accel.y < PHYS_ESPILON)
-        //     accel.y = 0;
         
         //apply euler integration
         vel += accel * dt;
         pos += vel * dt;
+
+        //dampen accel and vel to act as friction
+        vel = vel - vel*dampening*dt;
+        if (NormSq(vel) < PHYS_ESPILON * PHYS_ESPILON)
+            vel = vec3(0);
+        if (NormSq(accel) < PHYS_ESPILON * PHYS_ESPILON)
+            accel = vec3(0);
         return pos;
     }
     void add_force(vec3 force)
@@ -48,7 +53,7 @@ public:
             debug_error("Mass cannot be zero.\n");
             return;
         }
-        accel += force / mass;
+        accel = force / mass;
     }
 
     RigidbodyType get_rbtype() { return rbtype; }

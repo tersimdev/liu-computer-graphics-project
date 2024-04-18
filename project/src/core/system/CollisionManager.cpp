@@ -127,17 +127,17 @@ void CollisionManager::resolve_collision(Collider *c1, Collider *c2, vec3 delta)
             float v1a = (v1 * (m1 - e * m2) + v2 * (1+e) * m2) / (m1 + m2);
             float v2a = (v2 * (m2 - e * m1) + v1 * (1+e) * m1) / (m1 + m2);
             rb1->set_vel(dir * (v1a)); 
-            rb2->set_vel(-dir * (v2a));            
+            rb2->set_vel(-dir * (v2a));      
         }
         else if (rb1->get_rbtype() == DYNAMIC && rb2->get_rbtype() == KINEMATIC)
         {
             c2->move_position(-delta);
-            rb1->set_vel(delta * 10); //temp
+            rb1->set_vel(delta * 20); //temp
         }
         else if (rb1->get_rbtype() == KINEMATIC && rb2->get_rbtype() == DYNAMIC)
         {
             c1->move_position(delta);
-            rb2->set_vel(-delta * 10); //temp
+            rb2->set_vel(-delta * 20); //temp
         }
     }
     else if (rb1 == nullptr) // just move rb2
