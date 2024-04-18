@@ -29,6 +29,6 @@ private:
     vec3 _camFront, _camRight; // tmp variables
 
     /* config vars */
-    float camMoveSpeed = 2;
-    float mouseSens = 0.2f;
+    float camMoveSpeed = 0.01;
+    float mouseSens = 0.001f;
 };

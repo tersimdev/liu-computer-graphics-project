@@ -4,6 +4,7 @@
 
 #include "../things/Player.h"
 #include "../things/LightBall.h"
+#include "../things/MazeWall.h"
 
 class MainScene : public Scene 
 {
@@ -14,6 +15,7 @@ public:
 private:
     Player* player;
     LightBall* lightBall, *lightBall2;
+    MazeWall* mazewall;
 
     double elapsed;
 };
