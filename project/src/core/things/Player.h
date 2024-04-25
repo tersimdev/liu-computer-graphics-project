@@ -40,5 +40,18 @@ private:
     vec3 position;
     vec3 camOffset; 
 
+
+    
+    //Defines how player moves, mainly for demo purposes
+    enum CAM_MODE
+    {
+        WASD = 1,
+        WASDQE,
+        THIRDPER,
+        TOPDOWN,
+    };
+    CAM_MODE camMode;
+    void init_cam();
+
     void do_player_input(float dt);
 };

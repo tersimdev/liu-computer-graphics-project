@@ -2,8 +2,7 @@
 
 void Player::init()
 {
-    position = {0, 0, 0};
-    camOffset = {0, 1, 2};
+    position = PLAYER_START_POS;
     float scale = 0.3;
 
     this->drawable = dh::create_sphere(Transform(), 32, 32);
@@ -17,6 +16,10 @@ void Player::init()
     this->collider = new SphereCollider(position, scale);
     this->rigidbody = new Rigidbody(KINEMATIC, scale);
     this->collider->set_rigidbody(rigidbody);
+
+    camMode = WASD;     // default
+    camMode = THIRDPER; // temp
+    init_cam();
 }
 
 void Player::update(float dt)
@@ -62,6 +65,31 @@ Collider *Player::get_collider()
     return this->collider;
 }
 
+void Player::init_cam()
+{
+    camera->set_dir(DEFAULT_CAM_DIR);
+    camera->set_up({0, 1, 0});
+    camOffset = {0, 0, 0};
+    Input::set_lock_mouse(true);
+    switch (camMode)
+    {
+    default:
+    case WASD:
+        break;
+    case WASDQE:
+        break;
+    case THIRDPER:
+        camOffset = {0, 0, 2};
+        break;
+    case TOPDOWN:
+        camOffset = {0, 0, 10};
+        camera->set_up({0, 0, -1});
+        camera->set_dir({0, -1, 0});
+        Input::set_lock_mouse(false);
+        break;
+    }
+}
+
 void Player::do_player_input(float dt)
 {
     /*handle inputs below */
@@ -70,27 +98,75 @@ void Player::do_player_input(float dt)
     vec3 dir = {0, 0, 0};
     vec2 deltaMouse = Input::get_mouse_delta();
 
-    if (Input::get_action("fwd"))
-        dir.z = -1;
-    else if (Input::get_action("bck"))
-        dir.z = 1;
-    if (Input::get_action("right"))
-        dir.x = 1;
-    else if (Input::get_action("left"))
-        dir.x = -1;
-    if (Input::get_action("up"))
-        dir.y = 1;
-    else if (Input::get_action("down"))
-        dir.y = -1;
+    switch (camMode)
+    {
+    case WASD:
+    case WASDQE:
+    case THIRDPER:
+        if (Input::get_action("fwd"))
+            dir.z = -1;
+        else if (Input::get_action("bck"))
+            dir.z = 1;
+        if (Input::get_action("right"))
+            dir.x = 1;
+        else if (Input::get_action("left"))
+            dir.x = -1;
+        if (camMode != WASD)
+        {
+            if (Input::get_action("up"))
+                dir.y = 1;
+            else if (Input::get_action("down"))
+                dir.y = -1;
+        }
+        break;
+    case TOPDOWN:
+        if (Input::get_action("fwd"))
+            dir.y = 1;
+        else if (Input::get_action("bck"))
+            dir.y = -1;
+        if (Input::get_action("right"))
+            dir.x = 1;
+        else if (Input::get_action("left"))
+            dir.x = -1;
+        if (Input::get_action("up"))
+            camOffset.z += dt * 10;
+        else if (Input::get_action("down"))
+            camOffset.z -= dt * 10;
+        break;
+    }
+
     position = camera->move_pos(position, dir, dt);
 
     vec3 offset = camOffset.y * camera->get_up() + camOffset.z * -camera->get_dir();
     camera->set_pos(position + offset);
-    camera->rotate_cam(deltaMouse, dt);
+    if (camMode != TOPDOWN)
+        camera->rotate_cam(deltaMouse, dt);
 
     if (Input::get_action("shoot", false))
     {
         // debug_log("pew pew pew\n");
         mailbox->notify(PLAYER_SAID_HELLO);
+    }
+
+    // switch camera modes
+    if (Input::get_action("camMode1", false))
+    {
+        camMode = WASD;
+        init_cam();
+    }
+    else if (Input::get_action("camMode2", false))
+    {
+        camMode = WASDQE;
+        init_cam();
+    }
+    else if (Input::get_action("camMode3", false))
+    {
+        camMode = THIRDPER;
+        init_cam();
+    }
+    else if (Input::get_action("camMode4", false))
+    {
+        camMode = TOPDOWN;
+        init_cam();
     }
 }

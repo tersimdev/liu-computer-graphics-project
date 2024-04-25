@@ -11,6 +11,7 @@
 #define EXIT_KEY_1 0x1B
 #define EXIT_KEY_2 '0'
 #define STARTING_SCENE "main"
+#define PLAYER_START_POS {0, 0, 0}
 
 //physics config here ///////////////////////////////////
 //////////////////////////////////////////////////////////
@@ -32,6 +33,7 @@
 #define P_Z_FAR 20.f
 #define CAM_MAX_LOOK_UP 0.95f
 #define CAM_DEADZONE 0.1f
+#define DEFAULT_CAM_DIR { 0, 0, -1 }
 
 //define hardcorded strings here! ////////////////////////
 #define HELLO_WORLD "Hello World!"

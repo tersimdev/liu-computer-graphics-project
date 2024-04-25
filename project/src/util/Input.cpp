@@ -23,6 +23,11 @@ void Input::init()
 
     inputMapping["n"] = 'n';
     inputMapping["m"] = 'm';
+
+    inputMapping["camMode1"] = '1';
+    inputMapping["camMode2"] = '2';
+    inputMapping["camMode3"] = '3';
+    inputMapping["camMode4"] = '4';
 }
 void Input::update(float dt)
 {
