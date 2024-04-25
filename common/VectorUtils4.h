@@ -89,6 +89,7 @@
 // 20230205: Added new helper functions, uploadMat4ToShader etc.
 // Made a better #ifdef for handling multiple inclusions.
 // 20230227: Fixed the mat4(mat3) constructor.
+// 20240418: One more time on perspective()!
 
 // You may use VectorUtils as you please. A reference to the origin is appreciated
 // but if you grab some snippets from it without reference... no problem.
@@ -289,8 +290,6 @@
 	vec3 cross(vec3 a, vec3 b);
 	GLfloat dot(vec3 a, vec3 b);
 	vec3 ScalarMult(vec3 a, GLfloat s);
-	vec3 ElementMult(vec3 a, vec3 b); // 25/3/2024, Terence, ADDED: element wise multiply operation
-	GLfloat NormSq(vec3 a); // 25/3/2024, Terence, ADDED: norm squared
 	GLfloat Norm(vec3 a);
 	vec3 normalize(vec3 a);
 	vec3 CalcNormalVector(vec3 a, vec3 b, vec3 c);
@@ -709,25 +708,6 @@ char transposed = 0;
 		return result;
 	}
 
-	vec3 ElementMult(vec3 a, vec3 b) // 25/3/2024, Terence, ADDED: element wise multiply operation
-	{
-		vec3 result;
-		
-		result.x = a.x * b.x;
-		result.y = a.y * b.y;
-		result.z = a.z * b.z;
-		
-		return result;
-	}
-
-	GLfloat NormSq(vec3 a) // 25/3/2024, Terence, ADDED: norm squared
-	{
-		GLfloat result;
-
-		result = (GLfloat)(a.x * a.x + a.y * a.y + a.z * a.z);
-		return result;
-	}
-
 	GLfloat Norm(vec3 a)
 	{
 		GLfloat result;
@@ -885,31 +865,6 @@ char transposed = 0;
 		return m;
 	}
 
-//	mat4 Mult(mat4 a, mat4 b) // m = a * b
-//	{
-//		mat4 m;
-
-//		if (transposed)
-//		{
-//			a = transpose(a);
-//			b = transpose(b);
-//		}
-
-//		int x, y;
-//		for (x = 0; x <= 3; x++)
-//			for (y = 0; y <= 3; y++)
-//					m.m[y*4 + x] =	a.m[y*4+0] * b.m[0*4+x] +
-//								a.m[y*4+1] * b.m[1*4+x] +
-//								a.m[y*4+2] * b.m[2*4+x] +
-//								a.m[y*4+3] * b.m[3*4+x];
-
-//		if (transposed)
-//			m = transpose(m);
-
-//		return m;
-//	}
-
-
 	// Ej testad!
 	mat3 MultMat3(mat3 a, mat3 b) // m = a * b
 	{
@@ -997,16 +952,6 @@ char transposed = 0;
 	}
 
 
-// Unnecessary
-// Will probably be removed
-//	void CopyMatrix(GLfloat *src, GLfloat *dest)
-//	{
-//		int i;
-//		for (i = 0; i <= 15; i++)
-//			dest[i] = src[i];
-//	}
-
-
 // Added for lab 3 (TSBK03)
 
 	// Orthonormalization of Matrix4D. Assumes rotation only, translation/projection ignored
@@ -1074,21 +1019,6 @@ char transposed = 0;
 			R->m[15] = 1.0;
 		}
 	}
-
-
-// Commented out since I plan to remove it if I can't see a good reason to keep it.
-//	// Only transposes rotation part.
-//	mat4 TransposeRotation(mat4 m)
-//	{
-//		mat4 a;
-//		
-//		a.m[0] = m.m[0]; a.m[4] = m.m[1]; a.m[8] = m.m[2];      a.m[12] = m.m[12];
-//		a.m[1] = m.m[4]; a.m[5] = m.m[5]; a.m[9] = m.m[6];      a.m[13] = m.m[13];
-//		a.m[2] = m.m[8]; a.m[6] = m.m[9]; a.m[10] = m.m[10];    a.m[14] = m.m[14];
-//		a.m[3] = m.m[3]; a.m[7] = m.m[7]; a.m[11] = m.m[11];    a.m[15] = m.m[15];
-//		
-//		return a;
-//	}
 
 	// Complete transpose!
 	mat4 transpose(mat4 m)
@@ -1161,7 +1091,7 @@ mat4 ArbRotate(vec3 axis, GLfloat fi)
 		R.m[12] = 0.0; R.m[13] = 0.0; R.m[14] = 0.0;  R.m[15] = 1.0;
 	}
 
-	Rt = Transpose(R); // Transpose = Invert -> felet ej i Transpose, och det �r en ortonormal matris
+	Rt = Transpose(R); // Transpose = Invert
 
 	Raxel = Rx(fi); // Rotate around x axis
 
@@ -1259,16 +1189,11 @@ mat4 lookAt(GLfloat px, GLfloat py, GLfloat pz,
 
 // From http://www.opengl.org/wiki/GluPerspective_code
 // Changed names and parameter order to conform with VU style
-// Rewritten 120913 because it was all wrong...
-
-// Creates a projection matrix like gluPerspective or glFrustum.
-// Upload to your shader as usual.
-// Error fixed 20220525: 180, not 360!
-// Also made it conform to the reference manual.
+// Rewritten multiple times. 20240417, now it passes my test!
 mat4 perspective(float fovyInDegrees, float aspectRatio,
                       float znear, float zfar)
 {
-	float f = 1/tan(fovyInDegrees / 2);
+	float f = 1/tan(fovyInDegrees * M_PI / 360.0);
 	mat4 m = SetMat4(f/aspectRatio, 0, 0, 0,
 					0, f, 0, 0,
 					0, 0, (zfar+znear)/(znear-zfar), 2*zfar*znear/(znear-zfar),
@@ -1415,15 +1340,15 @@ mat3 InverseTranspose(mat4 in)
 	else
 	{
 		nanout = SetMat3(NAN, NAN, NAN,
-								NAN, NAN, NAN,
-								NAN, NAN, NAN);
+		NAN, NAN, NAN,
+		NAN, NAN, NAN);
 		out = nanout;
 	}
 
 	return out;
 }
 
-
+	
 // Simple conversions
 mat3 mat4tomat3(mat4 m)
 {

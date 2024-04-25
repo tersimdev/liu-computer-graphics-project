@@ -124,6 +124,8 @@ void DisposeModel(Model *m);
 // 220222: Added a printed error message if ParseOBJ can't open a file. Also makes DrawModel always activare the shader for you.
 // 2022 somewhere: Made experimental header only version, necessary to work with VectorUtils in C++.
 // 2023-02-05: Added LOL_IMPLEMENTATION to avoid double compilation.
+// 2024-02-18: Added BindModel to handle the overlap between DrawModel and DrawWireframeModel, suggested by Isak Horvath.
+// 2024-04-17: Security fix in ParseOBJ.
 
 // Usage:
 // Load simple models with LoadModel. Multi-part models are loaded with LoadModelSet.
@@ -517,10 +519,11 @@ static char ParseOBJ(const char *filename, MeshPtr theMesh)
 			// Save file name for later
 			char libname[256];
 			
-			// Added by Felicia Castenbrandt: Get path of main file, if any
-        	char temp[255];
+			// Added by Felicia Castenbrandt: Get path of main file, if any. Corrected by Axel Hammarberg 2024, no longer assuming the memory to be zeroed.
+        		char temp[255];
 			int index = 0;
-
+			temp[0] = 0;	
+			
 			//find index of last /
 			for(unsigned int i = 0; i < strlen(filename); i++)
 				if(filename[i] == '/')
@@ -1195,10 +1198,8 @@ static void LOLError(const char *caller, const char *name)
 // and to get attribute locations. This is clearly not optimal, but the
 // goal is stability.
 
-void DrawModel(Model *m, GLuint program, const char* vertexVariableName, const char* normalVariableName, const char* texCoordVariableName)
+static void BindModel(Model *m, GLuint program, const char* vertexVariableName, const char* normalVariableName, const char* texCoordVariableName, const char *fn)
 {
-	if (m != NULL)
-	{
 		GLint loc;
 		
 		glBindVertexArray(m->vao);	// Select VAO
@@ -1212,7 +1213,7 @@ void DrawModel(Model *m, GLuint program, const char* vertexVariableName, const c
 			glEnableVertexAttribArray(loc);
 		}
 		else
-			LOLError("DrawModel", vertexVariableName);
+			LOLError(fn, vertexVariableName);
 		
 		if (normalVariableName!=NULL)
 		{
@@ -1224,7 +1225,7 @@ void DrawModel(Model *m, GLuint program, const char* vertexVariableName, const c
 				glEnableVertexAttribArray(loc);
 			}
 			else
-				LOLError("DrawModel", normalVariableName);
+				LOLError(fn, normalVariableName);
 		}
 	
 		if ((m->texCoordArray != NULL)&&(texCoordVariableName != NULL))
@@ -1237,9 +1238,15 @@ void DrawModel(Model *m, GLuint program, const char* vertexVariableName, const c
 				glEnableVertexAttribArray(loc);
 			}
 			else
-				LOLError("DrawModel", texCoordVariableName);
+				LOLError(fn, texCoordVariableName);
 		}
+}
 
+void DrawModel(Model *m, GLuint program, const char* vertexVariableName, const char* normalVariableName, const char* texCoordVariableName)
+{
+	if (m != NULL)
+	{
+		BindModel(m, program, vertexVariableName, normalVariableName, texCoordVariableName, "DrawModel");
 		glDrawElements(GL_TRIANGLES, m->numIndices, GL_UNSIGNED_INT, 0L);
 	}
 }
@@ -1248,50 +1255,11 @@ void DrawWireframeModel(Model *m, GLuint program, const char* vertexVariableName
 {
 	if (m != NULL)
 	{
-		GLint loc;
-		
-		glBindVertexArray(m->vao);	// Select VAO
-		glUseProgram(program); // Added 2022-03
-
-		glBindBuffer(GL_ARRAY_BUFFER, m->vb);
-		loc = glGetAttribLocation(program, vertexVariableName);
-		if (loc >= 0)
-		{
-			glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 0, 0); 
-			glEnableVertexAttribArray(loc);
-		}
-		else
-			LOLError("DrawWireframeModel", vertexVariableName);
-		
-		if (normalVariableName!=NULL)
-		{
-			loc = glGetAttribLocation(program, normalVariableName);
-			if (loc >= 0)
-			{
-				glBindBuffer(GL_ARRAY_BUFFER, m->nb);
-				glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, 0, 0);
-				glEnableVertexAttribArray(loc);
-			}
-			else
-				LOLError("DrawWireframeModel", normalVariableName);
-		}
-	
-		if ((m->texCoordArray != NULL)&&(texCoordVariableName != NULL))
-		{
-			loc = glGetAttribLocation(program, texCoordVariableName);
-			if (loc >= 0)
-			{
-				glBindBuffer(GL_ARRAY_BUFFER, m->tb);
-				glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, 0, 0);
-				glEnableVertexAttribArray(loc);
-			}
-			else
-				LOLError("DrawWireframeModel", texCoordVariableName);
-		}
+		BindModel(m, program, vertexVariableName, normalVariableName, texCoordVariableName, "DrawWireframeModel");
 		glDrawElements(GL_LINE_STRIP, m->numIndices, GL_UNSIGNED_INT, 0L);
 	}
 }
-	
+
 // Called from LoadModel, LoadModelSet and LoadDataToModel
 // VAO and VBOs must already exist!
 // Useful by its own when the model changes on CPU

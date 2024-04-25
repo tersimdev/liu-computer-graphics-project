@@ -1,6 +1,7 @@
 #pragma once
 
 #include "VectorUtils4.h"
+#include "VectorUtils4Extra.h"
 #include "../util/Debug.h"
 #include "../util/Input.h"
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "Material.h"
 #include "LittleOBJLoader.h"
+#include "VectorUtils4Extra.h"
 
 typedef struct _Transform
 {
