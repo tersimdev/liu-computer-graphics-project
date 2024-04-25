@@ -9,6 +9,7 @@ void Player::init()
     this->drawable = dh::create_sphere(Transform(), 32, 32);
     Material *m = dh::create_material(ShaderProg::LIT, {0.5, 0.5, 0.7}, {0.8, 0.8, 0.8, 256});
     dh::attach_texture_to_material(m, 0, "conc");
+    m->tileFactor = 0.1f;
     drawable->setMaterial(m);
     drawable->set_position(position);
     drawable->set_scale(scale);

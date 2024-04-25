@@ -8,6 +8,7 @@ Material *DrawableHelper::create_material(ShaderProg shaderProg, vec3 albedo, ve
     m->specular = specular;
     m->shaderProg = shaderProg;
     m->textureBitmask = 0;
+    m->tileFactor = 1.0f;
     return m;
 }
 

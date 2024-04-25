@@ -18,7 +18,7 @@ void main(void)
 	
 	v_FragPos = (modelMtx * vec4(in_Position, 1.0)).xyz;
 	v_Normal = normalMtx * in_Normal;
-	v_TexCoord = in_TexCoord;
+	v_TexCoord = in_TexCoord ;
 
 	vec4 pos = projectionMtx * viewMtx * modelMtx * vec4(in_Position, 1.0);
 	gl_Position = pos;

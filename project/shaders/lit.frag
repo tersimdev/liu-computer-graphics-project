@@ -28,6 +28,7 @@ uniform vec3 viewPos;
 //material stuff
 uniform vec3 albedo;
 uniform vec4 specular;
+uniform float tileFactor;
 
 vec3 calc_directional_light(vec3 baseColor, vec3 normal, vec3 viewDir)
 {
@@ -89,7 +90,7 @@ vec3 calc_point_light(int i, vec3 baseColor, vec3 normal, vec3 viewDir)
 void main(void)
 {
 	//base texture color
-	vec4 texColor = texture(texUnit, v_TexCoord);
+	vec4 texColor = texture(texUnit, v_TexCoord * tileFactor);
 	vec3 baseColor = albedo * texColor.xyz;
 
 	vec3 viewDir = normalize(viewPos - v_FragPos);
