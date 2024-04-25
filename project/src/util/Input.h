@@ -8,7 +8,6 @@
 #include <unordered_map>
 #include <string>
 
-void glutClose(); //forward declare
 class Input
 {
 public:

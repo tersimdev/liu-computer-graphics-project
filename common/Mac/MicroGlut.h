@@ -15,14 +15,13 @@ extern "C" {
 void glutMainLoop();
 void glutCheckLoop();
 void glutInit(int *argcp, char **argv);
+void glutExit();
 void glutPostRedisplay();
 
 void glutReshapeFunc(void (*func)(int width, int height));
 void glutDisplayFunc(void (*func)(void));
 void glutKeyboardFunc(void (*func)(unsigned char key, int x, int y));
 void glutKeyboardUpFunc(void (*func)(unsigned char key, int x, int y));
-void glutSpecialFunc(void (*func)(unsigned char key, int x, int y));
-void glutSpecialUpFunc(void (*func)(unsigned char key, int x, int y));
 
 void glutMouseFunc(void (*func)(int button, int state, int x, int y));
 void glutPassiveMotionFunc(void (*func)(int x, int y));
@@ -52,7 +51,6 @@ void glutIdleFunc(void (*func)(void));
 // Standard GLUT timer
 void glutTimerFunc(int millis, void (*func)(int arg), int arg);
 // Ingemar's version
-void glutRepeatingTimerFunc(int millis); // Old name, will be removed
 void glutRepeatingTimer(int millis);
 // New call for polling the keyboard, good for games
 char glutKeyIsDown(unsigned char c);
@@ -61,12 +59,11 @@ char glutMouseIsDown(unsigned char c);
 
 void glutReshapeWindow(int width, int height);
 void glutPositionWindow(int x, int y);
-void glutSetWindowTitle(char *title);
+void glutSetWindowTitle(const char *title);
 void glutInitContextVersion(int major, int minor);
 
 /* Mouse buttons. */
 #define GLUT_LEFT_BUTTON		0
-// No support for middle yet
 #define GLUT_MIDDLE_BUTTON		1
 #define GLUT_RIGHT_BUTTON		2
 
@@ -134,16 +131,21 @@ void glutInitContextVersion(int major, int minor);
 #define GLUT_KEY_SLASH			'/'
 #define GLUT_KEY_EQUAL			'='
 
+// Modifiers, only supported for glutKeyIsDown
+#define GLUT_KEY_SHIFT			19
+#define GLUT_KEY_CTRL			20
+#define GLUT_KEY_ALT			21
+
 
 // Menu support
 int glutCreateMenu(void (*func)(int value));
-void glutAddMenuEntry(char *name, int value);
+void glutAddMenuEntry(const char *name, int value);
 void glutAttachMenu(int button);
 void glutDetachMenu(int button);
 void glutAddSubMenu(char *name, int menu);
 void glutSetMenu(int menu);
 int glutGetMenu(void);
-void glutChangeToMenuEntry(int index, char *name, int value);
+void glutChangeToMenuEntry(int index, const char *name, int value);
 
 // Visibility not-really-support
 void glutVisibilityFunc(void (*visibility)(int status));
@@ -161,11 +163,18 @@ void glutFullScreen();
 void glutExitFullScreen();
 void glutToggleFullScreen();
 
-void glutClose();
+void glutExit();
 
 // Placeholders, we only support one window, unlike FreeGlut.
 void glutSetWindow(int win);
 int glutGetWindow(void);
+
+/* glutGetModifiers return mask. */
+// REMOVED - use glutKeyIsDown instead!
+//#define GLUT_ACTIVE_SHIFT               1
+//#define GLUT_ACTIVE_CTRL                2
+//#define GLUT_ACTIVE_ALT                 4
+//int glutGetModifiers(void);
 
 #ifdef __cplusplus
 }

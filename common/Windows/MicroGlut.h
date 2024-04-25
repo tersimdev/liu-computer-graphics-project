@@ -9,8 +9,8 @@ extern "C" {
 void glutMainLoop();
 void glutCheckLoop();
 void glutInit(int *argcp, char **argv);
+void glutExit();
 void glutPostRedisplay();
-void glutClose(void);
 
 void glutReshapeFunc(void (*func)(int width, int height));
 void glutDisplayFunc(void (*func)(void));
@@ -60,8 +60,7 @@ void glutReshapeWindow(int width, int height);
 
 /* Mouse buttons. */
 #define GLUT_LEFT_BUTTON		0
-// No support for middle yet
-//#define GLUT_MIDDLE_BUTTON		1
+#define GLUT_MIDDLE_BUTTON		1
 #define GLUT_RIGHT_BUTTON		2
 
 /* Mouse button  state. */

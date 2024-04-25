@@ -33,6 +33,7 @@
 // 210524: Added glutMotionFunc in the header file.
 // 210530: Temporary fix for the window size. It is not how I want it to be but it looks OK and will have to do for now.
 // 220112: Added support for modifier keys
+// 20240419: Support for all three mouse buttons.
 
 #include <windows.h>
 #include "glew.h"
@@ -179,8 +180,8 @@ void glutPostRedisplay()
 
 int gWindowPosX = 10;
 int gWindowPosY = 50;
-int gWindowWidth = 400;
-int gWindowHeight = 400;
+int gWindowWidth = 800;
+int gWindowHeight = 800;
 
 void glutInitWindowPosition (int x, int y)
 {
@@ -489,25 +490,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_LBUTTONUP:
 		if (gMouseFunc != NULL)
 			gMouseFunc(GLUT_LEFT_BUTTON, GLUT_UP, x, y);
-		gButtonPressed[0] = 0;
+		gButtonPressed[GLUT_LEFT_BUTTON] = 0;
         break;
 
     case WM_LBUTTONDOWN:
 		if (gMouseFunc != NULL)
 			gMouseFunc(GLUT_LEFT_BUTTON, GLUT_DOWN, x, y);
-		gButtonPressed[0] = 1;
+		gButtonPressed[GLUT_LEFT_BUTTON] = 1;
      break;
 
     case WM_RBUTTONUP:
 		if (gMouseFunc != NULL)
 			gMouseFunc(GLUT_RIGHT_BUTTON, GLUT_UP, x, y);
-		gButtonPressed[1] = 0;
+		gButtonPressed[GLUT_RIGHT_BUTTON] = 0;
         break;
 
     case WM_RBUTTONDOWN:
 		if (gMouseFunc != NULL)
 			gMouseFunc(GLUT_RIGHT_BUTTON, GLUT_DOWN, x, y);
-		gButtonPressed[1] = 1;
+		gButtonPressed[GLUT_RIGHT_BUTTON] = 1;
+     break;
+
+    case WM_MBUTTONUP:
+		if (gMouseFunc != NULL)
+			gMouseFunc(GLUT_MIDDLE_BUTTON, GLUT_UP, x, y);
+		gButtonPressed[GLUT_MIDDLE_BUTTON] = 0;
+        break;
+
+    case WM_MBUTTONDOWN:
+		if (gMouseFunc != NULL)
+			gMouseFunc(GLUT_MIDDLE_BUTTON, GLUT_DOWN, x, y);
+		gButtonPressed[GLUT_MIDDLE_BUTTON] = 1;
      break;
 
     case WM_MOUSEMOVE:
@@ -604,7 +617,7 @@ void glutInit(int *argcp, char **argv)
 //	printf("allocated console and window class\n");
 }
 
-void glutClose()
+void glutExit()
 {    /* shutdown OpenGL */
     DisableOpenGL (hWnd, hDC, hRC);
 

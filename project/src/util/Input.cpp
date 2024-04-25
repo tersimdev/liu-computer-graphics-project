@@ -33,7 +33,7 @@ void Input::update(float dt)
     if (get_action("exit", false))
     {
         debug_log("Exit button pressed, terminating\n");
-        glutClose();
+        glutExit();
         exit(0);
     }
     if (get_action("exit2", false))
