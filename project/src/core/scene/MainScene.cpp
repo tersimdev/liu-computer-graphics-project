@@ -18,7 +18,7 @@ int maze[10][10] =
 
 void MainScene::init(Camera *camera)
 {
-	sgCreateStaticString(20, RES_Y - 20, "WASDQE to move camera, NM to move lightball");
+	sgCreateStaticString(20, RES_Y - 20, "1-WASD, 2-WASDQE, 3-Third Person, 4-Topdown");
     sgSetBackgroundColor(0,0,0,0);
 	//A slider and a float display
 	// sgCreateStaticString(40, 80, "Slider and float display");
