@@ -70,7 +70,7 @@ ColResult CollisionManager::check_sphere_sphere(SphereCollider *c1, SphereCollid
             res.delta = radii * vec3(0, 1, 0); // arbitary direction
         else
             res.delta = (dist - radii) * (dir / dist);
-        debug_log("Collided, resolved with %f %f %f\n", res.delta.x, res.delta.y, res.delta.z);
+        debug_log("(S-S) Collided, resolved with %f %f %f\n", res.delta.x, res.delta.y, res.delta.z);
         resolve_collision(c1, c2, res.delta);
     }
     return res;
@@ -79,10 +79,16 @@ ColResult CollisionManager::check_sphere_sphere(SphereCollider *c1, SphereCollid
 ColResult CollisionManager::check_sphere_plane(SphereCollider *c1, PlaneCollider *c2)
 {
     vec3 dir = c2->get_position() - c1->get_position();
-    float dist = dot(dir, c2->normal);
+    float dist = dot(dir, -c2->normal);
     ColResult res = {false, vec3(0)};
+
+    //if way below the plane, ignore
+    if (dist + PHYS_ESPILON < -c1->radius) 
+        return res;
+
     if (dist + PHYS_ESPILON < c1->radius)
     {
+        //debug_log("(P-S) Collide?, dist %f\n", dist);
         //vector pointing from center of sphere to nearest point on plane
         vec3 delta = (c2->normal * (c1->radius - dist)); 
         //nearest point on plane
@@ -90,16 +96,19 @@ ColResult CollisionManager::check_sphere_plane(SphereCollider *c1, PlaneCollider
         //vector from center of plane to nearest point
         vec3 cp = p - c2->get_position(); 
         //distance when projected onto x bounds
-        float xdist = dot(cp, c2->tangentX) + PHYS_ESPILON;
+        float xdist = abs(dot(cp, c2->tangentX) + PHYS_ESPILON);
         //distance when projected on y bound
-        float ydist = dot(cp, c2->tangentY) + PHYS_ESPILON;
+        float ydist = abs(dot(cp, c2->tangentY) + PHYS_ESPILON);
         
         // check if point is inside defined plane
         ////////////////// TODO, check if it works!
-        if (xdist < c2->size.x || ydist < c2->size.y)
+        if (xdist < c2->size.x + c1->radius && ydist < c2->size.y + c1->radius)
         {
             res.overlap = true;
             res.delta = delta;
+
+            resolve_collision(c1, c2, delta);
+            debug_log("(P-S) Collided, resolved with %f %f %f, x%f y%f\n", res.delta.x, res.delta.y, res.delta.z, xdist, ydist);
         }
     }
 
@@ -132,12 +141,12 @@ void CollisionManager::resolve_collision(Collider *c1, Collider *c2, vec3 delta)
         else if (rb1->get_rbtype() == DYNAMIC && rb2->get_rbtype() == KINEMATIC)
         {
             c2->move_position(-delta);
-            rb1->set_vel(delta * 20); //temp
+            //rb1->set_vel(delta * 20); //temp
         }
         else if (rb1->get_rbtype() == KINEMATIC && rb2->get_rbtype() == DYNAMIC)
         {
             c1->move_position(delta);
-            rb2->set_vel(-delta * 20); //temp
+            //rb2->set_vel(-delta * 20); //temp
         }
     }
     else if (rb1 == nullptr) // just move rb2

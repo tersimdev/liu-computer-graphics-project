@@ -6,6 +6,8 @@
 #include "../things/LightBall.h"
 #include "../things/MazeWall.h"
 #include "../things/Obstacle.h"
+#include "../things/TorchLight.h"
+#include "../things/Floor.h"
 
 class MainScene : public Scene 
 {
@@ -18,6 +20,7 @@ private:
     LightBall* lightBall, *lightBall2;
     MazeWall* mazewall;
     Obstacle* obstacle;
+    Floor* floor;
 
     double elapsed;
 };

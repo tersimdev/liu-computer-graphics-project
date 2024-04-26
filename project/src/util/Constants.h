@@ -14,7 +14,7 @@
 
 //physics config here ///////////////////////////////////
 //////////////////////////////////////////////////////////
-#define GRAVITY 9.81
+#define GRAVITY -9.81
 #define PHYS_ESPILON 0.0001
 #define PHYS_TIMESTEP 0.02
 

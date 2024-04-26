@@ -32,7 +32,8 @@ public:
     {
         //apply gravity
         //disabled for now, no floor
-        // accel.y -= GRAVITY * gravScale;
+        //if colliding with floor, need to stop gravity
+        //accel.y = GRAVITY * gravScale;
         
         //apply euler integration
         vel += accel * dt;

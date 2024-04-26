@@ -1,0 +1,1 @@
+make -j quick && ./output

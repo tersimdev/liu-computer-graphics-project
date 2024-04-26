@@ -3,7 +3,7 @@
 void Player::init()
 {
     position = {0, 0, 0};
-    camOffset = {0, 1, 2};
+    camOffset = {0, 0, 2};
     float scale = 0.3;
 
     this->drawable = dh::create_sphere(Transform(), 32, 32);
