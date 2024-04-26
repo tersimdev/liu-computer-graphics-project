@@ -1,11 +1,13 @@
 #include "MazeWall.h"
 
 void MazeWall::init()
-{
-    this->drawable = dh::create_from_model("cube.obj", Transform({0, 0, -5}, {0, 0, 0}, {0.5, 0.5, 0.5}));
+{   
+    vec3 pos = vec3(0.0f);
+    this->drawable = dh::create_from_model("cube.obj", Transform(pos, {0, 0, 0}, {0.5, 0.5, 0.5}));
     Material *m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
     dh::attach_texture_to_material(m, 0, "conc");
     drawable->setMaterial(m);
+
 }
 
 void MazeWall::update(float dt)
@@ -34,4 +36,36 @@ void MazeWall::on_notify(MailTopic topic, void* aux)
     default:
         break;
     }
+}
+
+void MazeWall::set_position(vec3 pos)
+{
+    if (collider)
+        collider->set_position(pos);
+        this->colliderFront = new PlaneCollider({pos.x + 0.5f, pos.y, pos.z}, {1,0,0}, {0,1,0}, {0,0,1}, {0.5f,0.5f}); // Front Wall
+        this->colliderRight = new PlaneCollider({pos.x, pos.y, pos.z+0.5f}, {0,0,1}, {1,0,0}, {0,1,0}, {0.5f,0.5f}); // Right Wall
+        this->colliderBack = new PlaneCollider({pos.x - 0.5f, pos.y, pos.z}, {-1,0,0}, {0,1,0}, {0,0,1}, {0.5f,0.5f}); // Back Wall
+        this->colliderLeft = new PlaneCollider({pos.x, pos.y, pos.z-0.5f}, {0,0,-1}, {1,0,0}, {0,1,0}, {0.5f,0.5f}); // Left Wall
+        
+    drawable->set_position(pos);
+}
+
+Collider *MazeWall::get_colliderLeft()
+{
+    return this->colliderLeft;
+}
+
+Collider *MazeWall::get_colliderRight()
+{
+    return this->colliderRight;
+}
+
+Collider *MazeWall::get_colliderFront()
+{
+    return this->colliderFront;
+}
+
+Collider *MazeWall::get_colliderBack()
+{
+    return this->colliderBack;
 }

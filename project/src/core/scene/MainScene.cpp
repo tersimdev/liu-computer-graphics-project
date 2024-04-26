@@ -1,18 +1,28 @@
 #include "MainScene.h"
 #include "SimpleGUI.h"
 
-int maze[10][10] = 
+int maze[20][20] = 
 {
-    {1,0,1,1,1,1,1,1,1,1},
-    {1,0,0,1,1,1,0,0,0,1},
-    {1,1,0,0,0,0,0,0,0,1},
-    {1,0,1,0,0,0,0,0,0,1},
-    {1,0,1,0,0,0,0,0,0,1},
-    {1,1,0,0,0,1,1,0,0,1},
-    {1,0,1,1,0,0,1,1,1,1},
-    {1,0,1,0,1,0,0,1,1,1},
-    {1,0,0,1,0,0,0,0,0,1},
-    {1,1,1,1,1,1,0,1,1,1}
+    {1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,0,0,0,2,0,0,0,1,2,2,2,2,1,1,1},
+    {1,1,1,1,1,1,1,1,2,1,1,1,1,2,1,1,2,1,1,1},
+    {1,1,1,1,1,1,1,1,2,2,2,2,2,2,1,1,2,1,1,1},
+    {1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,2,1,1,1},
+    {1,1,1,0,1,1,1,1,1,1,1,1,0,0,0,1,2,1,1,1},
+    {1,1,1,0,1,1,2,2,2,2,2,2,2,2,2,2,2,0,0,1},
+    {1,1,1,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,0,1},
+    {1,1,0,1,1,1,2,1,1,2,2,2,2,2,2,1,1,1,0,1},
+    {1,1,0,1,1,1,2,2,2,2,1,1,1,1,2,1,1,1,1,1},
+    {1,1,0,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1},
+    {1,1,2,2,2,2,2,1,1,1,1,1,1,1,2,1,1,1,1,1},
+    {1,1,2,1,1,1,2,2,2,2,2,2,2,2,2,0,0,0,1,1},
+    {1,1,2,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1},
+    {1,1,2,1,0,1,0,1,1,0,1,1,1,1,1,1,1,0,1,1},
+    {1,1,2,1,0,1,0,1,1,0,1,1,1,1,0,0,0,0,1,1},
+    {1,1,2,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1},
+    {1,1,2,2,2,2,2,2,2,2,0,0,0,0,1,1,1,1,1,1},
+    {1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1}
 
 } ;
 
@@ -32,13 +42,13 @@ void MainScene::init(Camera *camera)
     player->init();
     drawables.push_back(player->get_drawable());
     things.push_back(player);
-    colliders.push_back(player->get_collider());
+    colliders.push_back(player->get_collider());   
 
 
     // put more balls to test
     //this temp code should move into maze, 
     //ie for each maze cell chance to spawn an obstacle
-    for (int i = 1; i <= 12; ++i)
+    /*for (int i = 1; i <= 12; ++i)
     {
         Obstacle *temp = new Obstacle(&mailbox);
         temp->init();
@@ -46,21 +56,49 @@ void MainScene::init(Camera *camera)
         drawables.push_back(temp->get_drawable());
         things.push_back(temp);
         colliders.push_back(temp->get_collider());
-    }
+    }*/
 
+    // todo Create floor of maze
+    // make it plane collidable
+
+
+    Floor *floor = new Floor(&mailbox);
+    floor->init();
+    drawables.push_back(floor->get_drawable());
+    things.push_back(floor);
+    colliders.push_back(floor->get_collider());
+
+    
     // todo Create maze
-    for(int i=0; i<10; ++i)
+    for(int i=0; i<20; ++i)
     {
-        for(int j=0; j<10; ++j)
+        
+        for(int j=0; j<20; ++j)
         {
-            if (maze[i][j])
+            vec3 pos = {(float)i, 0, (float)j};
+            if (maze[i][j]==1)
             {
                 MazeWall *temp = new MazeWall(&mailbox);
+                temp->init();
+                temp->set_position(pos);
+                drawables.push_back(temp->get_drawable());
+                things.push_back(temp);
+                colliders.push_back(temp->get_colliderLeft());
+                colliders.push_back(temp->get_colliderRight());
+                colliders.push_back(temp->get_colliderFront());
+                colliders.push_back(temp->get_colliderBack());
+            }
+            
+            /*else if (maze[i][j] == 2)
+            {
+                TorchLight *temp = new TorchLight(&mailbox);
                 temp->init();
                 temp->get_drawable()->translate({(float)i, 0, (float)j});
                 drawables.push_back(temp->get_drawable());
                 things.push_back(temp);
-            }
+                //colliders.push_back(temp->get_collider());
+                
+            }*/
         }
 
     }
