@@ -16,7 +16,7 @@ void Camera::update(float dt)
 void Camera::reset()
 {
     camPos = {0, 0, 0};
-    camDir = {0, 0, -1};
+    camDir = DEFAULT_CAM_DIR;
     camUp = {0, 1, 0};
 }
 
@@ -38,6 +38,11 @@ void Camera::set_pos(vec3 pos)
 void Camera::set_dir(vec3 dir)
 {
     camDir = normalize(dir);
+}
+
+void Camera::set_up(vec3 up)
+{
+    camUp = normalize(up);
 }
 
 vec3 Camera::get_pos()
@@ -67,7 +72,7 @@ void Camera::move_cam(vec3 direction, float dt)
         direction = normalize(direction);
     camPos += -direction.z * _camFront * camMoveSpeed * dt;
     camPos += direction.x * _camRight * camMoveSpeed * dt;
-    camPos += direction.y * vec3(0, 1, 0) * camMoveSpeed * dt;
+    camPos += direction.y * camUp * camMoveSpeed * dt;
 }
 
 //moves a given position vector
@@ -77,7 +82,7 @@ vec3 Camera::move_pos(vec3 pos, vec3 dir, float dt)
         dir = normalize(dir);
     pos += -dir.z * _camFront * camMoveSpeed * dt;
     pos += dir.x * _camRight * camMoveSpeed * dt;
-    pos += dir.y * vec3(0, 1, 0) * camMoveSpeed * dt;
+    pos += dir.y * camUp * camMoveSpeed * dt;
 
     return pos;
 }

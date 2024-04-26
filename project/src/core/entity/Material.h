@@ -13,4 +13,5 @@ typedef struct _Material
     ShaderProg shaderProg; //program to use
     std::string textures[MAX_TEXTURES]; //empty for inactive
     int textureBitmask; //use bits to select which texture active
+    float tileFactor; //multiplier on UV to tile textures
 } Material;

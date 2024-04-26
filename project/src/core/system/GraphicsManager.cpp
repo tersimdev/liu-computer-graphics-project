@@ -222,6 +222,7 @@ void GraphicsManager::render(Drawable *d)
     }
     glUniform3fv(glGetUniformLocation(program, "albedo"), 1, &(m->albedo.r));
     glUniform4fv(glGetUniformLocation(program, "specular"), 1, &(m->specular.r));
+    glUniform1f(glGetUniformLocation(program, "tileFactor"), m->tileFactor);
 
     DrawModel(d->getModel(), program, "in_Position", "in_Normal", "in_TexCoord");
 }
