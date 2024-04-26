@@ -21,12 +21,14 @@ public:
     void cleanup() override;
     void on_notify(MailTopic topic, void* aux) override;
     void set_position(vec3 pos);
+    int get_maze(int i, int j);
 
     Collider* get_colliderLeft();
     Collider* get_colliderRight();
     Collider* get_colliderFront();
     Collider* get_colliderBack();
     Drawable* get_drawable();
+    
     
 private:
     Drawable* drawable;
