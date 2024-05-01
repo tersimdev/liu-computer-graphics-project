@@ -18,6 +18,7 @@ public:
     void update(float dt) override;
     void cleanup() override;
     void on_notify(MailTopic topic, void* aux) override;
+    void set_position(vec3 pos);
 
     Drawable* get_drawable();
 private:
