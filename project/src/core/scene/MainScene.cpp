@@ -62,7 +62,8 @@ void MainScene::init(Camera *camera)
                 colliders.push_back(temp->get_colliderBack());
             }
             
-            else if (temp->get_maze(i, j) == 0)
+            // Place random objects at random places
+            else if (temp->get_maze(i, j)==0 || temp->get_maze(i, j) == 2)
             {
                 if(rand() % 1000 > 950)
                 {
@@ -74,7 +75,6 @@ void MainScene::init(Camera *camera)
                     colliders.push_back(obs->get_collider());
 
                 }
-
             }
         }
 
