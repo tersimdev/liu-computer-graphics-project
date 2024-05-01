@@ -1,4 +1,5 @@
 #include "Obstacle.h"
+#include <stdlib.h>
 
 void Obstacle::init()
 {
@@ -8,9 +9,19 @@ void Obstacle::init()
     this->rigidbody = new Rigidbody(DYNAMIC, scale);
     this->collider->set_rigidbody(rigidbody);
     
-    this->drawable = dh::create_sphere(Transform(), 32, 32);
+    switch(rand() % 2)
+    {
+        case 0:
+            this->drawable = dh::create_sphere(Transform(), 32, 32);
+        break;
+
+        case 1:
+            this->drawable = dh::create_from_model("monkey.obj", Transform({0, 0, 0}, {0, 0, 0}, {0.1, 0.1, 0.1}));
+        break;
+    }
+    
     Material *m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
-    dh::attach_texture_to_material(m, 0, "conc");
+    dh::attach_texture_to_material(m, 0, "banana");
     drawable->setMaterial(m);
     drawable->set_position(pos);
     drawable->set_scale(scale);
@@ -19,6 +30,7 @@ void Obstacle::init()
 void Obstacle::update(float dt)
 {
     vec3 pos = collider->get_position();
+    drawable->rotate({0, 2 * dt, 0});
     pos = rigidbody->update(dt, pos); //uncomment when obstacles are dynamic
     collider->set_position(pos);
     drawable->set_position(pos);
