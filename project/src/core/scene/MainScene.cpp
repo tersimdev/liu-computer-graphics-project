@@ -69,7 +69,7 @@ void MainScene::init(Camera *camera)
                 {
                     Obstacle *obs = new Obstacle(&mailbox);
                     obs->init();
-                    obs->set_position(pos);
+                    obs->set_position({pos.x, pos.y-0.5f, pos.z});
                     drawables.push_back(obs->get_drawable());
                     things.push_back(obs);
                     colliders.push_back(obs->get_collider());

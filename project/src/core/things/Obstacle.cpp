@@ -16,11 +16,11 @@ void Obstacle::init()
         break;
 
         case 1:
-            this->drawable = dh::create_from_model("monkey.obj", Transform({0, -2, 0}, {0, 0, 0}, {0.1, 0.1, 0.1}));
+            this->drawable = dh::create_from_model("monkey.obj", Transform({0, 0, 0}, {0, 0, 0}, {0.1, 0.1, 0.1}));
         break;
 
         case 2:
-            this->drawable = dh::create_from_model("bunnyplus.obj", Transform({0, -2, 0}, {0, 0, 0}, {0.1, 0.1, 0.1}));
+            this->drawable = dh::create_from_model("bunnyplus.obj", Transform({0, 0, 0}, {0, 0, 0}, {0.1, 0.1, 0.1}));
         break;
     }
     
