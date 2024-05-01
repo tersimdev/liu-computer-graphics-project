@@ -1,5 +1,6 @@
 #include "MainScene.h"
 #include "SimpleGUI.h"
+#include <stdlib.h>
 
 void MainScene::init(Camera *camera)
 {
@@ -33,10 +34,7 @@ void MainScene::init(Camera *camera)
         colliders.push_back(temp->get_collider());
     }*/
 
-    // todo Create floor of maze
-    // make it plane collidable
-
-
+    //Initialise floor
     Floor *floor = new Floor(&mailbox);
     floor->init();
     drawables.push_back(floor->get_drawable());
@@ -44,14 +42,14 @@ void MainScene::init(Camera *camera)
     colliders.push_back(floor->get_collider());
 
     
-    // todo Create maze
-    for(int i=0; i<20; ++i)
+    //Create Maze
+    for(int i=0; i<30; ++i)
     {
         
-        for(int j=0; j<20; ++j)
+        for(int j=0; j<30; ++j)
         {
             MazeWall *temp = new MazeWall(&mailbox);
-            vec3 pos = {(float)i, 0, (float)j};
+            vec3 pos = {(float)i, 0.0f, (float)j};
             if (temp->get_maze(i, j) == 1)
             {
                 temp->init();
@@ -64,16 +62,20 @@ void MainScene::init(Camera *camera)
                 colliders.push_back(temp->get_colliderBack());
             }
             
-            /*else if (maze[i][j] == 2)
+            else if (temp->get_maze(i, j) == 0)
             {
-                TorchLight *temp = new TorchLight(&mailbox);
-                temp->init();
-                temp->get_drawable()->translate({(float)i, 0, (float)j});
-                drawables.push_back(temp->get_drawable());
-                things.push_back(temp);
-                //colliders.push_back(temp->get_collider());
-                
-            }*/
+                if(rand() % 1000 > 950)
+                {
+                    Obstacle *obs = new Obstacle(&mailbox);
+                    obs->init();
+                    obs->set_position(pos);
+                    drawables.push_back(obs->get_drawable());
+                    things.push_back(obs);
+                    colliders.push_back(obs->get_collider());
+
+                }
+
+            }
         }
 
     }
