@@ -10,6 +10,9 @@ void TextureManager::init()
     */
     add_texture("default", "tga");
     add_texture("conc", "tga");
+    add_texture("ikea", "tga");
+    add_texture("wall", "tga");
+    add_texture("banana", "tga");
 }
 
 void TextureManager::cleanup()
