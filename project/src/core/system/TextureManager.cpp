@@ -13,6 +13,11 @@ void TextureManager::init()
     add_texture("ikea", "tga");
     add_texture("wall", "tga");
     add_texture("banana", "tga");
+
+    add_texture("birchwood", "tga");
+    add_texture("beanbag", "tga");
+    add_texture("table_col", "tga");
+    add_texture("table_rou", "tga");
 }
 
 void TextureManager::cleanup()
