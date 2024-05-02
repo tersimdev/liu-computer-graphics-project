@@ -32,7 +32,6 @@ public:
     
 private:
     Drawable* drawable;
-    PlaneCollider* collider;
     PlaneCollider* colliderLeft;
     PlaneCollider* colliderRight;
     PlaneCollider* colliderFront;
