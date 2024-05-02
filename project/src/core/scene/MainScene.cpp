@@ -20,20 +20,6 @@ void MainScene::init(Camera *camera)
     things.push_back(player);
     colliders.push_back(player->get_collider());   
 
-
-    // put more balls to test
-    //this temp code should move into maze, 
-    //ie for each maze cell chance to spawn an obstacle
-    /*for (int i = 1; i <= 12; ++i)
-    {
-        Obstacle *temp = new Obstacle(&mailbox);
-        temp->init();
-        temp->set_position({(float)i, 0, -5});
-        drawables.push_back(temp->get_drawable());
-        things.push_back(temp);
-        colliders.push_back(temp->get_collider());
-    }*/
-
     //Initialise floor
     Floor *floor = new Floor(&mailbox);
     floor->init();
@@ -60,6 +46,16 @@ void MainScene::init(Camera *camera)
                 colliders.push_back(temp->get_colliderRight());
                 colliders.push_back(temp->get_colliderFront());
                 colliders.push_back(temp->get_colliderBack());
+                
+                //PERI TODO, based on wall position set whether active or not
+                //e.g. below is empty, use front
+                
+                bool left, right, front, back;
+                left = true;
+                right = true;
+                front = true;
+                back = true;
+                temp->set_active_colliders(left, right, front, back);
             }
             
             // Place random objects at random places

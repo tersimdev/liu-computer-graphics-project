@@ -22,12 +22,13 @@ enum ColliderType
 class Collider
 {
 public:
-    Collider(ColliderType coltype, vec3 pos) : coltype(coltype), position(pos), rigidbody(nullptr) {}
+    Collider(ColliderType coltype, vec3 pos) : coltype(coltype), position(pos), rigidbody(nullptr), active(true) {}
     virtual ~Collider() = default;
 
     void move_position(vec3 delta) { position += delta; }
     void set_position(vec3 pos) { position = pos; }
     void set_rigidbody(Rigidbody* rb) { rigidbody = rb; }
+    void set_active(bool b) { active = b; }
 
     ColliderType get_collider_type() { return coltype; }
     vec3 get_position() { return position; }
@@ -37,4 +38,5 @@ protected:
     ColliderType coltype;
     vec3 position;
     Rigidbody* rigidbody;
+    bool active;
 };

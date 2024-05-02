@@ -70,7 +70,7 @@ ColResult CollisionManager::check_sphere_sphere(SphereCollider *c1, SphereCollid
             res.delta = radii * vec3(0, 1, 0); // arbitary direction
         else
             res.delta = (dist - radii) * (dir / dist);
-        debug_log("(S-S) Collided, resolved with %f %f %f\n", res.delta.x, res.delta.y, res.delta.z);
+        //debug_log("(S-S) Collided, resolved with %f %f %f\n", res.delta.x, res.delta.y, res.delta.z);
         resolve_collision(c1, c2, res.delta);
     }
     return res;
@@ -108,7 +108,7 @@ ColResult CollisionManager::check_sphere_plane(SphereCollider *c1, PlaneCollider
             res.delta = delta;
 
             resolve_collision(c1, c2, delta);
-            debug_log("(P-S) Collided, resolved with %f %f %f, x%f y%f\n", res.delta.x, res.delta.y, res.delta.z, xdist, ydist);
+            //debug_log("(P-S) Collided, resolved with %f %f %f, x%f y%f\n", res.delta.x, res.delta.y, res.delta.z, xdist, ydist);
         }
     }
 

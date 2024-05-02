@@ -8,47 +8,18 @@ void MazeWall::init()
     dh::attach_texture_to_material(m, 0, "wall");
     drawable->setMaterial(m);
 
-    this->colliderFront = new PlaneCollider({pos.x + 0.5f, pos.y, pos.z}, {1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {0.5f, 0.5f}); // Front Wall
-    this->colliderRight = new PlaneCollider({pos.x, pos.y, pos.z + 0.5f}, {0, 0, 1}, {1, 0, 0}, {0, 1, 0}, {0.5f, 0.5f}); // Right Wall
-    this->colliderBack = new PlaneCollider({pos.x - 0.5f, pos.y, pos.z}, {-1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {0.5f, 0.5f}); // Back Wall
-    this->colliderLeft = new PlaneCollider({pos.x, pos.y, pos.z - 0.5f}, {0, 0, -1}, {1, 0, 0}, {0, 1, 0}, {0.5f, 0.5f}); // Left Wall
+    //give temp pos first, set inactive
+    this->colliderLeft = new PlaneCollider(pos, {0, 0, -1}, {1, 0, 0}, {0, 1, 0}, {colliderOffset, colliderOffset}); // Left Wall
+    this->colliderRight = new PlaneCollider(pos, {0, 0, 1}, {1, 0, 0}, {0, 1, 0}, {colliderOffset, colliderOffset}); // Right Wall
+    this->colliderFront = new PlaneCollider(pos, {1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {colliderOffset, colliderOffset}); // Front Wall
+    this->colliderBack = new PlaneCollider(pos, {-1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {colliderOffset, colliderOffset}); // Back Wall
+
+    set_active_colliders(false, false, false, false);
 }
 
 int MazeWall::get_maze(int i, int j)
 {
-    int maze[30][30] =
-        {
-            {1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 0, 0, 0, 0, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 0, 0, 0, 0, 1, 1},
-            {1, 1, 1, 1, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 0, 0, 0, 0, 1, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 0, 0, 1, 1, 1, 1},
-            {1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 0, 0, 0, 0, 0, 1, 1, 1, 1},
-            {1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 1, 1, 1, 1},
-            {1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1},
-            {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-            {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
-
+    //might want to add error check
     return maze[i][j];
 }
 
@@ -82,10 +53,10 @@ void MazeWall::on_notify(MailTopic topic, void *aux)
 
 void MazeWall::set_position(vec3 pos)
 {
-    this->colliderFront->set_position({pos.x + 0.5f, pos.y, pos.z}); // Front Wall
-    this->colliderRight->set_position({pos.x, pos.y, pos.z + 0.5f}); // Right Wall
-    this->colliderBack->set_position({pos.x - 0.5f, pos.y, pos.z});  // Back Wall
-    this->colliderLeft->set_position({pos.x, pos.y, pos.z - 0.5f});  // Left Wall
+    this->colliderLeft->set_position({pos.x, pos.y, pos.z - colliderOffset});  // Left Wall
+    this->colliderRight->set_position({pos.x, pos.y, pos.z + colliderOffset}); // Right Wall
+    this->colliderFront->set_position({pos.x + colliderOffset, pos.y, pos.z}); // Front Wall
+    this->colliderBack->set_position({pos.x - colliderOffset, pos.y, pos.z});  // Back Wall
 
     drawable->set_position(pos);
 }
@@ -108,4 +79,12 @@ Collider *MazeWall::get_colliderFront()
 Collider *MazeWall::get_colliderBack()
 {
     return this->colliderBack;
+}
+
+void MazeWall::set_active_colliders(bool left, bool right, bool front, bool back)
+{
+    this->colliderLeft->set_active(left);
+    this->colliderRight->set_active(right);
+    this->colliderFront->set_active(front);
+    this->colliderBack->set_active(back);
 }
