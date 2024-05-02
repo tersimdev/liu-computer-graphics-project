@@ -21,8 +21,8 @@ void CollisionManager::update(float dt)
             c1 = colliders->at(i);
             c2 = colliders->at(j);
 
-            // if both have no rigidbody, dont bother for now
-            if (no_rigidbodies(c1, c2))
+            // if both have no rigidbody or if either is inactive, dont bother checking
+            if (no_rigidbodies(c1, c2) || !c1->get_active() || !c2->get_active())
                 continue;
 
             if (c1->get_collider_type() == SPHERE && c2->get_collider_type() == SPHERE)

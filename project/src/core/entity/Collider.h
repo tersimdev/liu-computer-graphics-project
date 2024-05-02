@@ -33,6 +33,7 @@ public:
     ColliderType get_collider_type() { return coltype; }
     vec3 get_position() { return position; }
     Rigidbody* get_rigidbody() { return rigidbody; }
+    bool get_active() { return active; }
 
 protected:
     ColliderType coltype;
