@@ -18,6 +18,8 @@ void TextureManager::init()
     add_texture("beanbag", "tga");
     add_texture("table_col", "tga");
     add_texture("table_rou", "tga");
+
+    add_texture("spider2", "tga");
 }
 
 void TextureManager::cleanup()

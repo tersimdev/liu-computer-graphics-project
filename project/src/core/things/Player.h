@@ -31,6 +31,7 @@ public:
     void set_position(vec3 pos);
     void set_cam_offset(vec3 camOffset);
     void set_move_speed(float moveSpeed, float mouseSpeed); //default is 2, 0.2
+    vec3 get_position();
     Drawable* get_drawable();
     Collider* get_collider();
     Light* get_light();

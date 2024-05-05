@@ -86,6 +86,11 @@ Collider *Player::get_collider()
     return this->collider;
 }
 
+vec3 Player::get_position()
+{
+    return position;
+}
+
 Light *Player::get_light()
 {
     return this->light;
@@ -172,8 +177,15 @@ void Player::do_player_input(float dt)
 
     if (Input::get_action("shoot", false))
     {
-        // debug_log("pew pew pew\n");
-        mailbox->notify(PLAYER_SAID_HELLO);
+        debug_log("pew pew pew\n");
+        //mailbox->notify(PLAYER_SAID_HELLO);
+    }
+
+    if (Input::get_action("debug", false))
+    {
+        //print out current player position
+        debug_log(">>>> PLAYER POS [%f, %f, %f]\n", position.x, position.y, position.z);
+        //mailbox->notify(PLAYER_SAID_HELLO);
     }
 
     // switch camera modes

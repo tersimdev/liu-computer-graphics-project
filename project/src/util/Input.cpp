@@ -21,8 +21,7 @@ void Input::init()
 
     inputMapping["shoot"] = 'f';
 
-    inputMapping["n"] = 'n';
-    inputMapping["m"] = 'm';
+    inputMapping["debug"] = '8';
 
     inputMapping["camMode1"] = '1';
     inputMapping["camMode2"] = '2';

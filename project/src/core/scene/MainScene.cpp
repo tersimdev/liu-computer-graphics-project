@@ -27,6 +27,14 @@ void MainScene::init(Camera *camera)
     colliders.push_back(player->get_collider());
     lights.push_back(player->get_light());
 
+    //Create goal object
+    Goal* goal = new Goal(&mailbox);
+    goal->init();
+    goal->set_position(goalPos);
+    drawables.push_back(goal->get_drawable());
+    things.push_back(goal);
+    lights.push_back(goal->get_light());
+
     // Initialise floor
     Floor *floor = new Floor(&mailbox);
     floor->init();
@@ -55,14 +63,16 @@ void MainScene::update(float dt)
 {
     Scene::update(dt);
 
-    /*    if (Input::get_action("m"))
-            lightBall->translate({dt*10, 0, 0});
-        if (Input::get_action("n"))
-            lightBall->translate({-dt*10, 0, 0});
+    elapsed += dt;
 
-        elapsed += dt;
-
-        lightBall2->set_pos({sinf(elapsed) * 6 + 6,-0.5, -5});*/
+    //check for goal
+    vec3 tmp = player->get_position();
+    if (!reachedGoal && NormSq(tmp - goalPos) < 10.f)
+    {
+        reachedGoal = true;
+        debug_log("Goal reached\n");
+        mailbox.notify(PLAYER_REACH_GOAL);
+    }
 }
 
 void MainScene::on_notify(MailTopic topic, void *aux)

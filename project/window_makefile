@@ -30,7 +30,7 @@ CREATE_EXEC = $(CXX)  -o output.exe \
 	$(BUILDDIR)CollisionManager.o \
 	$(BUILDDIR)Scene.o $(BUILDDIR)MainScene.o \
 	$(BUILDDIR)Player.o $(BUILDDIR)LightBall.o $(BUILDDIR)Obstacle.o \
-	$(BUILDDIR)MazeWall.o \
+	$(BUILDDIR)MazeWall.o $(BUILDDIR)Floor.o $(BUILDDIR)TorchLight.o $(BUILDDIR)Goal.o \
 	$(LIBFLAG)
 
 
@@ -70,6 +70,9 @@ things:
 	$(CPPBLD) -c $(SRCDIR)core/things/LightBall.cpp -o $(BUILDDIR)LightBall.o
 	$(CPPBLD) -c $(SRCDIR)core/things/Obstacle.cpp -o $(BUILDDIR)Obstacle.o
 	$(CPPBLD) -c $(SRCDIR)core/things/MazeWall.cpp -o $(BUILDDIR)MazeWall.o
+	$(CPPBLD) -c $(SRCDIR)core/things/Floor.cpp -o $(BUILDDIR)Floor.o
+	$(CPPBLD) -c $(SRCDIR)core/things/TorchLight.cpp -o $(BUILDDIR)TorchLight.o
+	$(CPPBLD) -c $(SRCDIR)core/things/Goal.cpp -o $(BUILDDIR)Goal.o
 
 exec:
 	$(CREATE_EXEC)

@@ -8,6 +8,7 @@
 #include "../things/Obstacle.h"
 #include "../things/TorchLight.h"
 #include "../things/Floor.h"
+#include "../things/Goal.h"
 
 class MainScene : public Scene
 {
@@ -21,12 +22,13 @@ private:
     LightBall *lightBall, *lightBall2;
     MazeWall *mazewall;
     Obstacle *obstacle;
-    Floor *floor;
 
     void create_maze();
     int get_maze_value(int i, int j);
 
+    bool reachedGoal = false;
     double elapsed;
+    const vec3 goalPos = {38, 0, 18};
 
     /**
      * 99 PLAYER START POINT
