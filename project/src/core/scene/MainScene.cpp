@@ -15,7 +15,7 @@ void MainScene::init(Camera *camera)
     // Define directional light, it must come first!
     Light *dlt = new Light;
     dlt->type = LightType::DIR;
-    dlt->color = vec4(0.8, 0.8, 0.6, 0.2);
+    dlt->color = vec4(0.3, 0.3, 0.233, 0.15);
     dlt->position = vec3(-1, -1, -0.5);
     lights.push_back(dlt);
 
@@ -43,7 +43,8 @@ void MainScene::init(Camera *camera)
         {
             MazeWall *temp = new MazeWall(&mailbox);
             vec3 pos = {(float)i, 0.0f, (float)j};
-            if (temp->get_maze(i, j) == 0)
+            int mazeVal = temp->get_maze(i, j);
+            if (mazeVal == 0)
             {
                 temp->init();
                 temp->set_position(pos);
@@ -54,9 +55,6 @@ void MainScene::init(Camera *camera)
                 colliders.push_back(temp->get_colliderFront());
                 colliders.push_back(temp->get_colliderBack());
                 
-                //PERI TODO, based on wall position set whether active or not
-                //e.g. below is empty, use front
-                
                 bool left, right, front, back;
 
                 left = temp->get_maze(i, j-1) || j - 1 < 0;
@@ -65,9 +63,17 @@ void MainScene::init(Camera *camera)
                 back = temp->get_maze(i-1, j) || i - 1 < 0;     
                 temp->set_active_colliders(left, right, front, back);
                 
-            }           
+            }     
+            else if (mazeVal == 1 || mazeVal == 2)
+            {
+                ///is empty
+                // if (j < 10) //print first 10 row path
+                // {
+                //     debug_log("%f %f %f\n", pos.x, pos.y, pos.z);
+                // }
+            }
             // Place random objects at random places
-            else if (temp->get_maze(i, j) == 3)
+            else if (mazeVal == 3)
             {
                 Obstacle *obs = new Obstacle(&mailbox);
                 obs->init();
@@ -76,25 +82,16 @@ void MainScene::init(Camera *camera)
                 things.push_back(obs);
                 colliders.push_back(obs->get_collider());
             }
-            else if(temp->get_maze(i, j) == 4)
+            else if(mazeVal == 4)
             {
                 TorchLight *torch = new TorchLight(&mailbox);
                 torch->init();
                 torch->set_position({(float)i, 0.5f, (float)j});
-                drawables.push_back(torch->get_drawable());
+                auto dr = torch->get_drawables();
+                drawables.push_back(dr[0]); //careful here, might want to append vector instead
+                drawables.push_back(dr[1]); //but works fine for now
                 things.push_back(torch);
-
-                Light *fire = new Light;
-                fire->type = LightType::POINT;
-                fire->color = vec4(0.8, 0.5, 0.2, 2);
-                //fire->color = vec4(0.8, 0.1, 0.1, 1);
-                fire->position = {(float)i, 0.5f, (float)j};
-                lights.push_back(fire);          
-
-                LightBall *fireball = new LightBall(fire);
-                fireball->init();
-                drawables.push_back(fireball->get_drawable());
-                things.push_back(fireball);
+                lights.push_back(torch->get_light());
             }
         }
 

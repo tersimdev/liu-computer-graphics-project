@@ -11,7 +11,7 @@
 #define EXIT_KEY_1 0x1B
 #define EXIT_KEY_2 '0'
 #define STARTING_SCENE "main"
-#define PLAYER_START_POS {-2, 0, 0}
+#define PLAYER_START_POS {1, 0, 3}
 
 //physics config here ///////////////////////////////////
 //////////////////////////////////////////////////////////

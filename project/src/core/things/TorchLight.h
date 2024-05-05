@@ -6,6 +6,10 @@
 #include "../../util/Input.h"
 #include "../../util/Debug.h"
 
+
+#include "../entity/Light.h"
+#include "LightBall.h"
+
 #include "../system/DrawableHelper.h"
 #include "../system/ThingMailbox.h"
 
@@ -20,9 +24,12 @@ public:
     void on_notify(MailTopic topic, void* aux) override;
     void set_position(vec3 pos);
 
-    Drawable* get_drawable();
+    std::vector<Drawable *>get_drawables();
+    Light* get_light();
 private:
     Drawable* drawable;
     ThingMailbox* mailbox;
 
+    LightBall* fireball;
+    Light* fire;
 };

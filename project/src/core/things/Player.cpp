@@ -18,7 +18,7 @@ void Player::init()
     this->collider->set_rigidbody(rigidbody);
 
     camMode = WASD;     // default
-    camMode = THIRDPER; // temp
+    //camMode = THIRDPER; // temp
     init_cam();
 }
 
