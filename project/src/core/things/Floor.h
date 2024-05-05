@@ -21,6 +21,8 @@ public:
     void on_notify(MailTopic topic, void* aux) override;
 
     void set_position(vec3 pos);
+    void set_scale(float scale);
+    void use_as_ceiling(); //special func to reuse floor as ceil
     Drawable* get_drawable();
     Collider* get_collider();
 private:
