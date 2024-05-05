@@ -96,13 +96,15 @@ void Player::init_cam()
     camera->set_dir(DEFAULT_CAM_DIR);
     camera->set_up({0, 1, 0});
     camOffset = {0, 0, 0};
+    set_move_speed(3, 0.2);
     Input::set_lock_mouse(true);
     switch (camMode)
     {
     default:
     case WASD:
         break;
-    case WASDQE:
+    case WASDQE:        
+        set_move_speed(10, 0.2); //move faster
         break;
     case THIRDPER:
         camOffset = {0, 0, 2};
@@ -165,7 +167,6 @@ void Player::do_player_input(float dt)
 
     vec3 offset = camOffset.y * camera->get_up() + camOffset.z * -camera->get_dir();
     camera->set_pos(position + offset);
-    set_move_speed(3, 0.2);
     if (camMode != TOPDOWN)
         camera->rotate_cam(deltaMouse, dt);
 
@@ -185,7 +186,6 @@ void Player::do_player_input(float dt)
     {
         camMode = WASDQE;
         init_cam();
-        set_move_speed(8, 0.2); //move faster
     }
     else if (Input::get_action("camMode3", false))
     {

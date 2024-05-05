@@ -31,7 +31,7 @@ void MainScene::init(Camera *camera)
     Floor *floor = new Floor(&mailbox);
     floor->init();
     floor->set_position({15, -0.6f, 15});
-    floor->set_scale(40);
+    floor->set_scale(50);
     drawables.push_back(floor->get_drawable());
     things.push_back(floor);
     colliders.push_back(floor->get_collider());
@@ -41,7 +41,7 @@ void MainScene::init(Camera *camera)
     ceiling->init();
     ceiling->use_as_ceiling();
     ceiling->set_position({15, 3, 15});
-    ceiling->set_scale(40);
+    ceiling->set_scale(50);
     drawables.push_back(ceiling->get_drawable());
     things.push_back(ceiling);
     colliders.push_back(ceiling->get_collider());
@@ -73,7 +73,7 @@ void MainScene::on_notify(MailTopic topic, void *aux)
 void MainScene::create_maze()
 {
     int size = 20;
-    float width = 3.f;
+    float width = 2.f;
     float height = 3.f;
     for (int i = 0; i < size; ++i)
     {
@@ -86,6 +86,10 @@ void MainScene::create_maze()
             {
                 player->set_position({pos.x, 0.5f ,pos.z});
                 player->set_dir({1, 0, 0});
+            }
+            else if (mazeVal == 69) // goal
+            {
+                debug_log("Goal is at (%f, %f)\n", pos.x, pos.z);
             }
             else if (mazeVal == 0)
             {
