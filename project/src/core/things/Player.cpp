@@ -21,7 +21,7 @@ void Player::init()
     // camMode = THIRDPER; // temp
     init_cam();
 
-    //add a light to player
+    // add a light to player
     light = new Light;
     light->type = LightType::POINT;
     light->color = vec4(0.9, 0.3, 0.1, 1.0f);
@@ -38,7 +38,7 @@ void Player::update(float dt)
     // update position of renderable and collider based on camera new pos
     drawable->set_position(position);
     collider->set_position(position);
-    light->position = position + vec3(0,1,0);
+    light->position = position + vec3(0, 1, 0);
 }
 
 void Player::cleanup()
@@ -73,6 +73,14 @@ void Player::set_dir(vec3 dir)
         camera->set_dir(dir);
 }
 
+void Player::set_move_speed(float moveSpeed, float mouseSpeed)
+{
+    if (!camera)
+        return;
+    camera->set_move_speed(moveSpeed);
+    camera->set_mouse_sens(mouseSpeed);
+}
+
 Collider *Player::get_collider()
 {
     return this->collider;
@@ -82,7 +90,6 @@ Light *Player::get_light()
 {
     return this->light;
 }
-
 
 void Player::init_cam()
 {
@@ -158,6 +165,7 @@ void Player::do_player_input(float dt)
 
     vec3 offset = camOffset.y * camera->get_up() + camOffset.z * -camera->get_dir();
     camera->set_pos(position + offset);
+    set_move_speed(3, 0.2);
     if (camMode != TOPDOWN)
         camera->rotate_cam(deltaMouse, dt);
 
@@ -177,6 +185,7 @@ void Player::do_player_input(float dt)
     {
         camMode = WASDQE;
         init_cam();
+        set_move_speed(8, 0.2); //move faster
     }
     else if (Input::get_action("camMode3", false))
     {

@@ -8,7 +8,9 @@ void MazeWall::init()
     dh::attach_texture_to_material(m, 0, "wall");
     drawable->setMaterial(m);
 
-    //give temp pos first, set inactive
+    float colliderOffset = 0.5f; //based on size
+
+    // give temp pos first, set inactive
     this->colliderLeft = new PlaneCollider(pos, {0, 0, -1}, {1, 0, 0}, {0, 1, 0}, {colliderOffset, colliderOffset}); // Left Wall
     this->colliderRight = new PlaneCollider(pos, {0, 0, 1}, {1, 0, 0}, {0, 1, 0}, {colliderOffset, colliderOffset}); // Right Wall
     this->colliderFront = new PlaneCollider(pos, {1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {colliderOffset, colliderOffset}); // Front Wall
@@ -47,6 +49,7 @@ void MazeWall::on_notify(MailTopic topic, void *aux)
 
 void MazeWall::set_position(vec3 pos)
 {
+    float colliderOffset = drawable->getTransform()->scale.x; //based on size of cube
     this->colliderLeft->set_position({pos.x, pos.y, pos.z - colliderOffset});  // Left Wall
     this->colliderRight->set_position({pos.x, pos.y, pos.z + colliderOffset}); // Right Wall
     this->colliderFront->set_position({pos.x + colliderOffset, pos.y, pos.z}); // Front Wall
@@ -78,15 +81,23 @@ Collider *MazeWall::get_colliderBack()
 void MazeWall::set_height(float h)
 {
     drawable->getTransform()->scale.y = h;
-    //scale works for now, but should actually do:
-    //offset the block by translating
-    //translate collider pos to match, and update size
+    // scale works for now, but should actually do:
+    // offset the block by translating
+    // translate collider pos to match, and update size
 }
 
 void MazeWall::set_width(float w)
 {
-    drawable->getTransform()->scale.x = w;
-    drawable->getTransform()->scale.z = w;
+    drawable->getTransform()->scale = {w, 1, w};
+
+    // update collider scale as well
+    this->colliderLeft->size = {w, w};
+    this->colliderRight->size = {w, w};
+    this->colliderFront->size = {w, w};
+    this->colliderBack->size = {w, w};
+
+    //update collider offset by reset pos
+    set_position(drawable->getTransform()->translation);
 }
 
 void MazeWall::set_active_colliders(bool left, bool right, bool front, bool back)

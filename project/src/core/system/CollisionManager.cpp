@@ -83,7 +83,7 @@ ColResult CollisionManager::check_sphere_plane(SphereCollider *c1, PlaneCollider
     ColResult res = {false, vec3(0)};
 
     //if way below the plane, ignore
-    if (dist + PHYS_ESPILON < -c1->radius) 
+    if (dist < 0) 
         return res;
 
     if (dist + PHYS_ESPILON < c1->radius)

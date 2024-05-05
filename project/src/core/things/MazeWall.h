@@ -38,6 +38,4 @@ private:
     PlaneCollider* colliderFront;
     PlaneCollider* colliderBack;
     ThingMailbox* mailbox;
-    
-    const float colliderOffset = 0.5f;
 };
