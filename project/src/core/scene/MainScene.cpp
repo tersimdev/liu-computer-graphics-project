@@ -12,6 +12,12 @@ void MainScene::init(Camera *camera)
 	// sgCreateDisplayFloat(40, 120, "Value: ", &testf);
 	// Input::set_lock_mouse(false);
 
+    // Define directional light, it must come first!
+    Light *dlt = new Light;
+    dlt->type = LightType::DIR;
+    dlt->color = vec4(0.8, 0.8, 0.6, 0.2);
+    dlt->position = vec3(-1, -1, -0.5);
+    lights.push_back(dlt);
 
     // Create player object
     player = new Player(&mailbox, camera);
@@ -29,10 +35,11 @@ void MainScene::init(Camera *camera)
 
 
     //Create Maze
-    for(int i=0; i<20; ++i)
+    int size = 20;
+    for(int i=0; i<size; ++i)
     {
         
-        for(int j=0; j<20; ++j)
+        for(int j=0; j<size; ++j)
         {
             MazeWall *temp = new MazeWall(&mailbox);
             vec3 pos = {(float)i, 0.0f, (float)j};
@@ -52,33 +59,13 @@ void MainScene::init(Camera *camera)
                 
                 bool left, right, front, back;
 
-                left = false;
-                right = false;
-                front = false;
-                back = false;
-
-                if(temp->get_maze(i+1, j) || i + 1 == 20)
-                {
-                    front = true;
-                }
-                if(temp->get_maze(i-1, j) || i - 1 == -1)
-                {
-                    back = true;
-                }
-                if(temp->get_maze(i, j+1) || j + 1 == 20)
-                {
-                    right = true;
-                }
-                if(temp->get_maze(i, j-1) || j - 1 == -1)
-                {
-                    left = true;
-                }
-
-                
+                left = temp->get_maze(i, j-1) || j - 1 < 0;
+                right = temp->get_maze(i, j+1) || j + 1 >= size;
+                front = temp->get_maze(i+1, j) || i + 1 >= size;
+                back = temp->get_maze(i-1, j) || i - 1 < 0;     
                 temp->set_active_colliders(left, right, front, back);
                 
-            }
-            
+            }           
             // Place random objects at random places
             else if (temp->get_maze(i, j) == 3)
             {
@@ -89,8 +76,7 @@ void MainScene::init(Camera *camera)
                 things.push_back(obs);
                 colliders.push_back(obs->get_collider());
             }
-
-            if(temp->get_maze(i, j) == 4)
+            else if(temp->get_maze(i, j) == 4)
             {
                 TorchLight *torch = new TorchLight(&mailbox);
                 torch->init();
@@ -100,30 +86,21 @@ void MainScene::init(Camera *camera)
 
                 Light *fire = new Light;
                 fire->type = LightType::POINT;
-                fire->color = vec4(0.8, 0.5, 0.2, 1);
-                fire->position = {(float)i, 1.0f, (float)j};
-                lights.push_back(fire);
-                
+                fire->color = vec4(0.8, 0.5, 0.2, 2);
+                //fire->color = vec4(0.8, 0.1, 0.1, 1);
+                fire->position = {(float)i, 0.5f, (float)j};
+                lights.push_back(fire);          
 
                 LightBall *fireball = new LightBall(fire);
                 fireball->init();
                 drawables.push_back(fireball->get_drawable());
                 things.push_back(fireball);
             }
-
-
         }
 
     }
 
     // todo Create enemy spawner
-
-    // Define lighting
-    Light *dlt = new Light;
-    dlt->type = LightType::DIR;
-    dlt->color = vec4(0.8, 0.8, 0.6, 0.2);
-    dlt->position = vec3(-1, -1, -0.5);
-    lights.push_back(dlt);
 
     // add point light to test
     /*Light *plt = new Light;
