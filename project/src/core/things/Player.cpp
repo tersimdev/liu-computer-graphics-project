@@ -34,7 +34,7 @@ void Player::update(float dt)
     // get collided position
     position = collider->get_position();
     //restrict player height since terrain is flat
-    if (camMode != WASDQE) //if not fly mode
+    if (camMode == WASD)
         position.y = playerHeight;
     // use cam to move player position
     do_player_input(dt);
@@ -183,7 +183,7 @@ void Player::do_player_input(float dt)
     if (Input::get_action("shoot", false))
     {
         debug_log("pew pew pew\n");
-        //mailbox->notify(PLAYER_SAID_HELLO);
+        mailbox->notify(PLAYER_SAID_HELLO, &position);
     }
 
     if (Input::get_action("debug", false))

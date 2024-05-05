@@ -11,8 +11,8 @@ void MazeWall::init()
     float colliderOffset = 0.5f; //based on size
 
     // give temp pos first, set inactive
-    this->colliderLeft = new PlaneCollider(pos, {0, 0, -1}, {1, 0, 0}, {0, 1, 0}, {colliderOffset, colliderOffset}); // Left Wall
-    this->colliderRight = new PlaneCollider(pos, {0, 0, 1}, {1, 0, 0}, {0, 1, 0}, {colliderOffset, colliderOffset}); // Right Wall
+    this->colliderLeft = new PlaneCollider(pos, {0, 0, -1}, {0, 1, 0}, {1, 0, 0}, {colliderOffset, colliderOffset}); // Left Wall
+    this->colliderRight = new PlaneCollider(pos, {0, 0, 1}, {0, 1, 0}, {1, 0, 0}, {colliderOffset, colliderOffset}); // Right Wall
     this->colliderFront = new PlaneCollider(pos, {1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {colliderOffset, colliderOffset}); // Front Wall
     this->colliderBack = new PlaneCollider(pos, {-1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {colliderOffset, colliderOffset}); // Back Wall
 
@@ -81,9 +81,11 @@ Collider *MazeWall::get_colliderBack()
 void MazeWall::set_height(float h)
 {
     drawable->getTransform()->scale.y = h;
-    // scale works for now, but should actually do:
-    // offset the block by translating
-    // translate collider pos to match, and update size
+    this->colliderLeft->size.x = h;
+    this->colliderRight->size.x = h;
+    this->colliderFront->size.x = h;
+    this->colliderBack->size.x = h;
+    // scale works for now, but should offset too
 }
 
 void MazeWall::set_width(float w)
@@ -93,10 +95,10 @@ void MazeWall::set_width(float w)
     drawable->getTransform()->scale.z = w;
 
     // update collider scale as well
-    this->colliderLeft->size = {w, w};
-    this->colliderRight->size = {w, w};
-    this->colliderFront->size = {w, w};
-    this->colliderBack->size = {w, w};
+    this->colliderLeft->size.y = w;
+    this->colliderRight->size.y = w;
+    this->colliderFront->size.y = w;
+    this->colliderBack->size.y = w;
 
     //update collider offset by reset pos
     set_position(drawable->getTransform()->translation);

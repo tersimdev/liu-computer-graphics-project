@@ -34,4 +34,6 @@ private:
     Drawable* drawable;
     SphereCollider* collider;
     Rigidbody* rigidbody;
+
+    float interactRange = 3.f;
 };

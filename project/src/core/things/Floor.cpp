@@ -41,7 +41,6 @@ void Floor::use_as_ceiling()
     if (collider)
     {
         collider->normal = {0, -1, 0};
-        collider->set_active(false);
     }
         
     //rotate mesh

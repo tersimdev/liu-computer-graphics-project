@@ -4,6 +4,7 @@
 void Obstacle::init()
 {
     Material *m;
+    vec3 pos = {0,1,0};
     float scale = 1;
     switch (rand() % 4) // modulo num of types
     {
@@ -12,36 +13,38 @@ void Obstacle::init()
         this->drawable = dh::create_sphere(Transform(), 32, 32);
         m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
         dh::attach_texture_to_material(m, 0, "banana");
-        scale = 1;
+        scale = 0.3;
         break;
 
     case 1:
         this->drawable = dh::create_from_model("monkey.obj", Transform());
         m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
         dh::attach_texture_to_material(m, 0, "banana");
-        scale = 1;
+        scale = 0.3;
         break;
 
     case 2:
         this->drawable = dh::create_from_model("bunnyplus.obj", Transform());
         m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
         dh::attach_texture_to_material(m, 0, "banana");
-        scale = 1;
+        scale = 0.3;
         break;
     case 3:
         this->drawable = dh::create_from_model("table.obj", Transform());
         m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
         dh::attach_texture_to_material(m, 0, "table_col");
-        scale = 2;
+        scale = 0.3;
         break;
     }
 
     drawable->setMaterial(m);
-    drawable->set_position(vec3(0));
+    drawable->set_position(pos);
     drawable->set_scale(scale);
-    this->collider = new SphereCollider(vec3(0), scale);
+    this->collider = new SphereCollider(pos, scale * 0.5f);
     this->rigidbody = new Rigidbody(DYNAMIC, scale);
     this->collider->set_rigidbody(rigidbody);
+
+    mailbox->sub(PLAYER_SAID_HELLO, this);
 }
 
 void Obstacle::update(float dt)
@@ -62,6 +65,16 @@ void Obstacle::on_notify(MailTopic topic, void *aux)
     // demo observer pattern
     switch (topic)
     {
+    case PLAYER_SAID_HELLO:
+    {
+        vec3 *pos = reinterpret_cast<vec3 *>(aux); // make sure this is not invalid!
+        vec3 delta = (drawable->getTransform()->translation - *pos);
+        if (NormSq(delta) <= interactRange * interactRange)
+        {
+            rigidbody->set_vel({delta.x, 1, delta.y});
+        }
+    }
+    break;
     default:
         break;
     }
