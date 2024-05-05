@@ -88,7 +88,9 @@ void MazeWall::set_height(float h)
 
 void MazeWall::set_width(float w)
 {
-    drawable->getTransform()->scale = {w, 1, w};
+    //preserve the y
+    drawable->getTransform()->scale.x = w;
+    drawable->getTransform()->scale.z = w;
 
     // update collider scale as well
     this->colliderLeft->size = {w, w};
