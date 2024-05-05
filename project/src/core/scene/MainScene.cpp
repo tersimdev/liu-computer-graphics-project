@@ -15,7 +15,7 @@ void MainScene::init(Camera *camera)
     // Define directional light, it must come first!
     Light *dlt = new Light;
     dlt->type = LightType::DIR;
-    dlt->color = vec4(0.3, 0.3, 0.233, 0.15);
+    dlt->color = vec4(0.3, 0.3, 0.233, 0.2);
     dlt->position = vec3(-1, -1, -0.5);
     lights.push_back(dlt);
 
@@ -30,7 +30,7 @@ void MainScene::init(Camera *camera)
     Floor *floor = new Floor(&mailbox);
     floor->init();
     floor->set_position({15, -0.6f, 15});
-    floor->set_scale(18);
+    floor->set_scale(40);
     drawables.push_back(floor->get_drawable());
     things.push_back(floor);
     colliders.push_back(floor->get_collider());
@@ -40,39 +40,73 @@ void MainScene::init(Camera *camera)
     ceiling->init();
     ceiling->use_as_ceiling();
     ceiling->set_position({15, 3, 15});
-    ceiling->set_scale(18);
+    ceiling->set_scale(40);
     drawables.push_back(ceiling->get_drawable());
     things.push_back(ceiling);
     colliders.push_back(ceiling->get_collider());
 
     // Create Maze
+    create_maze();
+    elapsed = 0;
+}
+
+void MainScene::update(float dt)
+{
+    Scene::update(dt);
+
+    /*    if (Input::get_action("m"))
+            lightBall->translate({dt*10, 0, 0});
+        if (Input::get_action("n"))
+            lightBall->translate({-dt*10, 0, 0});
+
+        elapsed += dt;
+
+        lightBall2->set_pos({sinf(elapsed) * 6 + 6,-0.5, -5});*/
+}
+
+void MainScene::on_notify(MailTopic topic, void *aux)
+{
+    // can recieve messages from things in the scene here
+}
+
+void MainScene::create_maze()
+{
     int size = 20;
+    float width = 3.f;
+    float height = 3.f;
     for (int i = 0; i < size; ++i)
     {
 
         for (int j = 0; j < size; ++j)
         {
-            MazeWall *temp = new MazeWall(&mailbox);
-            vec3 pos = {(float)i, 0.0f, (float)j};
-            int mazeVal = temp->get_maze(i, j);
-            if (mazeVal == 0)
+            vec3 pos = {(float)i * width, 0.0f, (float)j * width};
+            int mazeVal = get_maze_value(i, j);
+            if (mazeVal == 99) // player
             {
-                temp->init();
-                temp->set_position(pos);
-                drawables.push_back(temp->get_drawable());
-                things.push_back(temp);
-                colliders.push_back(temp->get_colliderLeft());
-                colliders.push_back(temp->get_colliderRight());
-                colliders.push_back(temp->get_colliderFront());
-                colliders.push_back(temp->get_colliderBack());
+                player->set_position({pos.x, 0.5f ,pos.z});
+                player->set_dir({1, 0, 0});
+            }
+            else if (mazeVal == 0)
+            {
+                MazeWall *mazeWall = new MazeWall(&mailbox);
+                mazeWall->init();
+                mazeWall->set_height(height);
+                mazeWall->set_width(width * 0.5f);
+                mazeWall->set_position(pos);
+                drawables.push_back(mazeWall->get_drawable());
+                things.push_back(mazeWall);
+                colliders.push_back(mazeWall->get_colliderLeft());
+                colliders.push_back(mazeWall->get_colliderRight());
+                colliders.push_back(mazeWall->get_colliderFront());
+                colliders.push_back(mazeWall->get_colliderBack());
 
                 bool left, right, front, back;
 
-                left = temp->get_maze(i, j - 1) || j - 1 < 0;
-                right = temp->get_maze(i, j + 1) || j + 1 >= size;
-                front = temp->get_maze(i + 1, j) || i + 1 >= size;
-                back = temp->get_maze(i - 1, j) || i - 1 < 0;
-                temp->set_active_colliders(left, right, front, back);
+                left = get_maze_value(i, j - 1) || j - 1 < 0;
+                right = get_maze_value(i, j + 1) || j + 1 >= size;
+                front = get_maze_value(i + 1, j) || i + 1 >= size;
+                back = get_maze_value(i - 1, j) || i - 1 < 0;
+                mazeWall->set_active_colliders(left, right, front, back);
             }
             else if (mazeVal == 1 || mazeVal == 2)
             {
@@ -96,7 +130,7 @@ void MainScene::init(Camera *camera)
             {
                 TorchLight *torch = new TorchLight(&mailbox);
                 torch->init();
-                torch->set_position({(float)i, 0.5f, (float)j});
+                torch->set_position({pos.x, height - 0.5f, pos.z});
                 auto dr = torch->get_drawables();
                 drawables.push_back(dr[0]); // careful here, might want to append vector instead
                 drawables.push_back(dr[1]); // but works fine for now
@@ -105,52 +139,10 @@ void MainScene::init(Camera *camera)
             }
         }
     }
-
-    // todo Create enemy spawner
-
-    // add point light to test
-    /*Light *plt = new Light;
-    plt->type = LightType::POINT;
-    plt->color = vec4(0, 0.8, 0.1, 1);
-    plt->position = vec3(0, 0.5, -5);
-    lights.push_back(plt);
-
-    // add a drawable to point light to debug
-    lightBall = new LightBall(plt);
-    lightBall->init();
-    drawables.push_back(lightBall->get_drawable());
-    things.push_back(lightBall);
-    // example mailbox usage
-    mailbox.sub(PLAYER_SAID_HELLO, lightBall); // lightBall listen to player
-
-    //second light ball to animate
-    plt = new Light;
-    plt->type = LightType::POINT;
-    plt->color = vec4(0.8, 0.2, 0.8, 1);
-    plt->position = vec3(0, -0.5, -5);
-    lights.push_back(plt);
-    lightBall2 = new LightBall(plt);
-    lightBall2->init();
-    drawables.push_back(lightBall2->get_drawable());
-    things.push_back(lightBall2);*/
-    elapsed = 0;
 }
 
-void MainScene::update(float dt)
+int MainScene::get_maze_value(int i, int j)
 {
-    Scene::update(dt);
-
-    /*    if (Input::get_action("m"))
-            lightBall->translate({dt*10, 0, 0});
-        if (Input::get_action("n"))
-            lightBall->translate({-dt*10, 0, 0});
-
-        elapsed += dt;
-
-        lightBall2->set_pos({sinf(elapsed) * 6 + 6,-0.5, -5});*/
-}
-
-void MainScene::on_notify(MailTopic topic, void *aux)
-{
-    // can recieve messages from things in the scene here
+    // todo error check
+    return maze_three[i][j];
 }

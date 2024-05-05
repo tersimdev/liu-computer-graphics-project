@@ -17,12 +17,6 @@ void MazeWall::init()
     set_active_colliders(false, false, false, false);
 }
 
-int MazeWall::get_maze(int i, int j)
-{
-    //might want to add error check
-    return maze_three[i][j];
-}
-
 void MazeWall::update(float dt)
 {
 }
@@ -79,6 +73,20 @@ Collider *MazeWall::get_colliderFront()
 Collider *MazeWall::get_colliderBack()
 {
     return this->colliderBack;
+}
+
+void MazeWall::set_height(float h)
+{
+    drawable->getTransform()->scale.y = h;
+    //scale works for now, but should actually do:
+    //offset the block by translating
+    //translate collider pos to match, and update size
+}
+
+void MazeWall::set_width(float w)
+{
+    drawable->getTransform()->scale.x = w;
+    drawable->getTransform()->scale.z = w;
 }
 
 void MazeWall::set_active_colliders(bool left, bool right, bool front, bool back)

@@ -11,7 +11,7 @@
 #define EXIT_KEY_1 0x1B
 #define EXIT_KEY_2 '0'
 #define STARTING_SCENE "main"
-#define PLAYER_START_POS {1, 0, 3}
+#define PLAYER_START_POS {0, 0, 0}
 
 //physics config here ///////////////////////////////////
 //////////////////////////////////////////////////////////
@@ -22,7 +22,7 @@
 //graphics config here ///////////////////////////////////
 //////////////////////////////////////////////////////////
 
-#define CLEAR_COL 0.2, 0.2, 0.5, 0
+#define CLEAR_COL 0.0, 0.0, 0.0, 0
 #define SHADER_PATH "./shaders/"
 #define TEXTURES_PATH "./asset/texture/"
 #define MODELS_PATH "./asset/model/"

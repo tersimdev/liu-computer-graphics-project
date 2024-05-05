@@ -26,6 +26,7 @@ public:
     void cleanup() override;
     void on_notify(MailTopic topic, void* aux) override;
 
+    void set_dir(vec3 dir);
     void set_position(vec3 pos);
     void set_cam_offset(vec3 camOffset);
     Drawable* get_drawable();

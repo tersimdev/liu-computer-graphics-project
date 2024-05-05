@@ -17,8 +17,8 @@ void Player::init()
     this->rigidbody = new Rigidbody(KINEMATIC, scale);
     this->collider->set_rigidbody(rigidbody);
 
-    camMode = WASD;     // default
-    //camMode = THIRDPER; // temp
+    camMode = WASD; // default
+    // camMode = THIRDPER; // temp
     init_cam();
 }
 
@@ -58,6 +58,12 @@ void Player::set_position(vec3 pos)
 Drawable *Player::get_drawable()
 {
     return this->drawable;
+}
+
+void Player::set_dir(vec3 dir)
+{
+    if (camera)
+        camera->set_dir(dir);
 }
 
 Collider *Player::get_collider()
