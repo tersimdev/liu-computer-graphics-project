@@ -13,8 +13,8 @@ void Obstacle::init()
     case 0:
         this->drawable = dh::create_sphere(Transform(), 32, 32);
         m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
-        dh::attach_texture_to_material(m, 0, "banana");
-        scale = 0.5;
+        dh::attach_texture_to_material(m, 0, "birchwood");
+        scale = 0.8;
         break;
 
     case 1:

@@ -94,7 +94,7 @@ void MainScene::create_maze()
             int mazeVal = get_maze_value(i, j);
             if (mazeVal == 99) // player
             {
-                player->set_position({pos.x, 0.5f ,pos.z});
+                player->set_position({pos.x, -0.5f ,pos.z});
                 player->set_dir({1, 0, 0});
             }
             else if (mazeVal == 69) // goal

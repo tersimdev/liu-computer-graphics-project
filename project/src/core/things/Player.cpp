@@ -3,7 +3,7 @@
 void Player::init()
 {
     position = PLAYER_START_POS;
-    float scale = 0.3;
+    float scale = 0.5f;
 
     this->drawable = dh::create_sphere(Transform(), 32, 32);
     Material *m = dh::create_material(ShaderProg::LIT, {0.5, 0.5, 0.7}, {0.8, 0.8, 0.8, 256});
@@ -62,9 +62,9 @@ void Player::on_notify(MailTopic topic, void *aux)
 void Player::set_position(vec3 pos)
 {
     position = pos;
-    drawable->set_position(position);
-    collider->set_position(position);
     playerHeight = pos.y;
+    drawable->set_position(pos);
+    collider->set_position(pos);
 }
 
 Drawable *Player::get_drawable()
@@ -105,9 +105,10 @@ void Player::init_cam()
 {
     camera->set_dir(DEFAULT_CAM_DIR);
     camera->set_up({0, 1, 0});
-    camOffset = {0, 0, 0};
+    camOffset = {0, 1, 0};
     set_move_speed(3, 0.2);
     Input::set_lock_mouse(true);
+    drawable->setDrawFlag(false);
     switch (camMode)
     {
     default:
@@ -118,12 +119,14 @@ void Player::init_cam()
         break;
     case THIRDPER:
         camOffset = {0, 0, 2};
+        drawable->setDrawFlag(true);
         break;
     case TOPDOWN:
         camOffset = {0, 0, 10};
         camera->set_up({0, 0, -1});
         camera->set_dir({0, -1, 0});
         Input::set_lock_mouse(false);
+        drawable->setDrawFlag(true);
         break;
     }
 }
