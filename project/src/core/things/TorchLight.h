@@ -25,6 +25,4 @@ private:
     Drawable* drawable;
     ThingMailbox* mailbox;
 
-
-
 };

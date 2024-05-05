@@ -3,7 +3,7 @@
 void MazeWall::init()
 {
     vec3 pos = vec3(0.0f);
-    this->drawable = dh::create_from_model("cubeUV.obj", Transform(pos, {0, 0, 0}, {0.5, 2.0f, 0.5}));
+    this->drawable = dh::create_from_model("cubeUV.obj", Transform(pos, {0, 0, 0}, {0.5f, 0.5f, 0.5f}));
     Material *m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
     dh::attach_texture_to_material(m, 0, "wall");
     drawable->setMaterial(m);
@@ -20,7 +20,7 @@ void MazeWall::init()
 int MazeWall::get_maze(int i, int j)
 {
     //might want to add error check
-    return maze[i][j];
+    return maze_three[i][j];
 }
 
 void MazeWall::update(float dt)

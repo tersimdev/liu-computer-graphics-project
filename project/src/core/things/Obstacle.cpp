@@ -12,27 +12,27 @@ void Obstacle::init()
         this->drawable = dh::create_sphere(Transform(), 32, 32);
         m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
         dh::attach_texture_to_material(m, 0, "banana");
-        scale = 0.2;
+        scale = 0.3;
         break;
 
     case 1:
         this->drawable = dh::create_from_model("monkey.obj", Transform());
         m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
         dh::attach_texture_to_material(m, 0, "banana");
-        scale = 0.1;
+        scale = 0.4;
         break;
 
     case 2:
         this->drawable = dh::create_from_model("bunnyplus.obj", Transform());
         m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
         dh::attach_texture_to_material(m, 0, "banana");
-        scale = 0.1;
+        scale = 0.5;
         break;
     case 3:
         this->drawable = dh::create_from_model("table.obj", Transform());
         m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
         dh::attach_texture_to_material(m, 0, "table_col");
-        scale = 0.5;
+        scale = 0.3;
         break;
     }
 

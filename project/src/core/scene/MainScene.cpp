@@ -27,16 +27,16 @@ void MainScene::init(Camera *camera)
     things.push_back(floor);
     colliders.push_back(floor->get_collider());
 
-    
+
     //Create Maze
-    for(int i=0; i<30; ++i)
+    for(int i=0; i<20; ++i)
     {
         
-        for(int j=0; j<30; ++j)
+        for(int j=0; j<20; ++j)
         {
             MazeWall *temp = new MazeWall(&mailbox);
             vec3 pos = {(float)i, 0.0f, (float)j};
-            if (temp->get_maze(i, j) == 1)
+            if (temp->get_maze(i, j) == 0)
             {
                 temp->init();
                 temp->set_position(pos);
@@ -51,27 +51,67 @@ void MainScene::init(Camera *camera)
                 //e.g. below is empty, use front
                 
                 bool left, right, front, back;
-                left = true;
-                right = true;
-                front = true;
-                back = true;
+
+                left = false;
+                right = false;
+                front = false;
+                back = false;
+
+                if(temp->get_maze(i+1, j) || i + 1 == 20)
+                {
+                    front = true;
+                }
+                if(temp->get_maze(i-1, j) || i - 1 == -1)
+                {
+                    back = true;
+                }
+                if(temp->get_maze(i, j+1) || j + 1 == 20)
+                {
+                    right = true;
+                }
+                if(temp->get_maze(i, j-1) || j - 1 == -1)
+                {
+                    left = true;
+                }
+
+                
                 temp->set_active_colliders(left, right, front, back);
+                
             }
             
             // Place random objects at random places
-            else if (temp->get_maze(i, j)==0 || temp->get_maze(i, j) == 2)
+            else if (temp->get_maze(i, j) == 3)
             {
-                if(rand() % 1000 > 950)
-                {
-                    Obstacle *obs = new Obstacle(&mailbox);
-                    obs->init();
-                    obs->set_position({pos.x, pos.y-0.5f, pos.z});
-                    drawables.push_back(obs->get_drawable());
-                    things.push_back(obs);
-                    colliders.push_back(obs->get_collider());
-
-                }
+                Obstacle *obs = new Obstacle(&mailbox);
+                obs->init();
+                obs->set_position({pos.x, pos.y-0.7f, pos.z});
+                drawables.push_back(obs->get_drawable());
+                things.push_back(obs);
+                colliders.push_back(obs->get_collider());
             }
+
+            if(temp->get_maze(i, j) == 4)
+            {
+                TorchLight *torch = new TorchLight(&mailbox);
+                torch->init();
+                torch->set_position({(float)i, 0.5f, (float)j});
+                drawables.push_back(torch->get_drawable());
+                things.push_back(torch);
+
+                Light *fire = new Light;
+                fire->type = LightType::POINT;
+                fire->color = vec4(0.8, 0.5, 0.2, 1);
+                fire->position = {(float)i, 1.0f, (float)j};
+                lights.push_back(fire);
+                
+
+                LightBall *fireball = new LightBall(fire);
+                fireball->init();
+                drawables.push_back(fireball->get_drawable());
+                things.push_back(fireball);
+            }
+
+
         }
 
     }
@@ -86,7 +126,7 @@ void MainScene::init(Camera *camera)
     lights.push_back(dlt);
 
     // add point light to test
-    Light *plt = new Light;
+    /*Light *plt = new Light;
     plt->type = LightType::POINT;
     plt->color = vec4(0, 0.8, 0.1, 1);
     plt->position = vec3(0, 0.5, -5);
@@ -109,7 +149,7 @@ void MainScene::init(Camera *camera)
     lightBall2 = new LightBall(plt);
     lightBall2->init();
     drawables.push_back(lightBall2->get_drawable());
-    things.push_back(lightBall2);
+    things.push_back(lightBall2);*/
     elapsed = 0;
 }
 
@@ -117,14 +157,14 @@ void MainScene::update(float dt)
 {
     Scene::update(dt);
 
-    if (Input::get_action("m"))
+/*    if (Input::get_action("m"))
         lightBall->translate({dt*10, 0, 0});
     if (Input::get_action("n"))
         lightBall->translate({-dt*10, 0, 0});
 
     elapsed += dt;
 
-    lightBall2->set_pos({sinf(elapsed) * 6 + 6,-0.5, -5});
+    lightBall2->set_pos({sinf(elapsed) * 6 + 6,-0.5, -5});*/
 }
 
 void MainScene::on_notify(MailTopic topic, void *aux)
