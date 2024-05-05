@@ -8,7 +8,7 @@ void TorchLight::init()
 
     fire = new Light;
     fire->type = LightType::POINT;
-    fire->color = vec4(0.9, 0.2, 0.1, 0.3);
+    fire->color = vec4(1, 0.8, 0.2, 1.0);
     fire->position = vec3(0); //set later
 
     fireball = new LightBall(fire);

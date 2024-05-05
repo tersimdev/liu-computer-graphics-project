@@ -20,6 +20,12 @@ void Player::init()
     camMode = WASD; // default
     // camMode = THIRDPER; // temp
     init_cam();
+
+    //add a light to player
+    light = new Light;
+    light->type = LightType::POINT;
+    light->color = vec4(0.9, 0.3, 0.1, 1.0f);
+    light->position = position;
 }
 
 void Player::update(float dt)
@@ -32,6 +38,7 @@ void Player::update(float dt)
     // update position of renderable and collider based on camera new pos
     drawable->set_position(position);
     collider->set_position(position);
+    light->position = position + vec3(0,1,0);
 }
 
 void Player::cleanup()
@@ -70,6 +77,12 @@ Collider *Player::get_collider()
 {
     return this->collider;
 }
+
+Light *Player::get_light()
+{
+    return this->light;
+}
+
 
 void Player::init_cam()
 {

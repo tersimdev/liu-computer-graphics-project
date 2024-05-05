@@ -2,6 +2,7 @@
 
 #include "../entity/Thing.h"
 #include "../entity/Drawable.h"
+#include "../entity/Light.h"
 #include "../entity/SphereCollider.h"
 #include "../entity/Rigidbody.h"
 #include "../../util/Camera.h"
@@ -31,12 +32,14 @@ public:
     void set_cam_offset(vec3 camOffset);
     Drawable* get_drawable();
     Collider* get_collider();
+    Light* get_light();
 private:
     Drawable* drawable;
     ThingMailbox* mailbox;
     Camera* camera;
     SphereCollider* collider;
     Rigidbody* rigidbody;
+    Light* light;
 
     vec3 position;
     vec3 camOffset; 

@@ -15,7 +15,7 @@ void MainScene::init(Camera *camera)
     // Define directional light, it must come first!
     Light *dlt = new Light;
     dlt->type = LightType::DIR;
-    dlt->color = vec4(0.3, 0.3, 0.233, 0.2);
+    dlt->color = vec4(0.1, 0.1, 0.03, 0.1);
     dlt->position = vec3(-1, -1, -0.5);
     lights.push_back(dlt);
 
@@ -25,6 +25,7 @@ void MainScene::init(Camera *camera)
     drawables.push_back(player->get_drawable());
     things.push_back(player);
     colliders.push_back(player->get_collider());
+    lights.push_back(player->get_light());
 
     // Initialise floor
     Floor *floor = new Floor(&mailbox);
