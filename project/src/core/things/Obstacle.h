@@ -35,5 +35,8 @@ private:
     SphereCollider* collider;
     Rigidbody* rigidbody;
 
+    void interact(vec3 pos);
+
+    bool autoInteract = false;
     float interactRange = 3.f;
 };

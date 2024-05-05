@@ -136,7 +136,7 @@ void MainScene::create_maze()
             {
                 Obstacle *obs = new Obstacle(&mailbox);
                 obs->init();
-                obs->set_position({pos.x, pos.y - 0.7f, pos.z});
+                obs->set_position({pos.x, pos.y - 0.5f, pos.z});
                 drawables.push_back(obs->get_drawable());
                 things.push_back(obs);
                 colliders.push_back(obs->get_collider());
@@ -145,7 +145,7 @@ void MainScene::create_maze()
             {
                 TorchLight *torch = new TorchLight(&mailbox);
                 torch->init();
-                torch->set_position({pos.x, height - 0.5f, pos.z});
+                torch->set_position({pos.x, height - 1.5f, pos.z});
                 auto dr = torch->get_drawables();
                 drawables.push_back(dr[0]); // careful here, might want to append vector instead
                 drawables.push_back(dr[1]); // but works fine for now

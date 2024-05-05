@@ -91,4 +91,8 @@ bool Input::get_action(const std::string &action, bool hold)
 void Input::set_lock_mouse(bool lock)
 {
     lockMouse = lock;
+    if (lock)
+        glutHideCursor();
+    else
+        glutShowCursor();
 }

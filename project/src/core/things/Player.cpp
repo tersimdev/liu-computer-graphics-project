@@ -24,7 +24,7 @@ void Player::init()
     // add a light to player
     light = new Light;
     light->type = LightType::POINT;
-    light->color = vec4(0.9, 0.3, 0.1, 1.0f);
+    light->color = vec4(0.9, 0.3, 0.1, 0.5f);
     light->position = position;
 }
 
@@ -43,6 +43,7 @@ void Player::update(float dt)
     collider->set_position(position);
     light->position = position + vec3(0, 1, 0);
 
+    mailbox->notify(PLAYER_LOCATION, &position);
 }
 
 void Player::cleanup()
@@ -109,6 +110,7 @@ void Player::init_cam()
     set_move_speed(3, 0.2);
     Input::set_lock_mouse(true);
     drawable->setDrawFlag(false);
+    collider->set_active(true);
     switch (camMode)
     {
     default:
@@ -116,6 +118,7 @@ void Player::init_cam()
         break;
     case WASDQE:        
         set_move_speed(10, 0.2); //move faster
+        collider->set_active(false);
         break;
     case THIRDPER:
         camOffset = {0, 0, 2};
