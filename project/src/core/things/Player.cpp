@@ -33,12 +33,16 @@ void Player::update(float dt)
     drawable->rotate({0, 2 * dt, 0});
     // get collided position
     position = collider->get_position();
+    //restrict player height since terrain is flat
+    if (camMode != WASDQE) //if not fly mode
+        position.y = playerHeight;
     // use cam to move player position
     do_player_input(dt);
     // update position of renderable and collider based on camera new pos
     drawable->set_position(position);
     collider->set_position(position);
     light->position = position + vec3(0, 1, 0);
+
 }
 
 void Player::cleanup()
@@ -60,6 +64,7 @@ void Player::set_position(vec3 pos)
     position = pos;
     drawable->set_position(position);
     collider->set_position(position);
+    playerHeight = pos.y;
 }
 
 Drawable *Player::get_drawable()

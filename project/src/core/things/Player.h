@@ -46,6 +46,7 @@ private:
     vec3 position;
     vec3 camOffset; 
 
+    float playerHeight = 0;
 
     
     //Defines how player moves, mainly for demo purposes
