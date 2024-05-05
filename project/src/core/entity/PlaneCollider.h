@@ -6,11 +6,13 @@ class PlaneCollider : public Collider
 {
 public:
     PlaneCollider(vec3 pos, vec3 normal, vec3 tangentX, vec3 tangentY, vec2 size) 
-    : Collider(ColliderType::PLANE, pos), normal(normal), tangentX(tangentX), tangentY(tangentY), size(size) 
+    : Collider(ColliderType::PLANE, pos), normal(normal), 
+        tangentX(tangentX), tangentY(tangentY), size(size),
+        isFloor(false)
     {
     }
     PlaneCollider(vec3 pos, vec3 botLeft, vec3 topLeft, vec3 botRight) 
-    : Collider(ColliderType::PLANE, pos)
+    : Collider(ColliderType::PLANE, pos), isFloor(false)
     {
         //UNTESTED!
         vec3 bot = botRight - botLeft;
@@ -27,4 +29,6 @@ public:
     vec3 tangentX; //if normal was z axis, xBound would be the horizontal bound 
     vec3 tangentY; //if normal was z axis, yBound would be the vertical bound
     vec2 size; //size along tangents
+
+    bool isFloor; //ie disable gravity if at rest
 };

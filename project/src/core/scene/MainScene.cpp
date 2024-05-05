@@ -38,7 +38,7 @@ void MainScene::init(Camera *camera)
     // Initialise floor
     Floor *floor = new Floor(&mailbox);
     floor->init();
-    floor->set_position({15, -0.6f, 15});
+    floor->set_position({15, -1.f, 15});
     floor->set_scale(50);
     drawables.push_back(floor->get_drawable());
     things.push_back(floor);

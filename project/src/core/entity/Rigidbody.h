@@ -24,26 +24,24 @@ class Rigidbody
 public:
     Rigidbody(RigidbodyType rbtype, float mass) 
     : rbtype(rbtype), mass(mass), 
-    gravScale(1), elasticity(0.7), dampening(0.1),
+    gravScale(0), elasticity(0.7), dampening(0.5),
     vel({0,0,0}), accel({0,0,0}) 
     {}
 
     vec3 update(float dt, vec3 pos)
     {
-        //apply gravity
-        //disabled for now, no floor
-        //if colliding with floor, need to stop gravity
-        //accel.y = GRAVITY * gravScale;
-        
+        //gravity
+        vel.y += GRAVITY * gravScale * dt;
+
         //apply euler integration
         vel += accel * dt;
         pos += vel * dt;
 
         //dampen accel and vel to act as friction
         vel = vel - vel*dampening*dt;
-        if (NormSq(vel) < PHYS_ESPILON * PHYS_ESPILON)
+        if (NormSq(vel) < PHYS_ESPILON)
             vel = vec3(0);
-        if (NormSq(accel) < PHYS_ESPILON * PHYS_ESPILON)
+        if (NormSq(accel) < PHYS_ESPILON)
             accel = vec3(0);
         return pos;
     }

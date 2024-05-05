@@ -30,4 +30,6 @@ GLfloat NormSq(vec3 a)
 	result = (GLfloat)(a.x * a.x + a.y * a.y + a.z * a.z);
 	return result;
 }
+
+
 #endif

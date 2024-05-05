@@ -11,6 +11,7 @@ void Floor::init()
     dh::attach_texture_to_material(m, 0, "conc");
     drawable->setMaterial(m);
     this->collider = new PlaneCollider(pos, {0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {scale.x, scale.y});
+    collider->isFloor = true;
 }
 
 void Floor::update(float dt)

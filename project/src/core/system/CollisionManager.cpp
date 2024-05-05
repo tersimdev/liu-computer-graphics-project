@@ -70,7 +70,7 @@ ColResult CollisionManager::check_sphere_sphere(SphereCollider *c1, SphereCollid
             res.delta = radii * vec3(0, 1, 0); // arbitary direction
         else
             res.delta = (dist - radii) * (dir / dist);
-        //debug_log("(S-S) Collided, resolved with %f %f %f\n", res.delta.x, res.delta.y, res.delta.z);
+        // debug_log("(S-S) Collided, resolved with %f %f %f\n", res.delta.x, res.delta.y, res.delta.z);
         resolve_collision(c1, c2, res.delta);
     }
     return res;
@@ -82,33 +82,53 @@ ColResult CollisionManager::check_sphere_plane(SphereCollider *c1, PlaneCollider
     float dist = dot(dir, -c2->normal);
     ColResult res = {false, vec3(0)};
 
-    //if way below the plane, ignore
-    if (dist < PHYS_ESPILON) 
+    // if way below the plane, ignore
+    if (dist < PHYS_ESPILON)
         return res;
 
     if (dist + PHYS_ESPILON < c1->radius)
     {
-        //debug_log("(P-S) Collide?, dist %f\n", dist);
-        //vector pointing from center of sphere to nearest point on plane
-        vec3 delta = (c2->normal * (c1->radius - dist)); 
-        //nearest point on plane
-        vec3 p = c1->get_position() - delta; 
-        //vector from center of plane to nearest point
-        vec3 cp = p - c2->get_position(); 
-        //distance when projected onto x bounds
+        // debug_log("(P-S) Collide?, dist %f\n", dist);
+        // vector pointing from center of sphere to nearest point on plane
+        vec3 delta = (c2->normal * (c1->radius - dist));
+        // nearest point on plane
+        vec3 p = c1->get_position() - delta;
+        // vector from center of plane to nearest point
+        vec3 cp = p - c2->get_position();
+        // distance when projected onto x bounds
         float xdist = abs(dot(cp, c2->tangentX) + PHYS_ESPILON);
-        //distance when projected on y bound
+        // distance when projected on y bound
         float ydist = abs(dot(cp, c2->tangentY) + PHYS_ESPILON);
-        
+
         // check if point is inside defined plane
         ////////////////// TODO, check if it works!
         if (xdist < c2->size.x + c1->radius && ydist < c2->size.y + c1->radius)
         {
             res.overlap = true;
             res.delta = delta;
+            Rigidbody *rb1 = c1->get_rigidbody();
+            if (rb1 == nullptr || rb1->get_rbtype() == KINEMATIC)
+                c1->move_position(delta);
+            else if (rb1->get_rbtype() == DYNAMIC)
+            {
+                c1->move_position(delta); // move min dist first
+                vec3 vel = rb1->get_vel();
 
-            resolve_collision(c1, c2, delta);
-            //debug_log("(P-S) Collided, resolved with %f %f %f, x%f y%f\n", res.delta.x, res.delta.y, res.delta.z, xdist, ydist);
+                rb1->set_grav_scale(true);
+                if (c2->isFloor && abs(vel.y) < 0.1) // if velocity almost zero, disable gravity
+                {
+                    rb1->set_vel({vel.x, 0, vel.z});
+                    rb1->set_grav_scale(false);
+                    //debug_log("hi\n");
+                }
+                else
+                {
+                    // somewhat reflect based on normal
+                    rb1->set_vel(vel + 2 * dot(-vel, c2->normal) * c2-> normal);
+                }
+            }
+            // resolve_collision(c1, c2, delta);
+            // debug_log("(P-S) Collided, resolved with %f %f %f, x%f y%f\n", res.delta.x, res.delta.y, res.delta.z, xdist, ydist);
         }
     }
 
@@ -132,21 +152,21 @@ void CollisionManager::resolve_collision(Collider *c1, Collider *c2, vec3 delta)
             float v2 = Norm(rb2->get_vel());
             float m1 = rb1->get_mass();
             float m2 = rb2->get_mass();
-            float e = ( rb1->get_elasticity() + rb2->get_elasticity() ) * 0.5f;
-            float v1a = (v1 * (m1 - e * m2) + v2 * (1+e) * m2) / (m1 + m2);
-            float v2a = (v2 * (m2 - e * m1) + v1 * (1+e) * m1) / (m1 + m2);
-            rb1->set_vel(dir * (v1a)); 
-            rb2->set_vel(-dir * (v2a));      
+            float e = (rb1->get_elasticity() + rb2->get_elasticity()) * 0.5f;
+            float v1a = (v1 * (m1 - e * m2) + v2 * (1 + e) * m2) / (m1 + m2);
+            float v2a = (v2 * (m2 - e * m1) + v1 * (1 + e) * m1) / (m1 + m2);
+            rb1->set_vel(dir * (v1a));
+            rb2->set_vel(-dir * (v2a));
         }
         else if (rb1->get_rbtype() == DYNAMIC && rb2->get_rbtype() == KINEMATIC)
         {
             c2->move_position(-delta);
-            //rb1->set_vel(delta * 20); //temp
+            // rb1->set_vel(delta * 20); //temp
         }
         else if (rb1->get_rbtype() == KINEMATIC && rb2->get_rbtype() == DYNAMIC)
         {
             c1->move_position(delta);
-            //rb2->set_vel(-delta * 20); //temp
+            // rb2->set_vel(-delta * 20); //temp
         }
     }
     else if (rb1 == nullptr) // just move rb2
