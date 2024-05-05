@@ -3,7 +3,7 @@
 void TorchLight::init()
 {
     this->drawable = dh::create_from_model("objCandle.obj", Transform({0, 0, 0}, {0, 0, 0}, {0.1, 0.1, 0.1}));
-    Material *m = dh::create_material(ShaderProg::SIMPLE, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
+    Material *m = dh::create_material(ShaderProg::LIT, {1, 1, 1}, {0.8, 0.8, 0.8, 16});
     drawable->setMaterial(m);
 
     fire = new Light;

@@ -51,7 +51,7 @@ vec3 calc_directional_light(vec3 baseColor, vec3 normal, vec3 viewDir)
 	//I = kd*Ia + kd*Il*max(0, s·n) + ks*Il*max(0, r·v)^a
 	vec3 totalLight = baseColor * lightColor * ambientAmt
 		+ baseColor * lightColor * lightStrength * diffuseAmt
-		+ specular.rgb * specularAmt;
+		+ lightColor * specular.rgb * specularAmt;
 
 	return totalLight;
 }
@@ -82,7 +82,7 @@ vec3 calc_point_light(int i, vec3 baseColor, vec3 normal, vec3 viewDir)
 	//I = kd*Ia + kd*Il*max(0, s·n) + ks*Il*max(0, r·v)^a
 	vec3 totalLight = baseColor * lightColor * ambientAmt
 		+ baseColor * lightColor * diffuseAmt
-		+ specular.rgb * specularAmt;
+		+ lightColor * specular.rgb * specularAmt;
 	totalLight *= attenuation;
 	return totalLight;
 }

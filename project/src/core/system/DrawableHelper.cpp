@@ -9,6 +9,8 @@ Material *DrawableHelper::create_material(ShaderProg shaderProg, vec3 albedo, ve
     m->shaderProg = shaderProg;
     m->textureBitmask = 0;
     m->tileFactor = 1.0f;
+    //attach a default texture
+    attach_texture_to_material(m, 0, "default");
     return m;
 }
 
