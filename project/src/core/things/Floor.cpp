@@ -46,6 +46,9 @@ void Floor::use_as_ceiling()
         
     //rotate mesh
     drawable->rotate({M_PI, 0, 0});
+
+    //darken color
+    drawable->getMaterial()->albedo = {0.3, 0.3, 0.4};
 }
 
 Drawable *Floor::get_drawable()
