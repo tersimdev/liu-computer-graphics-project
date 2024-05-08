@@ -40,7 +40,7 @@ vec3 calc_directional_light(vec3 baseColor, vec3 normal, vec3 viewDir)
 	vec3 lightDir = dLight.position;
 
 	//ambient lighting
-	float ambientAmt = 0.2;
+	float ambientAmt = 0.5;
 	//diffuse lighting
 	float diffuseAmt = clamp(dot(normal, -lightDir), 0, 1);
 	//specular lighting
