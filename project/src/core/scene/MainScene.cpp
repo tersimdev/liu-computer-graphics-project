@@ -109,7 +109,7 @@ void MainScene::create_maze()
                 mazeWall->set_width(width * 0.5f);
                 mazeWall->set_position(pos);
                 drawables.push_back(mazeWall->get_drawable());
-                things.push_back(mazeWall);
+                //things.push_back(mazeWall);
                 colliders.push_back(mazeWall->get_colliderLeft());
                 colliders.push_back(mazeWall->get_colliderRight());
                 colliders.push_back(mazeWall->get_colliderFront());
