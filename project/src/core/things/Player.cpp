@@ -34,7 +34,7 @@ void Player::update(float dt)
     // get collided position
     position = collider->get_position();
     //restrict player height since terrain is flat
-    if (camMode == WASD)
+    if (camMode != WASDQE)
         position.y = playerHeight;
     // use cam to move player position
     do_player_input(dt);
