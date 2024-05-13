@@ -4,7 +4,7 @@
     Header file containing all global defines
 */
 
-#define GAME_TITLE "TSBK07 Project"
+#define GAME_TITLE "TSBK11 Project"
 #define AUTHOR "Terence & Peri"
 #define RES_X 1024
 #define RES_Y 576
